@@ -6,12 +6,12 @@ slides_data = [
         "id": "intro",
         "isIntro": True,
         "title": "Tajlandia 2027",
-        "subtitle": "Wyprawa Życia we Dwoje",
+        "subtitle": "Bangkok • Kanchanaburi • Ko Samui",
         "dateRange": "8 – 24 Stycznia 2027",
         "bgImage": "https://images.unsplash.com/photo-1508009603885-50cf7c579365?auto=format&fit=crop&w=1200&q=80",
         "bgFallback": "linear-gradient(135deg, #090d16 0%, #1e1b4b 50%, #0f172a 100%)",
         "stats": [
-            {"num": "17", "label": "Dni wyprawy"},
+            {"num": "17", "label": "Dni podróży"},
             {"num": "4", "label": "Bazy hotelowe"},
             {"num": "3", "label": "Krainy Tajlandii"}
         ],
@@ -48,7 +48,7 @@ slides_data = [
             {
                 "time": "17:30",
                 "title": "Check-in w Mövenpick Sukhumvit 15",
-                "desc": "Zameldowanie w 5★ hotelu w sercu tętniącej życiem dzielnicy Sukhumvit. Szybki relaks i odświeżenie po długim locie.",
+                "desc": "Zameldowanie w 5★ hotelu w sercu tętniącej życiem dzielnicy Sukhumvit. Szybki relaks i odświeżenie po locie.",
                 "price": "W cenie rezerwacji",
                 "query": "Mövenpick Hotel Sukhumvit 15 Bangkok",
                 "tip": "Hotel ma świetny basen na dachu i bar Rainforest."
@@ -343,7 +343,7 @@ slides_data = [
         "type": "✈️ LOT NA KO SAMUI",
         "typeClass": "tag-flight",
         "title": "Powrót na BKK ➔ Lot PG155 (14:55) ➔ Ko Samui",
-        "subtitle": "Z krainy rzek do tropikalnego raju Zastoki Tajlandzkiej",
+        "subtitle": "Z krainy rzek do tropikalnego raju Zatoki Tajlandzkiej",
         "hotel": "Impiana Resort Chaweng Noi (4★)",
         "hotelTip": "Bezpośrednio przy plaży Chaweng Noi – najdrobniejszy, jasny piasek na wyspie.",
         "bgImage": "https://images.unsplash.com/photo-1537956965359-7573183d1f57?auto=format&fit=crop&w=1200&q=80",
@@ -431,7 +431,7 @@ slides_data = [
             },
             {
                 "time": "15:00",
-                "title": "Masaż olejkowy z żoną na plaży",
+                "title": "Masaż olejkowy dla dwojga na plaży",
                 "desc": "Tradycyjny masaż kokosowy w zadaszonej altanie na piasku. Szum fal w tle tworzy najpiękniejszą muzykę relaksacyjną.",
                 "price": "~300–400 THB / os.",
                 "query": "Chaweng Noi Beach Koh Samui",
@@ -499,7 +499,7 @@ slides_data = [
                 "desc": "Nastrojowy deptak w dawnej osadzie rybackiej z drewnianą architekturą, butikami i nadrzecznymi restauracjami.",
                 "price": "Wstęp wolny",
                 "query": "Fisherman's Village Bophut",
-                "tip": "Cudowna atmosfera na wieczorny spacer we dwoje."
+                "tip": "Cudowna atmosfera na wieczorny spacer."
             },
             {
                 "time": "20:30",
@@ -728,7 +728,7 @@ slides_data = [
             {
                 "time": "16:00",
                 "title": "Wyjazd na zachodnie wybrzeże (Lipa Noi / Taling Ngam)",
-                "desc": "Przejazd na zachodnią stronę wyspy, gdzie słońce chowa się bezpośrednio za horyzontem Zastoki Tajlandzkiej.",
+                "desc": "Przejazd na zachodnią stronę wyspy, gdzie słońce chowa się bezpośrednio za horyzontem Zatoki Tajlandzkiej.",
                 "price": "Bolt ~400 THB",
                 "query": "Lipa Noi Beach Samui",
                 "tip": "To tu powstają najwspanialsze zachody słońca w całej Tajlandii."
@@ -739,7 +739,7 @@ slides_data = [
                 "desc": "Elegancki taras zawieszony na klifie nad morzem. Muzyka na żywo i widok na mieniące się purpurą i złotem morze.",
                 "price": "Drinki ~350–500 THB",
                 "query": "Air Bar Koh Samui",
-                "tip": "Niezwykle romantyczna chwila dla dwojga."
+                "tip": "Niezwykle romantyczna chwila."
             },
             {
                 "time": "19:30",
@@ -896,7 +896,7 @@ slides_data = [
             {
                 "time": "10:50",
                 "title": "Wylot do Polski",
-                "desc": "Start samolotu powrotnego. Szczęśliwy powrót do domu z tysiącem zdjęć, opalenizną i wspomnieniami na całe życie!",
+                "desc": "Start samolotu powrotnego. Szczęśliwy powrót do domu z tysiącem zdjęć, opalenizną i wspaniałymi wspomnieniami!",
                 "price": "Lot powrotny",
                 "query": "Suvarnabhumi Airport Bangkok",
                 "tip": "Khai Khup Khun Krap – dziękujemy, Tajlandio!"
@@ -916,21 +916,20 @@ html_template = '''<!DOCTYPE html>
   <meta name="theme-color" content="#090d16">
   <link rel="apple-touch-icon" href="./icon-192.png">
   <link rel="manifest" href="./manifest.json">
-  <title>Tajlandia 2027 • Przewodnik Wyprawy</title>
+  <title>Tajlandia 2027 • Harmonogram Podróży</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg-dark: #090d16;
-      --card-bg: rgba(15, 23, 42, 0.78);
-      --card-border: rgba(255, 255, 255, 0.12);
+      --card-bg: rgba(15, 23, 42, 0.82);
+      --card-border: rgba(255, 255, 255, 0.14);
       --gold: #f59e0b;
       --gold-light: #fef3c7;
       --gold-gradient: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
       --accent-cyan: #06b6d4;
       --accent-green: #10b981;
-      --accent-pink: #ec4899;
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
       --safe-top: env(safe-area-inset-top, 20px);
@@ -956,13 +955,13 @@ html_template = '''<!DOCTYPE html>
       -webkit-user-select: none;
     }
 
-    /* Deck Viewport with vertical scroll snap */
+    /* Deck Viewport - Smooth snap scrolling without nested interference */
     .app-viewport {
       width: 100vw;
+      height: 100%;
       height: 100dvh;
       overflow-y: scroll;
       scroll-snap-type: y mandatory;
-      overscroll-behavior-y: contain;
       -webkit-overflow-scrolling: touch;
       scroll-behavior: smooth;
     }
@@ -970,9 +969,9 @@ html_template = '''<!DOCTYPE html>
     /* Slide base */
     .slide {
       width: 100vw;
+      height: 100%;
       height: 100dvh;
       scroll-snap-align: start;
-      scroll-snap-stop: always;
       position: relative;
       overflow-y: auto;
       overflow-x: hidden;
@@ -981,7 +980,7 @@ html_template = '''<!DOCTYPE html>
       flex-direction: column;
     }
 
-    /* Fixed Top Navigation Bar */
+    /* Fixed High-Contrast Top Navigation Bar (NO BLURRY TEXT) */
     .top-bar {
       position: fixed;
       top: 0;
@@ -989,16 +988,15 @@ html_template = '''<!DOCTYPE html>
       right: 0;
       z-index: 100;
       padding-top: max(var(--safe-top), 12px);
-      padding-bottom: 10px;
+      padding-bottom: 12px;
       padding-left: 16px;
       padding-right: 16px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: linear-gradient(180deg, rgba(9, 13, 22, 0.9) 0%, rgba(9, 13, 22, 0.4) 70%, transparent 100%);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      pointer-events: none;
+      background: rgba(9, 13, 22, 0.96); /* Solid deep dark background for maximum readability */
+      border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.75);
     }
 
     .top-bar-inner {
@@ -1006,55 +1004,51 @@ html_template = '''<!DOCTYPE html>
       display: flex;
       justify-content: space-between;
       align-items: center;
-      pointer-events: auto;
     }
 
     .nav-badge {
       display: flex;
       align-items: center;
-      gap: 6px;
-      background: rgba(15, 23, 42, 0.85);
-      border: 1px solid var(--card-border);
-      padding: 6px 14px;
+      gap: 8px;
+      background: #1e293b; /* High-contrast solid slate */
+      border: 1px solid rgba(245, 158, 11, 0.45);
+      padding: 7px 16px;
       border-radius: 999px;
-      font-size: 13px;
-      font-weight: 700;
-      color: #fff;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      font-size: 14px;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: 0.2px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
     }
 
     .nav-badge-dot {
-      width: 8px;
-      height: 8px;
+      width: 9px;
+      height: 9px;
       border-radius: 50%;
       background: #10b981;
-      box-shadow: 0 0 8px #10b981;
-    }
-
-    .top-actions {
-      display: flex;
-      gap: 8px;
+      box-shadow: 0 0 10px #10b981;
+      flex-shrink: 0;
     }
 
     .icon-btn {
-      background: rgba(15, 23, 42, 0.85);
-      border: 1px solid var(--card-border);
-      color: var(--text-main);
-      width: 38px;
-      height: 38px;
+      background: #1e293b;
+      border: 1px solid rgba(245, 158, 11, 0.45);
+      color: #fbbf24;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 16px;
+      font-size: 19px;
       cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-      transition: transform 0.2s, background 0.2s;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+      transition: transform 0.15s, background 0.15s;
     }
 
     .icon-btn:active {
       transform: scale(0.92);
-      background: rgba(245, 158, 11, 0.2);
+      background: rgba(245, 158, 11, 0.25);
     }
 
     /* Progress Bar */
@@ -1085,8 +1079,7 @@ html_template = '''<!DOCTYPE html>
       background-size: cover;
       background-position: center;
       z-index: 1;
-      transform: scale(1.03);
-      transition: transform 6s ease-out;
+      transform: scale(1.02);
     }
 
     .slide-overlay {
@@ -1098,9 +1091,9 @@ html_template = '''<!DOCTYPE html>
       z-index: 2;
       background: linear-gradient(
         180deg,
-        rgba(9, 13, 22, 0.45) 0%,
-        rgba(9, 13, 22, 0.75) 45%,
-        rgba(9, 13, 22, 0.96) 90%,
+        rgba(9, 13, 22, 0.5) 0%,
+        rgba(9, 13, 22, 0.78) 40%,
+        rgba(9, 13, 22, 0.96) 85%,
         rgba(9, 13, 22, 1) 100%
       );
     }
@@ -1110,11 +1103,11 @@ html_template = '''<!DOCTYPE html>
       position: relative;
       z-index: 10;
       width: 100%;
-      min-height: 100%;
-      padding-top: calc(max(var(--safe-top), 20px) + 54px);
-      padding-bottom: calc(max(var(--safe-bottom), 20px) + 30px);
-      padding-left: 20px;
-      padding-right: 20px;
+      box-sizing: border-box;
+      padding-top: calc(max(var(--safe-top), 16px) + 62px);
+      padding-bottom: max(var(--safe-bottom), 24px); /* Clean spacing for iOS Home Bar without dead space */
+      padding-left: 18px;
+      padding-right: 18px;
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
@@ -1128,17 +1121,17 @@ html_template = '''<!DOCTYPE html>
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 16px;
+      gap: 14px;
     }
 
     .intro-tag {
-      background: rgba(245, 158, 11, 0.15);
-      border: 1px solid rgba(245, 158, 11, 0.4);
+      background: rgba(245, 158, 11, 0.18);
+      border: 1px solid rgba(245, 158, 11, 0.45);
       color: #fbbf24;
       padding: 6px 16px;
       border-radius: 999px;
       font-size: 13px;
-      font-weight: 700;
+      font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 1px;
     }
@@ -1154,9 +1147,9 @@ html_template = '''<!DOCTYPE html>
     }
 
     .intro-subtitle {
-      font-size: 18px;
+      font-size: 17px;
       color: var(--text-muted);
-      font-weight: 500;
+      font-weight: 600;
     }
 
     /* Countdown Widget */
@@ -1165,11 +1158,11 @@ html_template = '''<!DOCTYPE html>
       max-width: 360px;
       background: var(--card-bg);
       border: 1px solid var(--card-border);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       border-radius: 24px;
       padding: 20px;
-      margin-top: 10px;
+      margin-top: 6px;
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
     }
 
@@ -1218,16 +1211,16 @@ html_template = '''<!DOCTYPE html>
     /* Stats bar */
     .stats-row {
       display: flex;
-      gap: 12px;
+      gap: 10px;
       width: 100%;
       max-width: 360px;
-      margin-top: 8px;
+      margin-top: 6px;
     }
 
     .stat-pill {
       flex: 1;
-      background: rgba(15, 23, 42, 0.6);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 16px;
       padding: 10px 6px;
       text-align: center;
@@ -1248,6 +1241,7 @@ html_template = '''<!DOCTYPE html>
       margin-top: auto;
       text-align: center;
       padding-top: 20px;
+      padding-bottom: max(var(--safe-bottom), 16px);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -1258,7 +1252,7 @@ html_template = '''<!DOCTYPE html>
       background: var(--gold-gradient);
       color: #090d16;
       border: none;
-      padding: 14px 32px;
+      padding: 14px 34px;
       border-radius: 999px;
       font-size: 16px;
       font-weight: 800;
@@ -1267,7 +1261,7 @@ html_template = '''<!DOCTYPE html>
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      transition: transform 0.2s;
+      transition: transform 0.15s;
     }
 
     .start-btn:active {
@@ -1276,22 +1270,23 @@ html_template = '''<!DOCTYPE html>
 
     .swipe-hint {
       font-size: 13px;
-      color: rgba(255, 255, 255, 0.6);
+      color: rgba(255, 255, 255, 0.7);
       display: flex;
       align-items: center;
       gap: 6px;
+      font-weight: 600;
       animation: bounce 2s infinite;
     }
 
     @keyframes bounce {
       0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-      40% { transform: translateY(-8px); }
-      60% { transform: translateY(-4px); }
+      40% { transform: translateY(-7px); }
+      60% { transform: translateY(-3px); }
     }
 
     /* DAY SLIDE HEADERS */
     .day-header {
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     .day-top-meta {
@@ -1304,7 +1299,7 @@ html_template = '''<!DOCTYPE html>
 
     .day-pill {
       background: rgba(255, 255, 255, 0.12);
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.18);
       color: #fff;
       font-size: 12px;
       font-weight: 700;
@@ -1312,23 +1307,23 @@ html_template = '''<!DOCTYPE html>
       border-radius: 8px;
     }
 
-    .tag-arrival { background: rgba(59, 130, 246, 0.2); border-color: rgba(59, 130, 246, 0.4); color: #60a5fa; }
-    .tag-explore { background: rgba(245, 158, 11, 0.2); border-color: rgba(245, 158, 11, 0.4); color: #fbbf24; }
-    .tag-drive { background: rgba(168, 85, 247, 0.2); border-color: rgba(168, 85, 247, 0.4); color: #c084fc; }
-    .tag-nature { background: rgba(16, 185, 129, 0.2); border-color: rgba(16, 185, 129, 0.4); color: #34d399; }
-    .tag-flight { background: rgba(14, 165, 233, 0.2); border-color: rgba(14, 165, 233, 0.4); color: #38bdf8; }
-    .tag-relax { background: rgba(20, 184, 166, 0.2); border-color: rgba(20, 184, 166, 0.4); color: #2dd4bf; }
-    .tag-boat { background: rgba(6, 182, 212, 0.2); border-color: rgba(6, 182, 212, 0.4); color: #22d3ee; }
-    .tag-luxury { background: rgba(236, 72, 153, 0.2); border-color: rgba(236, 72, 153, 0.4); color: #f472b6; }
+    .tag-arrival { background: rgba(59, 130, 246, 0.25); border-color: rgba(59, 130, 246, 0.5); color: #93c5fd; }
+    .tag-explore { background: rgba(245, 158, 11, 0.25); border-color: rgba(245, 158, 11, 0.5); color: #fbbf24; }
+    .tag-drive { background: rgba(168, 85, 247, 0.25); border-color: rgba(168, 85, 247, 0.5); color: #d8b4fe; }
+    .tag-nature { background: rgba(16, 185, 129, 0.25); border-color: rgba(16, 185, 129, 0.5); color: #6ee7b7; }
+    .tag-flight { background: rgba(14, 165, 233, 0.25); border-color: rgba(14, 165, 233, 0.5); color: #7dd3fc; }
+    .tag-relax { background: rgba(20, 184, 166, 0.25); border-color: rgba(20, 184, 166, 0.5); color: #5eead4; }
+    .tag-boat { background: rgba(6, 182, 212, 0.25); border-color: rgba(6, 182, 212, 0.5); color: #67e8f9; }
+    .tag-luxury { background: rgba(236, 72, 153, 0.25); border-color: rgba(236, 72, 153, 0.5); color: #f472b6; }
 
     .day-date-text {
       font-size: 13px;
-      color: var(--text-muted);
+      color: #cbd5e1;
       font-weight: 600;
     }
 
     .day-title {
-      font-size: 28px;
+      font-size: 27px;
       font-weight: 800;
       line-height: 1.15;
       color: #fff;
@@ -1349,7 +1344,7 @@ html_template = '''<!DOCTYPE html>
       -webkit-backdrop-filter: blur(16px);
       border-radius: 16px;
       padding: 12px 14px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
       display: flex;
       align-items: flex-start;
       gap: 12px;
@@ -1359,8 +1354,8 @@ html_template = '''<!DOCTYPE html>
       width: 36px;
       height: 36px;
       border-radius: 10px;
-      background: rgba(245, 158, 11, 0.15);
-      border: 1px solid rgba(245, 158, 11, 0.3);
+      background: rgba(245, 158, 11, 0.18);
+      border: 1px solid rgba(245, 158, 11, 0.35);
       color: #fbbf24;
       display: flex;
       align-items: center;
@@ -1390,7 +1385,7 @@ html_template = '''<!DOCTYPE html>
       display: flex;
       flex-direction: column;
       gap: 12px;
-      margin-bottom: 24px;
+      margin-bottom: 16px;
     }
 
     .timeline-card {
@@ -1401,7 +1396,6 @@ html_template = '''<!DOCTYPE html>
       border-radius: 18px;
       padding: 16px;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-      transition: transform 0.2s ease, border-color 0.2s;
     }
 
     .timeline-card-header {
@@ -1425,8 +1419,8 @@ html_template = '''<!DOCTYPE html>
       font-size: 12px;
       font-weight: 700;
       color: #38bdf8;
-      background: rgba(14, 165, 233, 0.15);
-      border: 1px solid rgba(14, 165, 233, 0.3);
+      background: rgba(14, 165, 233, 0.18);
+      border: 1px solid rgba(14, 165, 233, 0.35);
       padding: 3px 8px;
       border-radius: 6px;
     }
@@ -1447,7 +1441,7 @@ html_template = '''<!DOCTYPE html>
     }
 
     .timeline-tip-box {
-      background: rgba(0, 0, 0, 0.3);
+      background: rgba(0, 0, 0, 0.35);
       border-left: 3px solid #fbbf24;
       padding: 8px 10px;
       border-radius: 0 8px 8px 0;
@@ -1469,50 +1463,20 @@ html_template = '''<!DOCTYPE html>
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
       color: #fff;
       padding: 7px 14px;
       border-radius: 10px;
       font-size: 12px;
       font-weight: 700;
       text-decoration: none;
-      transition: background 0.2s, transform 0.2s;
+      transition: background 0.15s, transform 0.15s;
     }
 
     .maps-btn:active {
       transform: scale(0.95);
-      background: rgba(245, 158, 11, 0.25);
-    }
-
-    /* Slide Bottom Navigation Pills */
-    .slide-footer-nav {
-      margin-top: auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-top: 10px;
-      padding-bottom: 16px;
-    }
-
-    .nav-arrow-btn {
-      background: rgba(15, 23, 42, 0.85);
-      border: 1px solid var(--card-border);
-      color: #fff;
-      padding: 10px 18px;
-      border-radius: 999px;
-      font-size: 13px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      cursor: pointer;
-      text-decoration: none;
-      backdrop-filter: blur(12px);
-    }
-
-    .nav-arrow-btn:active {
-      transform: scale(0.95);
+      background: rgba(245, 158, 11, 0.3);
     }
 
     /* Modal / Bottom Drawer for Day Selection */
@@ -1522,13 +1486,13 @@ html_template = '''<!DOCTYPE html>
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: rgba(0, 0, 0, 0.7);
+      background: rgba(0, 0, 0, 0.75);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
       z-index: 200;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.3s ease;
+      transition: opacity 0.25s ease;
     }
 
     .drawer-backdrop.active {
@@ -1560,7 +1524,7 @@ html_template = '''<!DOCTYPE html>
     .drawer-handle {
       width: 44px;
       height: 5px;
-      background: rgba(255, 255, 255, 0.3);
+      background: rgba(255, 255, 255, 0.35);
       border-radius: 999px;
       margin: 0 auto 16px;
     }
@@ -1579,7 +1543,7 @@ html_template = '''<!DOCTYPE html>
     }
 
     .drawer-close {
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.12);
       border: none;
       color: #fff;
       width: 32px;
@@ -1608,11 +1572,11 @@ html_template = '''<!DOCTYPE html>
       cursor: pointer;
       text-decoration: none;
       color: #fff;
-      transition: background 0.2s;
+      transition: background 0.15s;
     }
 
     .drawer-item:active {
-      background: rgba(245, 158, 11, 0.2);
+      background: rgba(245, 158, 11, 0.25);
     }
 
     .drawer-item-title {
@@ -1633,79 +1597,6 @@ html_template = '''<!DOCTYPE html>
       background: rgba(245, 158, 11, 0.2);
       color: #fbbf24;
     }
-
-    /* iOS Installation Guide Modal */
-    .ios-modal {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) scale(0.9);
-      width: 90%;
-      max-width: 380px;
-      background: #0f172a;
-      border: 1px solid var(--card-border);
-      border-radius: 24px;
-      padding: 24px;
-      z-index: 250;
-      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7);
-      opacity: 0;
-      pointer-events: none;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .ios-modal.active {
-      opacity: 1;
-      pointer-events: auto;
-      transform: translate(-50%, -50%) scale(1);
-    }
-
-    .ios-modal-title {
-      font-size: 20px;
-      font-weight: 800;
-      color: #fff;
-      margin-bottom: 12px;
-      text-align: center;
-    }
-
-    .ios-step {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-
-    .ios-step-num {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      background: var(--gold-gradient);
-      color: #090d16;
-      font-weight: 800;
-      font-size: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .ios-step-text {
-      font-size: 14px;
-      color: #cbd5e1;
-      line-height: 1.4;
-    }
-
-    .ios-btn-close {
-      width: 100%;
-      background: var(--gold-gradient);
-      color: #090d16;
-      border: none;
-      padding: 12px;
-      border-radius: 12px;
-      font-weight: 800;
-      font-size: 15px;
-      cursor: pointer;
-      margin-top: 8px;
-    }
   </style>
 </head>
 <body>
@@ -1715,7 +1606,7 @@ html_template = '''<!DOCTYPE html>
     <div class="progress-fill" id="progressFill"></div>
   </div>
 
-  <!-- Top Floating Header -->
+  <!-- Top Floating Header (Crisp, High-Contrast) -->
   <header class="top-bar">
     <div class="top-bar-inner">
       <div class="nav-badge" id="navBadge" role="status" aria-live="polite">
@@ -1723,8 +1614,7 @@ html_template = '''<!DOCTYPE html>
         <span id="navBadgeText">🇹🇭 Tajlandia '27</span>
       </div>
       <div class="top-actions">
-        <button class="icon-btn" id="btnInstall" title="Dodaj do ekranu iPhone" aria-label="Instrukcja instalacji na iPhone">📲</button>
-        <button class="icon-btn" id="btnDrawer" title="Spis dni" aria-label="Otwórz spis dni">📅</button>
+        <button class="icon-btn" id="btnDrawer" title="Spis dni" aria-label="Otwórz harmonogram dni">📅</button>
       </div>
     </div>
   </header>
@@ -1743,7 +1633,7 @@ for idx, s in enumerate(slides_data):
       <div class="slide-overlay"></div>
       <div class="slide-content">
         <div class="intro-hero">
-          <div class="intro-tag">✨ Wyprawa Życia z Żoną</div>
+          <div class="intro-tag">🌴 TAJLANDIA 2027</div>
           <h1 class="intro-title">{s["title"]}</h1>
           <p class="intro-subtitle">{s["subtitle"]}</p>
 
@@ -1852,28 +1742,18 @@ for idx, s in enumerate(slides_data):
             </div>
           </div>
 '''
-        next_slide = slide_idx + 1 if slide_idx < 16 else 0
-        next_label = f"Dzień {slide_idx + 1} ➔" if slide_idx < 16 else "Wróć na początek ↺"
-        prev_slide = slide_idx - 1
-
-        html_template += f'''
-        </div>
-
-        <!-- Navigation footer -->
-        <div class="slide-footer-nav">
-          <button class="nav-arrow-btn" onclick="scrollToSlide({prev_slide})">⬅ Poprzedni</button>
-          <button class="nav-arrow-btn" onclick="scrollToSlide({next_slide})">{next_label}</button>
+        html_template += '''
         </div>
 
       </div>
     </section>
 '''
 
-# Add bottom sheet drawer and modals
+# Add bottom sheet drawer
 html_template += '''
   </main>
 
-  <!-- Backdrop for drawer and modal -->
+  <!-- Backdrop for drawer -->
   <div class="drawer-backdrop" id="backdrop"></div>
 
   <!-- Day Selection Drawer -->
@@ -1910,28 +1790,6 @@ html_template += '''
     </div>
   </div>
 
-  <!-- iOS Install Modal -->
-  <div class="ios-modal" id="iosModal" role="dialog" aria-modal="true" aria-label="Instrukcja instalacji na iPhone">
-    <h3 class="ios-modal-title">📲 Dodaj do ekranu iPhone</h3>
-    <div class="ios-step">
-      <div class="ios-step-num">1</div>
-      <div class="ios-step-text">Otwórz tę stronę w przeglądarce <strong>Safari</strong> na swoim iPhone.</div>
-    </div>
-    <div class="ios-step">
-      <div class="ios-step-num">2</div>
-      <div class="ios-step-text">Kliknij ikonę <strong>Udostępnij</strong> na dolnym pasku (kwadrat ze strzałką w górę ⬆️).</div>
-    </div>
-    <div class="ios-step">
-      <div class="ios-step-num">3</div>
-      <div class="ios-step-text">Przewiń w dół i wybierz <strong>„Do ekranu początkowego”</strong> (Add to Home Screen).</div>
-    </div>
-    <div class="ios-step">
-      <div class="ios-step-num">4</div>
-      <div class="ios-step-text">Kliknij <strong>„Dodaj”</strong> w prawym górnym rogu. Aplikacja pojawi się obok innych apek i działa offline!</div>
-    </div>
-    <button class="ios-btn-close" id="btnCloseInstall">Rozumiem!</button>
-  </div>
-
   <script>
     // Live Countdown Timer to Departure (8 Jan 2027 00:00:00 CET)
     const departureDate = new Date('2027-01-08T00:00:00').getTime();
@@ -1966,9 +1824,11 @@ html_template += '''
     const navBadgeText = document.getElementById('navBadgeText');
     const progressFill = document.getElementById('progressFill');
     const totalSlides = slides.length;
+    let currentSlideIndex = 0;
 
     function scrollToSlide(index) {
       if (index >= 0 && index < totalSlides) {
+        currentSlideIndex = index;
         slides[index].scrollIntoView({ behavior: 'smooth' });
       }
     }
@@ -1979,6 +1839,7 @@ html_template += '''
         if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
           const label = entry.target.getAttribute('data-label');
           const index = parseInt(entry.target.getAttribute('data-index'), 10);
+          currentSlideIndex = index;
           if (label && navBadgeText) {
             navBadgeText.innerText = label;
           }
@@ -1994,6 +1855,48 @@ html_template += '''
     });
 
     slides.forEach(slide => observer.observe(slide));
+
+    // SUPER SMOOTH TOUCH GESTURE ENGINE (Fixes swipe sticking on iOS)
+    let touchStartY = 0;
+    let touchStartX = 0;
+    let touchStartTime = 0;
+
+    window.addEventListener('touchstart', (e) => {
+      touchStartY = e.touches[0].clientY;
+      touchStartX = e.touches[0].clientX;
+      touchStartTime = Date.now();
+    }, { passive: true });
+
+    window.addEventListener('touchend', (e) => {
+      // Don't intercept touches if drawer is open
+      if (drawerSheet.classList.contains('active')) return;
+
+      const touchEndY = e.changedTouches[0].clientY;
+      const touchEndX = e.changedTouches[0].clientX;
+      const deltaY = touchEndY - touchStartY;
+      const deltaX = touchEndX - touchStartX;
+      const duration = Date.now() - touchStartTime;
+
+      // Must be a decisive vertical swipe
+      if (Math.abs(deltaY) > 40 && Math.abs(deltaY) > Math.abs(deltaX) * 1.2 && duration < 600) {
+        const curSlide = slides[currentSlideIndex];
+        const isAtTop = curSlide.scrollTop <= 10;
+        const isAtBottom = (curSlide.scrollHeight - curSlide.scrollTop - curSlide.clientHeight) <= 15;
+        const tappedHeaderOrBg = e.target.closest('.day-header') || e.target.closest('.hotel-card') || e.target.closest('.intro-hero') || e.target.closest('.slide-bg');
+
+        if (deltaY < -40) {
+          // Swipe UP -> Next Day
+          if (isAtBottom || tappedHeaderOrBg || currentSlideIndex === 0) {
+            scrollToSlide(currentSlideIndex + 1);
+          }
+        } else if (deltaY > 40) {
+          // Swipe DOWN -> Prev Day
+          if (isAtTop || tappedHeaderOrBg) {
+            scrollToSlide(currentSlideIndex - 1);
+          }
+        }
+      }
+    }, { passive: true });
 
     // Drawer Logic
     const backdrop = document.getElementById('backdrop');
@@ -2013,41 +1916,20 @@ html_template += '''
 
     btnDrawer.addEventListener('click', openDrawer);
     btnCloseDrawer.addEventListener('click', closeDrawer);
+    backdrop.addEventListener('click', closeDrawer);
 
     function selectDay(index) {
       closeDrawer();
       setTimeout(() => {
         scrollToSlide(index);
-      }, 250);
+      }, 200);
     }
-
-    // iOS Install Modal Logic
-    const iosModal = document.getElementById('iosModal');
-    const btnInstall = document.getElementById('btnInstall');
-    const btnCloseInstall = document.getElementById('btnCloseInstall');
-
-    function openInstallModal() {
-      backdrop.classList.add('active');
-      iosModal.classList.add('active');
-    }
-
-    function closeInstallModal() {
-      backdrop.classList.remove('active');
-      iosModal.classList.remove('active');
-    }
-
-    btnInstall.addEventListener('click', openInstallModal);
-    btnCloseInstall.addEventListener('click', closeInstallModal);
-    backdrop.addEventListener('click', () => {
-      closeDrawer();
-      closeInstallModal();
-    });
 
     // Register Service Worker for offline capability
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js')
-          .then(reg => console.log('SW zarejestrowany pomyślnie!', reg))
+          .then(reg => console.log('SW zarejestrowany:', reg))
           .catch(err => console.log('Błąd SW:', err));
       });
     }
@@ -2056,7 +1938,11 @@ html_template += '''
 </html>
 '''
 
-with open('C:/Users/mosan/.gemini/antigravity/scratch/thailand-trip-app/index.html', 'w', encoding='utf-8') as f:
+with open('c:/Users/mosan/Desktop/Thai/Thai2027/index.html', 'w', encoding='utf-8') as f:
     f.write(html_template)
 
-print('index.html generated successfully!')
+# Also write to parent Thai folder
+with open('c:/Users/mosan/Desktop/Thai/index.html', 'w', encoding='utf-8') as f:
+    f.write(html_template)
+
+print('Updated index.html written successfully!')

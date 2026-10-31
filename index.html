@@ -9,21 +9,20 @@
   <meta name="theme-color" content="#090d16">
   <link rel="apple-touch-icon" href="./icon-192.png">
   <link rel="manifest" href="./manifest.json">
-  <title>Tajlandia 2027 • Przewodnik Wyprawy</title>
+  <title>Tajlandia 2027 • Harmonogram Podróży</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg-dark: #090d16;
-      --card-bg: rgba(15, 23, 42, 0.78);
-      --card-border: rgba(255, 255, 255, 0.12);
+      --card-bg: rgba(15, 23, 42, 0.82);
+      --card-border: rgba(255, 255, 255, 0.14);
       --gold: #f59e0b;
       --gold-light: #fef3c7;
       --gold-gradient: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
       --accent-cyan: #06b6d4;
       --accent-green: #10b981;
-      --accent-pink: #ec4899;
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
       --safe-top: env(safe-area-inset-top, 20px);
@@ -49,13 +48,13 @@
       -webkit-user-select: none;
     }
 
-    /* Deck Viewport with vertical scroll snap */
+    /* Deck Viewport - Smooth snap scrolling without nested interference */
     .app-viewport {
       width: 100vw;
+      height: 100%;
       height: 100dvh;
       overflow-y: scroll;
       scroll-snap-type: y mandatory;
-      overscroll-behavior-y: contain;
       -webkit-overflow-scrolling: touch;
       scroll-behavior: smooth;
     }
@@ -63,9 +62,9 @@
     /* Slide base */
     .slide {
       width: 100vw;
+      height: 100%;
       height: 100dvh;
       scroll-snap-align: start;
-      scroll-snap-stop: always;
       position: relative;
       overflow-y: auto;
       overflow-x: hidden;
@@ -74,7 +73,7 @@
       flex-direction: column;
     }
 
-    /* Fixed Top Navigation Bar */
+    /* Fixed High-Contrast Top Navigation Bar (NO BLURRY TEXT) */
     .top-bar {
       position: fixed;
       top: 0;
@@ -82,16 +81,15 @@
       right: 0;
       z-index: 100;
       padding-top: max(var(--safe-top), 12px);
-      padding-bottom: 10px;
+      padding-bottom: 12px;
       padding-left: 16px;
       padding-right: 16px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: linear-gradient(180deg, rgba(9, 13, 22, 0.9) 0%, rgba(9, 13, 22, 0.4) 70%, transparent 100%);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      pointer-events: none;
+      background: rgba(9, 13, 22, 0.96); /* Solid deep dark background for maximum readability */
+      border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.75);
     }
 
     .top-bar-inner {
@@ -99,55 +97,51 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      pointer-events: auto;
     }
 
     .nav-badge {
       display: flex;
       align-items: center;
-      gap: 6px;
-      background: rgba(15, 23, 42, 0.85);
-      border: 1px solid var(--card-border);
-      padding: 6px 14px;
+      gap: 8px;
+      background: #1e293b; /* High-contrast solid slate */
+      border: 1px solid rgba(245, 158, 11, 0.45);
+      padding: 7px 16px;
       border-radius: 999px;
-      font-size: 13px;
-      font-weight: 700;
-      color: #fff;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      font-size: 14px;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: 0.2px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
     }
 
     .nav-badge-dot {
-      width: 8px;
-      height: 8px;
+      width: 9px;
+      height: 9px;
       border-radius: 50%;
       background: #10b981;
-      box-shadow: 0 0 8px #10b981;
-    }
-
-    .top-actions {
-      display: flex;
-      gap: 8px;
+      box-shadow: 0 0 10px #10b981;
+      flex-shrink: 0;
     }
 
     .icon-btn {
-      background: rgba(15, 23, 42, 0.85);
-      border: 1px solid var(--card-border);
-      color: var(--text-main);
-      width: 38px;
-      height: 38px;
+      background: #1e293b;
+      border: 1px solid rgba(245, 158, 11, 0.45);
+      color: #fbbf24;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 16px;
+      font-size: 19px;
       cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-      transition: transform 0.2s, background 0.2s;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+      transition: transform 0.15s, background 0.15s;
     }
 
     .icon-btn:active {
       transform: scale(0.92);
-      background: rgba(245, 158, 11, 0.2);
+      background: rgba(245, 158, 11, 0.25);
     }
 
     /* Progress Bar */
@@ -178,8 +172,7 @@
       background-size: cover;
       background-position: center;
       z-index: 1;
-      transform: scale(1.03);
-      transition: transform 6s ease-out;
+      transform: scale(1.02);
     }
 
     .slide-overlay {
@@ -191,9 +184,9 @@
       z-index: 2;
       background: linear-gradient(
         180deg,
-        rgba(9, 13, 22, 0.45) 0%,
-        rgba(9, 13, 22, 0.75) 45%,
-        rgba(9, 13, 22, 0.96) 90%,
+        rgba(9, 13, 22, 0.5) 0%,
+        rgba(9, 13, 22, 0.78) 40%,
+        rgba(9, 13, 22, 0.96) 85%,
         rgba(9, 13, 22, 1) 100%
       );
     }
@@ -203,11 +196,11 @@
       position: relative;
       z-index: 10;
       width: 100%;
-      min-height: 100%;
-      padding-top: calc(max(var(--safe-top), 20px) + 54px);
-      padding-bottom: calc(max(var(--safe-bottom), 20px) + 30px);
-      padding-left: 20px;
-      padding-right: 20px;
+      box-sizing: border-box;
+      padding-top: calc(max(var(--safe-top), 16px) + 62px);
+      padding-bottom: max(var(--safe-bottom), 24px); /* Clean spacing for iOS Home Bar without dead space */
+      padding-left: 18px;
+      padding-right: 18px;
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
@@ -221,17 +214,17 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 16px;
+      gap: 14px;
     }
 
     .intro-tag {
-      background: rgba(245, 158, 11, 0.15);
-      border: 1px solid rgba(245, 158, 11, 0.4);
+      background: rgba(245, 158, 11, 0.18);
+      border: 1px solid rgba(245, 158, 11, 0.45);
       color: #fbbf24;
       padding: 6px 16px;
       border-radius: 999px;
       font-size: 13px;
-      font-weight: 700;
+      font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 1px;
     }
@@ -247,9 +240,9 @@
     }
 
     .intro-subtitle {
-      font-size: 18px;
+      font-size: 17px;
       color: var(--text-muted);
-      font-weight: 500;
+      font-weight: 600;
     }
 
     /* Countdown Widget */
@@ -258,11 +251,11 @@
       max-width: 360px;
       background: var(--card-bg);
       border: 1px solid var(--card-border);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       border-radius: 24px;
       padding: 20px;
-      margin-top: 10px;
+      margin-top: 6px;
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
     }
 
@@ -311,16 +304,16 @@
     /* Stats bar */
     .stats-row {
       display: flex;
-      gap: 12px;
+      gap: 10px;
       width: 100%;
       max-width: 360px;
-      margin-top: 8px;
+      margin-top: 6px;
     }
 
     .stat-pill {
       flex: 1;
-      background: rgba(15, 23, 42, 0.6);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 16px;
       padding: 10px 6px;
       text-align: center;
@@ -341,6 +334,7 @@
       margin-top: auto;
       text-align: center;
       padding-top: 20px;
+      padding-bottom: max(var(--safe-bottom), 16px);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -351,7 +345,7 @@
       background: var(--gold-gradient);
       color: #090d16;
       border: none;
-      padding: 14px 32px;
+      padding: 14px 34px;
       border-radius: 999px;
       font-size: 16px;
       font-weight: 800;
@@ -360,7 +354,7 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      transition: transform 0.2s;
+      transition: transform 0.15s;
     }
 
     .start-btn:active {
@@ -369,22 +363,23 @@
 
     .swipe-hint {
       font-size: 13px;
-      color: rgba(255, 255, 255, 0.6);
+      color: rgba(255, 255, 255, 0.7);
       display: flex;
       align-items: center;
       gap: 6px;
+      font-weight: 600;
       animation: bounce 2s infinite;
     }
 
     @keyframes bounce {
       0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-      40% { transform: translateY(-8px); }
-      60% { transform: translateY(-4px); }
+      40% { transform: translateY(-7px); }
+      60% { transform: translateY(-3px); }
     }
 
     /* DAY SLIDE HEADERS */
     .day-header {
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     .day-top-meta {
@@ -397,7 +392,7 @@
 
     .day-pill {
       background: rgba(255, 255, 255, 0.12);
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.18);
       color: #fff;
       font-size: 12px;
       font-weight: 700;
@@ -405,23 +400,23 @@
       border-radius: 8px;
     }
 
-    .tag-arrival { background: rgba(59, 130, 246, 0.2); border-color: rgba(59, 130, 246, 0.4); color: #60a5fa; }
-    .tag-explore { background: rgba(245, 158, 11, 0.2); border-color: rgba(245, 158, 11, 0.4); color: #fbbf24; }
-    .tag-drive { background: rgba(168, 85, 247, 0.2); border-color: rgba(168, 85, 247, 0.4); color: #c084fc; }
-    .tag-nature { background: rgba(16, 185, 129, 0.2); border-color: rgba(16, 185, 129, 0.4); color: #34d399; }
-    .tag-flight { background: rgba(14, 165, 233, 0.2); border-color: rgba(14, 165, 233, 0.4); color: #38bdf8; }
-    .tag-relax { background: rgba(20, 184, 166, 0.2); border-color: rgba(20, 184, 166, 0.4); color: #2dd4bf; }
-    .tag-boat { background: rgba(6, 182, 212, 0.2); border-color: rgba(6, 182, 212, 0.4); color: #22d3ee; }
-    .tag-luxury { background: rgba(236, 72, 153, 0.2); border-color: rgba(236, 72, 153, 0.4); color: #f472b6; }
+    .tag-arrival { background: rgba(59, 130, 246, 0.25); border-color: rgba(59, 130, 246, 0.5); color: #93c5fd; }
+    .tag-explore { background: rgba(245, 158, 11, 0.25); border-color: rgba(245, 158, 11, 0.5); color: #fbbf24; }
+    .tag-drive { background: rgba(168, 85, 247, 0.25); border-color: rgba(168, 85, 247, 0.5); color: #d8b4fe; }
+    .tag-nature { background: rgba(16, 185, 129, 0.25); border-color: rgba(16, 185, 129, 0.5); color: #6ee7b7; }
+    .tag-flight { background: rgba(14, 165, 233, 0.25); border-color: rgba(14, 165, 233, 0.5); color: #7dd3fc; }
+    .tag-relax { background: rgba(20, 184, 166, 0.25); border-color: rgba(20, 184, 166, 0.5); color: #5eead4; }
+    .tag-boat { background: rgba(6, 182, 212, 0.25); border-color: rgba(6, 182, 212, 0.5); color: #67e8f9; }
+    .tag-luxury { background: rgba(236, 72, 153, 0.25); border-color: rgba(236, 72, 153, 0.5); color: #f472b6; }
 
     .day-date-text {
       font-size: 13px;
-      color: var(--text-muted);
+      color: #cbd5e1;
       font-weight: 600;
     }
 
     .day-title {
-      font-size: 28px;
+      font-size: 27px;
       font-weight: 800;
       line-height: 1.15;
       color: #fff;
@@ -442,7 +437,7 @@
       -webkit-backdrop-filter: blur(16px);
       border-radius: 16px;
       padding: 12px 14px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
       display: flex;
       align-items: flex-start;
       gap: 12px;
@@ -452,8 +447,8 @@
       width: 36px;
       height: 36px;
       border-radius: 10px;
-      background: rgba(245, 158, 11, 0.15);
-      border: 1px solid rgba(245, 158, 11, 0.3);
+      background: rgba(245, 158, 11, 0.18);
+      border: 1px solid rgba(245, 158, 11, 0.35);
       color: #fbbf24;
       display: flex;
       align-items: center;
@@ -483,7 +478,7 @@
       display: flex;
       flex-direction: column;
       gap: 12px;
-      margin-bottom: 24px;
+      margin-bottom: 16px;
     }
 
     .timeline-card {
@@ -494,7 +489,6 @@
       border-radius: 18px;
       padding: 16px;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-      transition: transform 0.2s ease, border-color 0.2s;
     }
 
     .timeline-card-header {
@@ -518,8 +512,8 @@
       font-size: 12px;
       font-weight: 700;
       color: #38bdf8;
-      background: rgba(14, 165, 233, 0.15);
-      border: 1px solid rgba(14, 165, 233, 0.3);
+      background: rgba(14, 165, 233, 0.18);
+      border: 1px solid rgba(14, 165, 233, 0.35);
       padding: 3px 8px;
       border-radius: 6px;
     }
@@ -540,7 +534,7 @@
     }
 
     .timeline-tip-box {
-      background: rgba(0, 0, 0, 0.3);
+      background: rgba(0, 0, 0, 0.35);
       border-left: 3px solid #fbbf24;
       padding: 8px 10px;
       border-radius: 0 8px 8px 0;
@@ -562,50 +556,20 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
       color: #fff;
       padding: 7px 14px;
       border-radius: 10px;
       font-size: 12px;
       font-weight: 700;
       text-decoration: none;
-      transition: background 0.2s, transform 0.2s;
+      transition: background 0.15s, transform 0.15s;
     }
 
     .maps-btn:active {
       transform: scale(0.95);
-      background: rgba(245, 158, 11, 0.25);
-    }
-
-    /* Slide Bottom Navigation Pills */
-    .slide-footer-nav {
-      margin-top: auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-top: 10px;
-      padding-bottom: 16px;
-    }
-
-    .nav-arrow-btn {
-      background: rgba(15, 23, 42, 0.85);
-      border: 1px solid var(--card-border);
-      color: #fff;
-      padding: 10px 18px;
-      border-radius: 999px;
-      font-size: 13px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      cursor: pointer;
-      text-decoration: none;
-      backdrop-filter: blur(12px);
-    }
-
-    .nav-arrow-btn:active {
-      transform: scale(0.95);
+      background: rgba(245, 158, 11, 0.3);
     }
 
     /* Modal / Bottom Drawer for Day Selection */
@@ -615,13 +579,13 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: rgba(0, 0, 0, 0.7);
+      background: rgba(0, 0, 0, 0.75);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
       z-index: 200;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.3s ease;
+      transition: opacity 0.25s ease;
     }
 
     .drawer-backdrop.active {
@@ -653,7 +617,7 @@
     .drawer-handle {
       width: 44px;
       height: 5px;
-      background: rgba(255, 255, 255, 0.3);
+      background: rgba(255, 255, 255, 0.35);
       border-radius: 999px;
       margin: 0 auto 16px;
     }
@@ -672,7 +636,7 @@
     }
 
     .drawer-close {
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.12);
       border: none;
       color: #fff;
       width: 32px;
@@ -701,11 +665,11 @@
       cursor: pointer;
       text-decoration: none;
       color: #fff;
-      transition: background 0.2s;
+      transition: background 0.15s;
     }
 
     .drawer-item:active {
-      background: rgba(245, 158, 11, 0.2);
+      background: rgba(245, 158, 11, 0.25);
     }
 
     .drawer-item-title {
@@ -726,79 +690,6 @@
       background: rgba(245, 158, 11, 0.2);
       color: #fbbf24;
     }
-
-    /* iOS Installation Guide Modal */
-    .ios-modal {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) scale(0.9);
-      width: 90%;
-      max-width: 380px;
-      background: #0f172a;
-      border: 1px solid var(--card-border);
-      border-radius: 24px;
-      padding: 24px;
-      z-index: 250;
-      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7);
-      opacity: 0;
-      pointer-events: none;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .ios-modal.active {
-      opacity: 1;
-      pointer-events: auto;
-      transform: translate(-50%, -50%) scale(1);
-    }
-
-    .ios-modal-title {
-      font-size: 20px;
-      font-weight: 800;
-      color: #fff;
-      margin-bottom: 12px;
-      text-align: center;
-    }
-
-    .ios-step {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-
-    .ios-step-num {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      background: var(--gold-gradient);
-      color: #090d16;
-      font-weight: 800;
-      font-size: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .ios-step-text {
-      font-size: 14px;
-      color: #cbd5e1;
-      line-height: 1.4;
-    }
-
-    .ios-btn-close {
-      width: 100%;
-      background: var(--gold-gradient);
-      color: #090d16;
-      border: none;
-      padding: 12px;
-      border-radius: 12px;
-      font-weight: 800;
-      font-size: 15px;
-      cursor: pointer;
-      margin-top: 8px;
-    }
   </style>
 </head>
 <body>
@@ -808,7 +699,7 @@
     <div class="progress-fill" id="progressFill"></div>
   </div>
 
-  <!-- Top Floating Header -->
+  <!-- Top Floating Header (Crisp, High-Contrast) -->
   <header class="top-bar">
     <div class="top-bar-inner">
       <div class="nav-badge" id="navBadge" role="status" aria-live="polite">
@@ -816,8 +707,7 @@
         <span id="navBadgeText">🇹🇭 Tajlandia '27</span>
       </div>
       <div class="top-actions">
-        <button class="icon-btn" id="btnInstall" title="Dodaj do ekranu iPhone" aria-label="Instrukcja instalacji na iPhone">📲</button>
-        <button class="icon-btn" id="btnDrawer" title="Spis dni" aria-label="Otwórz spis dni">📅</button>
+        <button class="icon-btn" id="btnDrawer" title="Spis dni" aria-label="Otwórz harmonogram dni">📅</button>
       </div>
     </div>
   </header>
@@ -831,9 +721,9 @@
       <div class="slide-overlay"></div>
       <div class="slide-content">
         <div class="intro-hero">
-          <div class="intro-tag">✨ Wyprawa Życia z Żoną</div>
+          <div class="intro-tag">🌴 TAJLANDIA 2027</div>
           <h1 class="intro-title">Tajlandia 2027</h1>
-          <p class="intro-subtitle">Wyprawa Życia we Dwoje</p>
+          <p class="intro-subtitle">Bangkok • Kanchanaburi • Ko Samui</p>
 
           <!-- Live Countdown Card -->
           <div class="countdown-card">
@@ -938,7 +828,7 @@
               <span class="timeline-price-tag">W cenie rezerwacji</span>
             </div>
             <h3 class="timeline-title">Check-in w Mövenpick Sukhumvit 15</h3>
-            <p class="timeline-desc">Zameldowanie w 5★ hotelu w sercu tętniącej życiem dzielnicy Sukhumvit. Szybki relaks i odświeżenie po długim locie.</p>
+            <p class="timeline-desc">Zameldowanie w 5★ hotelu w sercu tętniącej życiem dzielnicy Sukhumvit. Szybki relaks i odświeżenie po locie.</p>
             <div class="timeline-tip-box">
               <span>💡</span>
               <div>Hotel ma świetny basen na dachu i bar Rainforest.</div>
@@ -989,12 +879,6 @@
             </div>
           </div>
 
-        </div>
-
-        <!-- Navigation footer -->
-        <div class="slide-footer-nav">
-          <button class="nav-arrow-btn" onclick="scrollToSlide(0)">⬅ Poprzedni</button>
-          <button class="nav-arrow-btn" onclick="scrollToSlide(2)">Dzień 2 ➔</button>
         </div>
 
       </div>
@@ -1145,12 +1029,6 @@
 
         </div>
 
-        <!-- Navigation footer -->
-        <div class="slide-footer-nav">
-          <button class="nav-arrow-btn" onclick="scrollToSlide(1)">⬅ Poprzedni</button>
-          <button class="nav-arrow-btn" onclick="scrollToSlide(3)">Dzień 3 ➔</button>
-        </div>
-
       </div>
     </section>
 
@@ -1297,12 +1175,6 @@
             </div>
           </div>
 
-        </div>
-
-        <!-- Navigation footer -->
-        <div class="slide-footer-nav">
-          <button class="nav-arrow-btn" onclick="scrollToSlide(2)">⬅ Poprzedni</button>
-          <button class="nav-arrow-btn" onclick="scrollToSlide(4)">Dzień 4 ➔</button>
         </div>
 
       </div>
@@ -1472,12 +1344,6 @@
 
         </div>
 
-        <!-- Navigation footer -->
-        <div class="slide-footer-nav">
-          <button class="nav-arrow-btn" onclick="scrollToSlide(3)">⬅ Poprzedni</button>
-          <button class="nav-arrow-btn" onclick="scrollToSlide(5)">Dzień 5 ➔</button>
-        </div>
-
       </div>
     </section>
 
@@ -1626,12 +1492,6 @@
 
         </div>
 
-        <!-- Navigation footer -->
-        <div class="slide-footer-nav">
-          <button class="nav-arrow-btn" onclick="scrollToSlide(4)">⬅ Poprzedni</button>
-          <button class="nav-arrow-btn" onclick="scrollToSlide(6)">Dzień 6 ➔</button>
-        </div>
-
       </div>
     </section>
 
@@ -1649,7 +1509,7 @@
             <span class="day-date-text">14 stycznia 2027 (Czwartek)</span>
           </div>
           <h2 class="day-title">Powrót na BKK ➔ Lot PG155 (14:55) ➔ Ko Samui</h2>
-          <p class="day-subtitle">Z krainy rzek do tropikalnego raju Zastoki Tajlandzkiej</p>
+          <p class="day-subtitle">Z krainy rzek do tropikalnego raju Zatoki Tajlandzkiej</p>
         </div>
 
         <!-- Hotel Card -->
@@ -1780,12 +1640,6 @@
 
         </div>
 
-        <!-- Navigation footer -->
-        <div class="slide-footer-nav">
-          <button class="nav-arrow-btn" onclick="scrollToSlide(5)">⬅ Poprzedni</button>
-          <button class="nav-arrow-btn" onclick="scrollToSlide(7)">Dzień 7 ➔</button>
-        </div>
-
       </div>
     </section>
 
@@ -1861,7 +1715,7 @@
               <span class="time-badge">15:00</span>
               <span class="timeline-price-tag">~300–400 THB / os.</span>
             </div>
-            <h3 class="timeline-title">Masaż olejkowy z żoną na plaży</h3>
+            <h3 class="timeline-title">Masaż olejkowy dla dwojga na plaży</h3>
             <p class="timeline-desc">Tradycyjny masaż kokosowy w zadaszonej altanie na piasku. Szum fal w tle tworzy najpiękniejszą muzykę relaksacyjną.</p>
             <div class="timeline-tip-box">
               <span>💡</span>
@@ -1894,12 +1748,6 @@
             </div>
           </div>
 
-        </div>
-
-        <!-- Navigation footer -->
-        <div class="slide-footer-nav">
-          <button class="nav-arrow-btn" onclick="scrollToSlide(6)">⬅ Poprzedni</button>
-          <button class="nav-arrow-btn" onclick="scrollToSlide(8)">Dzień 8 ➔</button>
         </div>
 
       </div>
@@ -2019,7 +1867,7 @@
             <p class="timeline-desc">Nastrojowy deptak w dawnej osadzie rybackiej z drewnianą architekturą, butikami i nadrzecznymi restauracjami.</p>
             <div class="timeline-tip-box">
               <span>💡</span>
-              <div>Cudowna atmosfera na wieczorny spacer we dwoje.</div>
+              <div>Cudowna atmosfera na wieczorny spacer.</div>
             </div>
             <div class="timeline-actions">
               <a href="https://www.google.com/maps/search/?api=1&query=Fisherman's+Village+Bophut" target="_blank" rel="noopener" class="maps-btn">
@@ -2048,12 +1896,6 @@
             </div>
           </div>
 
-        </div>
-
-        <!-- Navigation footer -->
-        <div class="slide-footer-nav">
-          <button class="nav-arrow-btn" onclick="scrollToSlide(7)">⬅ Poprzedni</button>
-          <button class="nav-arrow-btn" onclick="scrollToSlide(9)">Dzień 9 ➔</button>
         </div>
 
       </div>
@@ -2164,12 +2006,6 @@
             </div>
           </div>
 
-        </div>
-
-        <!-- Navigation footer -->
-        <div class="slide-footer-nav">
-          <button class="nav-arrow-btn" onclick="scrollToSlide(8)">⬅ Poprzedni</button>
-          <button class="nav-arrow-btn" onclick="scrollToSlide(10)">Dzień 10 ➔</button>
         </div>
 
       </div>
@@ -2301,12 +2137,6 @@
 
         </div>
 
-        <!-- Navigation footer -->
-        <div class="slide-footer-nav">
-          <button class="nav-arrow-btn" onclick="scrollToSlide(9)">⬅ Poprzedni</button>
-          <button class="nav-arrow-btn" onclick="scrollToSlide(11)">Dzień 11 ➔</button>
-        </div>
-
       </div>
     </section>
 
@@ -2396,12 +2226,6 @@
             </div>
           </div>
 
-        </div>
-
-        <!-- Navigation footer -->
-        <div class="slide-footer-nav">
-          <button class="nav-arrow-btn" onclick="scrollToSlide(10)">⬅ Poprzedni</button>
-          <button class="nav-arrow-btn" onclick="scrollToSlide(12)">Dzień 12 ➔</button>
         </div>
 
       </div>
@@ -2514,12 +2338,6 @@
 
         </div>
 
-        <!-- Navigation footer -->
-        <div class="slide-footer-nav">
-          <button class="nav-arrow-btn" onclick="scrollToSlide(11)">⬅ Poprzedni</button>
-          <button class="nav-arrow-btn" onclick="scrollToSlide(13)">Dzień 13 ➔</button>
-        </div>
-
       </div>
     </section>
 
@@ -2577,7 +2395,7 @@
               <span class="timeline-price-tag">Bolt ~400 THB</span>
             </div>
             <h3 class="timeline-title">Wyjazd na zachodnie wybrzeże (Lipa Noi / Taling Ngam)</h3>
-            <p class="timeline-desc">Przejazd na zachodnią stronę wyspy, gdzie słońce chowa się bezpośrednio za horyzontem Zastoki Tajlandzkiej.</p>
+            <p class="timeline-desc">Przejazd na zachodnią stronę wyspy, gdzie słońce chowa się bezpośrednio za horyzontem Zatoki Tajlandzkiej.</p>
             <div class="timeline-tip-box">
               <span>💡</span>
               <div>To tu powstają najwspanialsze zachody słońca w całej Tajlandii.</div>
@@ -2599,7 +2417,7 @@
             <p class="timeline-desc">Elegancki taras zawieszony na klifie nad morzem. Muzyka na żywo i widok na mieniące się purpurą i złotem morze.</p>
             <div class="timeline-tip-box">
               <span>💡</span>
-              <div>Niezwykle romantyczna chwila dla dwojga.</div>
+              <div>Niezwykle romantyczna chwila.</div>
             </div>
             <div class="timeline-actions">
               <a href="https://www.google.com/maps/search/?api=1&query=Air+Bar+Koh+Samui" target="_blank" rel="noopener" class="maps-btn">
@@ -2628,12 +2446,6 @@
             </div>
           </div>
 
-        </div>
-
-        <!-- Navigation footer -->
-        <div class="slide-footer-nav">
-          <button class="nav-arrow-btn" onclick="scrollToSlide(12)">⬅ Poprzedni</button>
-          <button class="nav-arrow-btn" onclick="scrollToSlide(14)">Dzień 14 ➔</button>
         </div>
 
       </div>
@@ -2725,12 +2537,6 @@
             </div>
           </div>
 
-        </div>
-
-        <!-- Navigation footer -->
-        <div class="slide-footer-nav">
-          <button class="nav-arrow-btn" onclick="scrollToSlide(13)">⬅ Poprzedni</button>
-          <button class="nav-arrow-btn" onclick="scrollToSlide(15)">Dzień 15 ➔</button>
         </div>
 
       </div>
@@ -2881,12 +2687,6 @@
 
         </div>
 
-        <!-- Navigation footer -->
-        <div class="slide-footer-nav">
-          <button class="nav-arrow-btn" onclick="scrollToSlide(14)">⬅ Poprzedni</button>
-          <button class="nav-arrow-btn" onclick="scrollToSlide(16)">Dzień 16 ➔</button>
-        </div>
-
       </div>
     </section>
 
@@ -2982,7 +2782,7 @@
               <span class="timeline-price-tag">Lot powrotny</span>
             </div>
             <h3 class="timeline-title">Wylot do Polski</h3>
-            <p class="timeline-desc">Start samolotu powrotnego. Szczęśliwy powrót do domu z tysiącem zdjęć, opalenizną i wspomnieniami na całe życie!</p>
+            <p class="timeline-desc">Start samolotu powrotnego. Szczęśliwy powrót do domu z tysiącem zdjęć, opalenizną i wspaniałymi wspomnieniami!</p>
             <div class="timeline-tip-box">
               <span>💡</span>
               <div>Khai Khup Khun Krap – dziękujemy, Tajlandio!</div>
@@ -2997,18 +2797,12 @@
 
         </div>
 
-        <!-- Navigation footer -->
-        <div class="slide-footer-nav">
-          <button class="nav-arrow-btn" onclick="scrollToSlide(15)">⬅ Poprzedni</button>
-          <button class="nav-arrow-btn" onclick="scrollToSlide(0)">Wróć na początek ↺</button>
-        </div>
-
       </div>
     </section>
 
   </main>
 
-  <!-- Backdrop for drawer and modal -->
+  <!-- Backdrop for drawer -->
   <div class="drawer-backdrop" id="backdrop"></div>
 
   <!-- Day Selection Drawer -->
@@ -3158,28 +2952,6 @@
     </div>
   </div>
 
-  <!-- iOS Install Modal -->
-  <div class="ios-modal" id="iosModal" role="dialog" aria-modal="true" aria-label="Instrukcja instalacji na iPhone">
-    <h3 class="ios-modal-title">📲 Dodaj do ekranu iPhone</h3>
-    <div class="ios-step">
-      <div class="ios-step-num">1</div>
-      <div class="ios-step-text">Otwórz tę stronę w przeglądarce <strong>Safari</strong> na swoim iPhone.</div>
-    </div>
-    <div class="ios-step">
-      <div class="ios-step-num">2</div>
-      <div class="ios-step-text">Kliknij ikonę <strong>Udostępnij</strong> na dolnym pasku (kwadrat ze strzałką w górę ⬆️).</div>
-    </div>
-    <div class="ios-step">
-      <div class="ios-step-num">3</div>
-      <div class="ios-step-text">Przewiń w dół i wybierz <strong>„Do ekranu początkowego”</strong> (Add to Home Screen).</div>
-    </div>
-    <div class="ios-step">
-      <div class="ios-step-num">4</div>
-      <div class="ios-step-text">Kliknij <strong>„Dodaj”</strong> w prawym górnym rogu. Aplikacja pojawi się obok innych apek i działa offline!</div>
-    </div>
-    <button class="ios-btn-close" id="btnCloseInstall">Rozumiem!</button>
-  </div>
-
   <script>
     // Live Countdown Timer to Departure (8 Jan 2027 00:00:00 CET)
     const departureDate = new Date('2027-01-08T00:00:00').getTime();
@@ -3214,9 +2986,11 @@
     const navBadgeText = document.getElementById('navBadgeText');
     const progressFill = document.getElementById('progressFill');
     const totalSlides = slides.length;
+    let currentSlideIndex = 0;
 
     function scrollToSlide(index) {
       if (index >= 0 && index < totalSlides) {
+        currentSlideIndex = index;
         slides[index].scrollIntoView({ behavior: 'smooth' });
       }
     }
@@ -3227,6 +3001,7 @@
         if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
           const label = entry.target.getAttribute('data-label');
           const index = parseInt(entry.target.getAttribute('data-index'), 10);
+          currentSlideIndex = index;
           if (label && navBadgeText) {
             navBadgeText.innerText = label;
           }
@@ -3242,6 +3017,48 @@
     });
 
     slides.forEach(slide => observer.observe(slide));
+
+    // SUPER SMOOTH TOUCH GESTURE ENGINE (Fixes swipe sticking on iOS)
+    let touchStartY = 0;
+    let touchStartX = 0;
+    let touchStartTime = 0;
+
+    window.addEventListener('touchstart', (e) => {
+      touchStartY = e.touches[0].clientY;
+      touchStartX = e.touches[0].clientX;
+      touchStartTime = Date.now();
+    }, { passive: true });
+
+    window.addEventListener('touchend', (e) => {
+      // Don't intercept touches if drawer is open
+      if (drawerSheet.classList.contains('active')) return;
+
+      const touchEndY = e.changedTouches[0].clientY;
+      const touchEndX = e.changedTouches[0].clientX;
+      const deltaY = touchEndY - touchStartY;
+      const deltaX = touchEndX - touchStartX;
+      const duration = Date.now() - touchStartTime;
+
+      // Must be a decisive vertical swipe
+      if (Math.abs(deltaY) > 40 && Math.abs(deltaY) > Math.abs(deltaX) * 1.2 && duration < 600) {
+        const curSlide = slides[currentSlideIndex];
+        const isAtTop = curSlide.scrollTop <= 10;
+        const isAtBottom = (curSlide.scrollHeight - curSlide.scrollTop - curSlide.clientHeight) <= 15;
+        const tappedHeaderOrBg = e.target.closest('.day-header') || e.target.closest('.hotel-card') || e.target.closest('.intro-hero') || e.target.closest('.slide-bg');
+
+        if (deltaY < -40) {
+          // Swipe UP -> Next Day
+          if (isAtBottom || tappedHeaderOrBg || currentSlideIndex === 0) {
+            scrollToSlide(currentSlideIndex + 1);
+          }
+        } else if (deltaY > 40) {
+          // Swipe DOWN -> Prev Day
+          if (isAtTop || tappedHeaderOrBg) {
+            scrollToSlide(currentSlideIndex - 1);
+          }
+        }
+      }
+    }, { passive: true });
 
     // Drawer Logic
     const backdrop = document.getElementById('backdrop');
@@ -3261,41 +3078,20 @@
 
     btnDrawer.addEventListener('click', openDrawer);
     btnCloseDrawer.addEventListener('click', closeDrawer);
+    backdrop.addEventListener('click', closeDrawer);
 
     function selectDay(index) {
       closeDrawer();
       setTimeout(() => {
         scrollToSlide(index);
-      }, 250);
+      }, 200);
     }
-
-    // iOS Install Modal Logic
-    const iosModal = document.getElementById('iosModal');
-    const btnInstall = document.getElementById('btnInstall');
-    const btnCloseInstall = document.getElementById('btnCloseInstall');
-
-    function openInstallModal() {
-      backdrop.classList.add('active');
-      iosModal.classList.add('active');
-    }
-
-    function closeInstallModal() {
-      backdrop.classList.remove('active');
-      iosModal.classList.remove('active');
-    }
-
-    btnInstall.addEventListener('click', openInstallModal);
-    btnCloseInstall.addEventListener('click', closeInstallModal);
-    backdrop.addEventListener('click', () => {
-      closeDrawer();
-      closeInstallModal();
-    });
 
     // Register Service Worker for offline capability
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js')
-          .then(reg => console.log('SW zarejestrowany pomyślnie!', reg))
+          .then(reg => console.log('SW zarejestrowany:', reg))
           .catch(err => console.log('Błąd SW:', err));
       });
     }
