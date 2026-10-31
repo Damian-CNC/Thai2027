@@ -527,37 +527,84 @@
     }
 
     /* Hotel Card - iOS Liquid Glass */
+    /* Hotel Card - iOS Liquid Glass Interactive Navigation */
     .hotel-card {
+      text-decoration: none;
+      color: inherit;
       background: rgba(15, 23, 42, 0.32);
       backdrop-filter: blur(16px) saturate(190%);
       -webkit-backdrop-filter: blur(16px) saturate(190%);
-      border: 1px solid rgba(255, 255, 255, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.20);
       border-radius: 20px;
-      padding: 14px 16px;
+      padding: 13px 16px;
       margin-bottom: 14px;
       display: flex;
-      align-items: flex-start;
+      align-items: center;
       gap: 12px;
-      box-shadow: 0 8px 28px -4px rgba(0, 0, 0, 0.4), inset 0 1px 1px 0 rgba(255, 255, 255, 0.25);
+      box-shadow: 0 8px 26px -4px rgba(0, 0, 0, 0.38), inset 0 1px 1px 0 rgba(255, 255, 255, 0.28);
+      cursor: pointer;
+      transition: transform 0.18s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.2s ease, border-color 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .hotel-card:active {
+      transform: scale(0.98);
+      background: rgba(15, 23, 42, 0.45);
+      border-color: rgba(245, 158, 11, 0.45);
     }
 
     .hotel-icon {
-      font-size: 22px;
+      font-size: 24px;
       flex-shrink: 0;
-      margin-top: 2px;
+    }
+
+    .hotel-info {
+      flex: 1;
+      min-width: 0;
     }
 
     .hotel-info-name {
       font-size: 14px;
       font-weight: 700;
-      color: #fff;
+      color: #ffffff;
+      line-height: 1.3;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
     }
 
     .hotel-info-tip {
       font-size: 12px;
-      color: var(--text-muted);
-      margin-top: 2px;
+      color: #cbd5e1;
+      margin-top: 3px;
       line-height: 1.35;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+    }
+
+    .hotel-nav-btn {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 10px;
+      background: rgba(245, 158, 11, 0.18);
+      border: 1px solid rgba(245, 158, 11, 0.40);
+      border-radius: 12px;
+      color: #fbbf24;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .hotel-card:hover .hotel-nav-btn,
+    .hotel-card:active .hotel-nav-btn {
+      background: var(--gold-gradient);
+      color: #090d16;
+      border-color: transparent;
+      box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
     }
 
     /* Timeline Items */
@@ -941,14 +988,20 @@
           <p class="day-subtitle">Przylot do Bangkoku i neonowe Chinatown</p>
         </div>
 
-        <!-- Hotel Card -->
-        <div class="hotel-card">
+        <!-- Hotel Card (Click to navigate from current location) -->
+        <a href="https://www.google.com/maps/dir/?api=1&destination=M%C3%B6venpick+Hotel+Sukhumvit+15+Bangkok" target="_blank" rel="noopener" class="hotel-card" title="Nawiguj do hotelu w Google Maps z obecnej lokalizacji">
           <div class="hotel-icon">🏨</div>
           <div class="hotel-info">
-            <div class="hotel-info-name">Mövenpick Hotel Sukhumvit 15 (5★)</div>
+            <div class="hotel-info-name">
+              <span>Mövenpick Hotel Sukhumvit 15 (5★)</span>
+            </div>
             <div class="hotel-info-tip">Darmowy tuk-tuk ze ślepej uliczki Soi 15 do stacji BTS Asok / Terminal 21.</div>
           </div>
-        </div>
+          <div class="hotel-nav-btn">
+            <span>📍</span>
+            <span>Nawiguj</span>
+          </div>
+        </a>
 
         <!-- Timeline Items -->
         <div class="timeline-container">
@@ -1051,14 +1104,20 @@
           <p class="day-subtitle">Klasyczne ikony dawnego i dzisiejszego Bangkoku</p>
         </div>
 
-        <!-- Hotel Card -->
-        <div class="hotel-card">
+        <!-- Hotel Card (Click to navigate from current location) -->
+        <a href="https://www.google.com/maps/dir/?api=1&destination=M%C3%B6venpick+Hotel+Sukhumvit+15+Bangkok" target="_blank" rel="noopener" class="hotel-card" title="Nawiguj do hotelu w Google Maps z obecnej lokalizacji">
           <div class="hotel-icon">🏨</div>
           <div class="hotel-info">
-            <div class="hotel-info-name">Mövenpick Hotel Sukhumvit 15</div>
+            <div class="hotel-info-name">
+              <span>Mövenpick Hotel Sukhumvit 15</span>
+            </div>
             <div class="hotel-info-tip">Śniadanie o 07:15 – startujemy w miasto o 07:45!</div>
           </div>
-        </div>
+          <div class="hotel-nav-btn">
+            <span>📍</span>
+            <span>Nawiguj</span>
+          </div>
+        </a>
 
         <!-- Timeline Items -->
         <div class="timeline-container">
@@ -1199,14 +1258,20 @@
           <p class="day-subtitle">Sekrety jedwabiu, tradycyjny transport i luksus nad rzeką</p>
         </div>
 
-        <!-- Hotel Card -->
-        <div class="hotel-card">
+        <!-- Hotel Card (Click to navigate from current location) -->
+        <a href="https://www.google.com/maps/dir/?api=1&destination=M%C3%B6venpick+Hotel+Sukhumvit+15+Bangkok" target="_blank" rel="noopener" class="hotel-card" title="Nawiguj do hotelu w Google Maps z obecnej lokalizacji">
           <div class="hotel-icon">🏨</div>
           <div class="hotel-info">
-            <div class="hotel-info-name">Mövenpick Hotel Sukhumvit 15</div>
+            <div class="hotel-info-name">
+              <span>Mövenpick Hotel Sukhumvit 15</span>
+            </div>
             <div class="hotel-info-tip">Codziennie w godz. 16:00–17:00 w hotelu trwa bezpłatny Chocolate Hour!</div>
           </div>
-        </div>
+          <div class="hotel-nav-btn">
+            <span>📍</span>
+            <span>Nawiguj</span>
+          </div>
+        </a>
 
         <!-- Timeline Items -->
         <div class="timeline-container">
@@ -1347,14 +1412,20 @@
           <p class="day-subtitle">Kolej przecinająca stragany, gigantyczny Budda i Most na rzece Kwai</p>
         </div>
 
-        <!-- Hotel Card -->
-        <div class="hotel-card">
+        <!-- Hotel Card (Click to navigate from current location) -->
+        <a href="https://www.google.com/maps/dir/?api=1&destination=Hilltop+Erawan+Camp+Kanchanaburi" target="_blank" rel="noopener" class="hotel-card" title="Nawiguj do hotelu w Google Maps z obecnej lokalizacji">
           <div class="hotel-icon">🏨</div>
           <div class="hotel-info">
-            <div class="hotel-info-name">Hilltop Erawan Camp (Tha Kradan, Si Sawat)</div>
+            <div class="hotel-info-name">
+              <span>Hilltop Erawan Camp (Tha Kradan, Si Sawat)</span>
+            </div>
             <div class="hotel-info-tip">Glamping na wzgórzu z panoramicznym widokiem na jezioro Srinakarin i góry.</div>
           </div>
-        </div>
+          <div class="hotel-nav-btn">
+            <span>📍</span>
+            <span>Nawiguj</span>
+          </div>
+        </a>
 
         <!-- Timeline Items -->
         <div class="timeline-container">
@@ -1514,14 +1585,20 @@
           <p class="day-subtitle">Kąpiele w 7 turkusowych kaskadach i nocleg nad samą taflą wody</p>
         </div>
 
-        <!-- Hotel Card -->
-        <div class="hotel-card">
+        <!-- Hotel Card (Click to navigate from current location) -->
+        <a href="https://www.google.com/maps/dir/?api=1&destination=Lake+Hill+Kanchanaburi+Resort" target="_blank" rel="noopener" class="hotel-card" title="Nawiguj do hotelu w Google Maps z obecnej lokalizacji">
           <div class="hotel-icon">🏨</div>
           <div class="hotel-info">
-            <div class="hotel-info-name">Lake Hill Kanchanaburi Resort (Tha Kradan)</div>
+            <div class="hotel-info-name">
+              <span>Lake Hill Kanchanaburi Resort (Tha Kradan)</span>
+            </div>
             <div class="hotel-info-tip">Pokoje/domki nad samym jeziorem, darmowe kajaki i prywatny pomost do wody.</div>
           </div>
-        </div>
+          <div class="hotel-nav-btn">
+            <span>📍</span>
+            <span>Nawiguj</span>
+          </div>
+        </a>
 
         <!-- Timeline Items -->
         <div class="timeline-container">
@@ -1662,14 +1739,20 @@
           <p class="day-subtitle">Z krainy rzek do tropikalnego raju Zatoki Tajlandzkiej</p>
         </div>
 
-        <!-- Hotel Card -->
-        <div class="hotel-card">
+        <!-- Hotel Card (Click to navigate from current location) -->
+        <a href="https://www.google.com/maps/dir/?api=1&destination=Impiana+Resort+Chaweng+Noi+Koh+Samui" target="_blank" rel="noopener" class="hotel-card" title="Nawiguj do hotelu w Google Maps z obecnej lokalizacji">
           <div class="hotel-icon">🏨</div>
           <div class="hotel-info">
-            <div class="hotel-info-name">Impiana Resort Chaweng Noi (4★)</div>
+            <div class="hotel-info-name">
+              <span>Impiana Resort Chaweng Noi (4★)</span>
+            </div>
             <div class="hotel-info-tip">Bezpośrednio przy plaży Chaweng Noi – najdrobniejszy, jasny piasek na wyspie.</div>
           </div>
-        </div>
+          <div class="hotel-nav-btn">
+            <span>📍</span>
+            <span>Nawiguj</span>
+          </div>
+        </a>
 
         <!-- Timeline Items -->
         <div class="timeline-container">
@@ -1810,14 +1893,20 @@
           <p class="day-subtitle">Brak budzika, ciepłe morze i masaże pod palmami</p>
         </div>
 
-        <!-- Hotel Card -->
-        <div class="hotel-card">
+        <!-- Hotel Card (Click to navigate from current location) -->
+        <a href="https://www.google.com/maps/dir/?api=1&destination=Impiana+Resort+Chaweng+Noi+Koh+Samui" target="_blank" rel="noopener" class="hotel-card" title="Nawiguj do hotelu w Google Maps z obecnej lokalizacji">
           <div class="hotel-icon">🏨</div>
           <div class="hotel-info">
-            <div class="hotel-info-name">Impiana Resort Chaweng Noi</div>
+            <div class="hotel-info-name">
+              <span>Impiana Resort Chaweng Noi</span>
+            </div>
             <div class="hotel-info-tip">Śniadanie serwowane jest na zadaszonym tarasie nad samym morzem.</div>
           </div>
-        </div>
+          <div class="hotel-nav-btn">
+            <span>📍</span>
+            <span>Nawiguj</span>
+          </div>
+        </a>
 
         <!-- Timeline Items -->
         <div class="timeline-container">
@@ -1920,14 +2009,20 @@
           <p class="day-subtitle">Kultura wyspy, niezwykłe skały i legendarny pokaz ognia</p>
         </div>
 
-        <!-- Hotel Card -->
-        <div class="hotel-card">
+        <!-- Hotel Card (Click to navigate from current location) -->
+        <a href="https://www.google.com/maps/dir/?api=1&destination=Impiana+Resort+Chaweng+Noi+Koh+Samui" target="_blank" rel="noopener" class="hotel-card" title="Nawiguj do hotelu w Google Maps z obecnej lokalizacji">
           <div class="hotel-icon">🏨</div>
           <div class="hotel-info">
-            <div class="hotel-info-name">Impiana Resort Chaweng Noi</div>
+            <div class="hotel-info-name">
+              <span>Impiana Resort Chaweng Noi</span>
+            </div>
             <div class="hotel-info-tip">Transport: małe auto na ten dzień lub aplikacja Bolt.</div>
           </div>
-        </div>
+          <div class="hotel-nav-btn">
+            <span>📍</span>
+            <span>Nawiguj</span>
+          </div>
+        </a>
 
         <!-- Timeline Items -->
         <div class="timeline-container">
@@ -2068,14 +2163,20 @@
           <p class="day-subtitle">Krystaliczna zatoka Crystal Bay i snorkeling z brzegu</p>
         </div>
 
-        <!-- Hotel Card -->
-        <div class="hotel-card">
+        <!-- Hotel Card (Click to navigate from current location) -->
+        <a href="https://www.google.com/maps/dir/?api=1&destination=Impiana+Resort+Chaweng+Noi+Koh+Samui" target="_blank" rel="noopener" class="hotel-card" title="Nawiguj do hotelu w Google Maps z obecnej lokalizacji">
           <div class="hotel-icon">🏨</div>
           <div class="hotel-info">
-            <div class="hotel-info-name">Impiana Resort Chaweng Noi</div>
+            <div class="hotel-info-name">
+              <span>Impiana Resort Chaweng Noi</span>
+            </div>
             <div class="hotel-info-tip">Zaledwie 7 minut jazdy samochodem lub Boltem z Waszego hotelu!</div>
           </div>
-        </div>
+          <div class="hotel-nav-btn">
+            <span>📍</span>
+            <span>Nawiguj</span>
+          </div>
+        </a>
 
         <!-- Timeline Items -->
         <div class="timeline-container">
@@ -2178,14 +2279,20 @@
           <p class="day-subtitle">Archipelag 42 bezludnych wysp, Szmaragdowe Jezioro i kajaki</p>
         </div>
 
-        <!-- Hotel Card -->
-        <div class="hotel-card">
+        <!-- Hotel Card (Click to navigate from current location) -->
+        <a href="https://www.google.com/maps/dir/?api=1&destination=Impiana+Resort+Chaweng+Noi+Koh+Samui" target="_blank" rel="noopener" class="hotel-card" title="Nawiguj do hotelu w Google Maps z obecnej lokalizacji">
           <div class="hotel-icon">🏨</div>
           <div class="hotel-info">
-            <div class="hotel-info-name">Impiana Resort Chaweng Noi</div>
+            <div class="hotel-info-name">
+              <span>Impiana Resort Chaweng Noi</span>
+            </div>
             <div class="hotel-info-tip">Wycieczkę motorówką zarezerwujcie 2 dni wcześniej w recepcji lub na Klook.</div>
           </div>
-        </div>
+          <div class="hotel-nav-btn">
+            <span>📍</span>
+            <span>Nawiguj</span>
+          </div>
+        </a>
 
         <!-- Timeline Items -->
         <div class="timeline-container">
@@ -2307,14 +2414,20 @@
           <p class="day-subtitle">Królewski rytuał dla dwojga i oaza spokoju na północy</p>
         </div>
 
-        <!-- Hotel Card -->
-        <div class="hotel-card">
+        <!-- Hotel Card (Click to navigate from current location) -->
+        <a href="https://www.google.com/maps/dir/?api=1&destination=Impiana+Resort+Chaweng+Noi+Koh+Samui" target="_blank" rel="noopener" class="hotel-card" title="Nawiguj do hotelu w Google Maps z obecnej lokalizacji">
           <div class="hotel-icon">🏨</div>
           <div class="hotel-info">
-            <div class="hotel-info-name">Impiana Resort Chaweng Noi</div>
+            <div class="hotel-info-name">
+              <span>Impiana Resort Chaweng Noi</span>
+            </div>
             <div class="hotel-info-tip">Pakiet spa warto zarezerwować dzień wcześniej.</div>
           </div>
-        </div>
+          <div class="hotel-nav-btn">
+            <span>📍</span>
+            <span>Nawiguj</span>
+          </div>
+        </a>
 
         <!-- Timeline Items -->
         <div class="timeline-container">
@@ -2398,14 +2511,20 @@
           <p class="day-subtitle">Kąpiel w basenie skalnym i tajemniczy Secret Buddha Garden</p>
         </div>
 
-        <!-- Hotel Card -->
-        <div class="hotel-card">
+        <!-- Hotel Card (Click to navigate from current location) -->
+        <a href="https://www.google.com/maps/dir/?api=1&destination=Impiana+Resort+Chaweng+Noi+Koh+Samui" target="_blank" rel="noopener" class="hotel-card" title="Nawiguj do hotelu w Google Maps z obecnej lokalizacji">
           <div class="hotel-icon">🏨</div>
           <div class="hotel-info">
-            <div class="hotel-info-name">Impiana Resort Chaweng Noi</div>
+            <div class="hotel-info-name">
+              <span>Impiana Resort Chaweng Noi</span>
+            </div>
             <div class="hotel-info-tip">Dzień pełen zieleni i górskiego chłodu we wnętrzu wyspy.</div>
           </div>
-        </div>
+          <div class="hotel-nav-btn">
+            <span>📍</span>
+            <span>Nawiguj</span>
+          </div>
+        </a>
 
         <!-- Timeline Items -->
         <div class="timeline-container">
@@ -2508,14 +2627,20 @@
           <p class="day-subtitle">Kameralna zatoczka i pożegnanie dnia w Lipa Noi</p>
         </div>
 
-        <!-- Hotel Card -->
-        <div class="hotel-card">
+        <!-- Hotel Card (Click to navigate from current location) -->
+        <a href="https://www.google.com/maps/dir/?api=1&destination=Impiana+Resort+Chaweng+Noi+Koh+Samui" target="_blank" rel="noopener" class="hotel-card" title="Nawiguj do hotelu w Google Maps z obecnej lokalizacji">
           <div class="hotel-icon">🏨</div>
           <div class="hotel-info">
-            <div class="hotel-info-name">Impiana Resort Chaweng Noi</div>
+            <div class="hotel-info-name">
+              <span>Impiana Resort Chaweng Noi</span>
+            </div>
             <div class="hotel-info-tip">Zatoczka Coral Cove znajduje się dosłownie 3 minuty od Chaweng Noi.</div>
           </div>
-        </div>
+          <div class="hotel-nav-btn">
+            <span>📍</span>
+            <span>Nawiguj</span>
+          </div>
+        </a>
 
         <!-- Timeline Items -->
         <div class="timeline-container">
@@ -2618,14 +2743,20 @@
           <p class="day-subtitle">Bliskie spotkanie z olbrzymami i sekrety tajskich przypraw</p>
         </div>
 
-        <!-- Hotel Card -->
-        <div class="hotel-card">
+        <!-- Hotel Card (Click to navigate from current location) -->
+        <a href="https://www.google.com/maps/dir/?api=1&destination=Impiana+Resort+Chaweng+Noi+Koh+Samui" target="_blank" rel="noopener" class="hotel-card" title="Nawiguj do hotelu w Google Maps z obecnej lokalizacji">
           <div class="hotel-icon">🏨</div>
           <div class="hotel-info">
-            <div class="hotel-info-name">Impiana Resort Chaweng Noi</div>
+            <div class="hotel-info-name">
+              <span>Impiana Resort Chaweng Noi</span>
+            </div>
             <div class="hotel-info-tip">Ostatnia noc na Ko Samui – jutro powrót do Bangkoku!</div>
           </div>
-        </div>
+          <div class="hotel-nav-btn">
+            <span>📍</span>
+            <span>Nawiguj</span>
+          </div>
+        </a>
 
         <!-- Timeline Items -->
         <div class="timeline-container">
@@ -2709,14 +2840,20 @@
           <p class="day-subtitle">Apartament nad rzeką i legendarny Sky Bar na 63. piętrze</p>
         </div>
 
-        <!-- Hotel Card -->
-        <div class="hotel-card">
+        <!-- Hotel Card (Click to navigate from current location) -->
+        <a href="https://www.google.com/maps/dir/?api=1&destination=lebua+at+State+Tower+Bangkok" target="_blank" rel="noopener" class="hotel-card" title="Nawiguj do hotelu w Google Maps z obecnej lokalizacji">
           <div class="hotel-icon">🏨</div>
           <div class="hotel-info">
-            <div class="hotel-info-name">lebua at State Tower Bangkok (5★ Luxury)</div>
+            <div class="hotel-info-name">
+              <span>lebua at State Tower Bangkok (5★ Luxury)</span>
+            </div>
             <div class="hotel-info-tip">The Dome & Sky Bar na 63. piętrze – sceneria z filmu Kac Vegas w Bangkoku!</div>
           </div>
-        </div>
+          <div class="hotel-nav-btn">
+            <span>📍</span>
+            <span>Nawiguj</span>
+          </div>
+        </a>
 
         <!-- Timeline Items -->
         <div class="timeline-container">
@@ -2857,14 +2994,20 @@
           <p class="day-subtitle">Królewskie śniadanie i lot powrotny z BKK o 10:50</p>
         </div>
 
-        <!-- Hotel Card -->
-        <div class="hotel-card">
+        <!-- Hotel Card (Click to navigate from current location) -->
+        <a href="https://www.google.com/maps/dir/?api=1&destination=Suvarnabhumi+Airport+Bangkok" target="_blank" rel="noopener" class="hotel-card" title="Nawiguj do hotelu w Google Maps z obecnej lokalizacji">
           <div class="hotel-icon">🏨</div>
           <div class="hotel-info">
-            <div class="hotel-info-name">Wylot do Polski</div>
+            <div class="hotel-info-name">
+              <span>Wylot do Polski</span>
+            </div>
             <div class="hotel-info-tip">Bądźcie na lotnisku BKK o 08:00 (dokładnie 2h50m przed startem).</div>
           </div>
-        </div>
+          <div class="hotel-nav-btn">
+            <span>📍</span>
+            <span>Nawiguj</span>
+          </div>
+        </a>
 
         <!-- Timeline Items -->
         <div class="timeline-container">
@@ -3331,7 +3474,7 @@
       });
 
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=17')
+        navigator.serviceWorker.register('./sw.js?v=18')
           .then(reg => {
             console.log('SW registered');
             reg.update();

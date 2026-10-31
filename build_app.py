@@ -1,4 +1,4 @@
-import sys, os, json
+import sys, os, json, urllib.parse, re
 
 slides_data = [
     {
@@ -1434,37 +1434,84 @@ html_head = """<!DOCTYPE html>
     }
 
     /* Hotel Card - iOS Liquid Glass */
+    /* Hotel Card - iOS Liquid Glass Interactive Navigation */
     .hotel-card {
+      text-decoration: none;
+      color: inherit;
       background: rgba(15, 23, 42, 0.32);
       backdrop-filter: blur(16px) saturate(190%);
       -webkit-backdrop-filter: blur(16px) saturate(190%);
-      border: 1px solid rgba(255, 255, 255, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.20);
       border-radius: 20px;
-      padding: 14px 16px;
+      padding: 13px 16px;
       margin-bottom: 14px;
       display: flex;
-      align-items: flex-start;
+      align-items: center;
       gap: 12px;
-      box-shadow: 0 8px 28px -4px rgba(0, 0, 0, 0.4), inset 0 1px 1px 0 rgba(255, 255, 255, 0.25);
+      box-shadow: 0 8px 26px -4px rgba(0, 0, 0, 0.38), inset 0 1px 1px 0 rgba(255, 255, 255, 0.28);
+      cursor: pointer;
+      transition: transform 0.18s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.2s ease, border-color 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .hotel-card:active {
+      transform: scale(0.98);
+      background: rgba(15, 23, 42, 0.45);
+      border-color: rgba(245, 158, 11, 0.45);
     }
 
     .hotel-icon {
-      font-size: 22px;
+      font-size: 24px;
       flex-shrink: 0;
-      margin-top: 2px;
+    }
+
+    .hotel-info {
+      flex: 1;
+      min-width: 0;
     }
 
     .hotel-info-name {
       font-size: 14px;
       font-weight: 700;
-      color: #fff;
+      color: #ffffff;
+      line-height: 1.3;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
     }
 
     .hotel-info-tip {
       font-size: 12px;
-      color: var(--text-muted);
-      margin-top: 2px;
+      color: #cbd5e1;
+      margin-top: 3px;
       line-height: 1.35;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+    }
+
+    .hotel-nav-btn {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 10px;
+      background: rgba(245, 158, 11, 0.18);
+      border: 1px solid rgba(245, 158, 11, 0.40);
+      border-radius: 12px;
+      color: #fbbf24;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .hotel-card:hover .hotel-nav-btn,
+    .hotel-card:active .hotel-nav-btn {
+      background: var(--gold-gradient);
+      color: #090d16;
+      border-color: transparent;
+      box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
     }
 
     /* Timeline Items */
@@ -1833,6 +1880,26 @@ for idx, s in enumerate(slides_data):
         slide_idx = day_num
 
 
+                # Determine hotel destination query for Google Maps navigation
+        hotel_name = s.get("hotel", "")
+        if "Mövenpick" in hotel_name:
+            hotel_query = "Mövenpick Hotel Sukhumvit 15 Bangkok"
+        elif "Hilltop Erawan" in hotel_name:
+            hotel_query = "Hilltop Erawan Camp Kanchanaburi"
+        elif "Lake Hill" in hotel_name:
+            hotel_query = "Lake Hill Kanchanaburi Resort"
+        elif "Impiana" in hotel_name:
+            hotel_query = "Impiana Resort Chaweng Noi Koh Samui"
+        elif "lebua" in hotel_name:
+            hotel_query = "lebua at State Tower Bangkok"
+        elif "Wylot" in hotel_name or "Lotnisko" in hotel_name:
+            hotel_query = "Suvarnabhumi Airport Bangkok"
+        else:
+            hotel_query = re.sub(r'\(.*?\)', '', hotel_name).strip()
+
+        encoded_hotel_query = urllib.parse.quote_plus(hotel_query)
+        hotel_maps_url = f"https://www.google.com/maps/dir/?api=1&destination={encoded_hotel_query}"
+
         html_body_slides += f"""
     <!-- SLIDE {slide_idx}: DZIEŃ {day_num} -->
     <section class="slide{is_active}" id="{s["id"]}" data-index="{slide_idx}" data-label="Dzień {day_num} / 16 • {s["badgeDate"]}">
@@ -1849,14 +1916,20 @@ for idx, s in enumerate(slides_data):
           <p class="day-subtitle">{s["subtitle"]}</p>
         </div>
 
-        <!-- Hotel Card -->
-        <div class="hotel-card">
+        <!-- Hotel Card (Click to navigate from current location) -->
+        <a href="{hotel_maps_url}" target="_blank" rel="noopener" class="hotel-card" title="Nawiguj do hotelu w Google Maps z obecnej lokalizacji">
           <div class="hotel-icon">🏨</div>
           <div class="hotel-info">
-            <div class="hotel-info-name">{s["hotel"]}</div>
+            <div class="hotel-info-name">
+              <span>{s["hotel"]}</span>
+            </div>
             <div class="hotel-info-tip">{s["hotelTip"]}</div>
           </div>
-        </div>
+          <div class="hotel-nav-btn">
+            <span>📍</span>
+            <span>Nawiguj</span>
+          </div>
+        </a>
 
         <!-- Timeline Items -->
         <div class="timeline-container">
@@ -2160,7 +2233,7 @@ html_drawer_and_script += """
       });
 
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=17')
+        navigator.serviceWorker.register('./sw.js?v=18')
           .then(reg => {
             console.log('SW registered');
             reg.update();
