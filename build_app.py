@@ -1244,10 +1244,10 @@ html_head = """<!DOCTYPE html>
     .countdown-card {
       width: 100%;
       max-width: 360px;
-      background: rgba(15, 23, 42, 0.32);
-      backdrop-filter: blur(16px) saturate(190%);
-      -webkit-backdrop-filter: blur(16px) saturate(190%);
-      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: rgba(11, 18, 33, 0.52);
+      backdrop-filter: blur(28px) saturate(180%);
+      -webkit-backdrop-filter: blur(28px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.20);
       border-radius: 26px;
       padding: 20px;
       margin-top: 4px;
@@ -1438,9 +1438,9 @@ html_head = """<!DOCTYPE html>
     .hotel-card {
       text-decoration: none;
       color: inherit;
-      background: rgba(15, 23, 42, 0.32);
-      backdrop-filter: blur(16px) saturate(190%);
-      -webkit-backdrop-filter: blur(16px) saturate(190%);
+      background: rgba(11, 18, 33, 0.52);
+      backdrop-filter: blur(28px) saturate(180%);
+      -webkit-backdrop-filter: blur(28px) saturate(180%);
       border: 1px solid rgba(255, 255, 255, 0.20);
       border-radius: 20px;
       padding: 13px 16px;
@@ -1514,6 +1514,53 @@ html_head = """<!DOCTYPE html>
       box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
     }
 
+    
+    /* Camera Advice Badges (Canon EOS R10) */
+    .camera-badge {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 14px;
+      font-size: 12px;
+      line-height: 1.45;
+      margin-top: 10px;
+      margin-bottom: 2px;
+      box-sizing: border-box;
+    }
+
+    .camera-badge strong {
+      font-weight: 700;
+    }
+
+    .camera-badge.camera-take {
+      background: rgba(16, 185, 129, 0.16);
+      border: 1px solid rgba(16, 185, 129, 0.42);
+      color: #a7f3d0;
+      box-shadow: 0 2px 10px rgba(16, 185, 129, 0.15);
+    }
+
+    .camera-badge.camera-take .camera-icon {
+      font-size: 16px;
+      line-height: 1;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .camera-badge.camera-risk {
+      background: rgba(239, 68, 68, 0.18);
+      border: 1px solid rgba(239, 68, 68, 0.45);
+      color: #fecaca;
+      box-shadow: 0 2px 10px rgba(239, 68, 68, 0.18);
+    }
+
+    .camera-badge.camera-risk .camera-icon {
+      font-size: 16px;
+      line-height: 1;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
     /* Timeline Items */
     .timeline-container {
       display: flex;
@@ -1523,13 +1570,13 @@ html_head = """<!DOCTYPE html>
     }
 
     .timeline-card {
-      background: rgba(15, 23, 42, 0.32);
-      backdrop-filter: blur(16px) saturate(190%);
-      -webkit-backdrop-filter: blur(16px) saturate(190%);
-      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: rgba(11, 18, 33, 0.52);
+      backdrop-filter: blur(28px) saturate(180%);
+      -webkit-backdrop-filter: blur(28px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.20);
       border-radius: 22px;
       padding: 16px 18px;
-      box-shadow: 0 10px 32px -4px rgba(0, 0, 0, 0.45), inset 0 1px 1px 0 rgba(255, 255, 255, 0.25);
+      box-shadow: 0 10px 32px -4px rgba(0, 0, 0, 0.48), inset 0 1px 1px 0 rgba(255, 255, 255, 0.28);
     }
 
     .timeline-card-header {
@@ -1814,6 +1861,8 @@ html_static_bgs += """    <div class="static-bg-overlay"></div>
   </div>
 """
 
+camera_rules = {'Chinatown (Yaowarat Road)': ('take', 'Weź R10 – kultowe neony, dynamiczny street photo i parujące woki na długim czasie naświetlania.'), 'Drink nad rzeką Chao Phraya': ('take', 'Weź R10 – nastrojowo oświetlona rzeka i barki nocą.'), 'Wielki Pałac Królewski & Wat Phra Kaew': ('take', 'Weź R10 – złote dachy, bogate mozaiki i rzeźby strażników Yaksha. Mistrzostwo dla matrycy R10.'), 'Wat Pho – Leżący Budda': ('take', 'Weź R10 – potężny 46-metrowy Budda i rzeźbione perłowe stopy.'), 'Przeprawa promem i Wat Arun (Świątynia Świtu)': ('take', 'Weź R10 – unikalne ceramiczne zdobienia i strome wieże nad rzeką.'), 'Prywatny rejs łodzią z długim ogonem (Khlongs)': ('risk', 'Ryzyko zalania R10 – woda z rzeki Chao Phraya pryska przy falach i mijaniu barek. Schowaj aparat do plecaka!'), 'Mahanakhon SkyWalk (314 m) na zachód słońca': ('take', 'Must-have dla R10 – złota godzina, zachód słońca nad drapaczami chmur i szklana platforma widokowa.'), 'Tichuca Rooftop Bar': ('take', 'Weź R10 – świecące neonowe drzewo i spektakularna nocna panorama Bangkoku.'), 'Wat Saket (Złota Góra / Golden Mount)': ('take', 'Weź R10 – 360° panorama starego Bangkoku ze szczytu zielonego wzgórza.'), 'Dom Jima Thompsona (Jim Thompson House)': ('take', 'Weź R10 – tradycyjna architektura z drewna tekowego w tropikalnym ogrodzie.'), 'Rejs lokalnym tramwajem po kanale Khlong Saen Saep': ('risk', 'Ryzyko zalania R10 – brudna woda z kanału chlapie przez plandeki. Schowaj aparat głęboko do torby!'), 'ICONSIAM & SookSiam (Obiad)': ('take', 'Weź R10 – kryty tradycyjny market i efektowne dekoracje wodne.'), 'Nocny targ Jodd Fairs Rama 9': ('take', 'Weź R10 – żywe kolory, street food i słynne żebra wulkaniczne (Leng Saap).'), 'Maeklong Railway Market (Targ na Torach)': ('take', 'Kadr życia dla R10 – pociąg przejeżdżający dosłownie centymetry od straganów i obiektywu!'), 'Świątynia Wat Tham Suea (Tiger Cave Temple)': ('take', 'Weź R10 – olbrzymi 18-metrowy złoty Budda i soczyście zielone pola ryżowe ze szczytu.'), 'Most na rzece Kwai w Kanchanaburi': ('take', 'Weź R10 – historyczna stalowa konstrukcja mostu i dżungla nad rzeką.'), 'Check-in w Hilltop Erawan Camp': ('take', 'Weź R10 – panoramiczny zachód słońca nad jeziorem Srinakarin i czyste, rozgwieżdżone niebo nocą.'), 'Park Narodowy Erawan (Wodospady 1–7)': ('risk', 'Wysokie ryzyko zalania R10 – pył wodny przy kaskadach, wilgoć, śliskie wapienie i kąpiele. R10 nie ma uszczelnień – zostaw w aucie lub zapakuj w worek wodoszczelny!'), 'Zapora Srinakarin & Punkt Widokowy': ('take', 'Weź R10 – ogromna tafla wody jeziora i zielone wzgórza Kanchanaburi.'), 'Check-in w Lake Hill Kanchanaburi Resort': ('risk', 'Ryzyko zalania R10 – na kajaki po głębokim jeziorze nie bierz aparatu bez twardego etui wodoodpornego!'), 'Check-in w Impiana Resort Chaweng Noi': ('take', 'Weź R10 – widok na turkusową Zatokę Tajlandzką i jasny piasek tuż pod palmami.'), 'Powitalna kolacja na piasku': ('take', 'Weź R10 – romantyczne latarnie i kolacja przy samym brzegu morza.'), 'Kąpiele i plażowanie na Chaweng Noi': ('risk', 'Ryzyko zalania R10 – słona morska woda i drobny piasek. Do fal wchodź tylko z telefonem / kamerą wodoodporną!'), 'Wielki Budda (Wat Phra Yai)': ('take', 'Weź R10 – 12-metrowy złoty Budda górujący nad morzem na tle błękitnego nieba.'), 'Wat Plai Laem – Świątynia na Jeziorze': ('take', 'Weź R10 – 18-ramienna bogini Guanyin na tafli jeziora, wspaniałe odbicia i kolory.'), 'Obiad w The Jungle Club z widokiem': ('take', 'Weź R10 – pocztówkowy, zapierający dech widok na całą zatokę Chaweng z 300 metrów.'), 'Skały Hin Ta & Hin Yai (Dziadek i Babcia)': ('take', 'Weź R10 – rzeźbione skały granitowe (zachowaj bezpieczny dystans od rozbijających się fal).'), "Fisherman's Village w Bophut": ('take', 'Weź R10 – klimatyczna drewniana uliczka handlowa i zachód słońca.'), "Coco Tam's & Fire Show na plaży": ('take', 'Must-have dla R10 – spektakularny taniec z ogniem i snopy iskier na plaży. Rewelacyjne zdjęcia w ruchu!'), 'Snorkeling wśród granitowych skał': ('risk', 'Ryzyko zalania R10 – wchodzenie do wody ze sprzętem ABC. Zostaw aparat w cieniu na plaży.'), 'Punkt widokowy Pha Jun Jaras (Koh Wua Talap)': ('take', 'Kadr całego wyjazdu dla R10 – panorama 42 wysp Ang Thong! (Uwaga: na czas rejsu schowaj w szczelny dry-bag).'), 'Szmaragdowa Laguna (Emerald Lake / Talay Nai)': ('take', 'Weź R10 – ukryte szmaragdowe jezioro wewnątrz krateru otoczonego klifami.'), 'Kajaki morskie i snorkeling w jaskiniach': ('risk', 'Ekstremalne ryzyko zalania R10 – morskie fale, woda w kajaku i przesiadki. Aparat bezwzględnie zostaw na pokładzie głównej łodzi!'), 'Plaża Mae Nam – Ucieczka od Zgiełku': ('take', 'Weź R10 – cicha, szeroka plaża bez tłumów, pochylone palmy kokosowe.'), 'Wodospady Na Muang 1 i 2': ('risk', 'Ryzyko zalania R10 – wilgoć, mgła wodna przy kaskadzie i śliskie, błotniste podejście w dżungli.'), 'Tarnim Magic Garden (Secret Buddha Garden)': ('take', 'Weź R10 – mistyczne kamienne rzeźby w chłodnej górskiej dżungli porośnięte mchem.'), 'Lunch w restauracji Giant Summit': ('take', 'Weź R10 – potężna panorama z najwyższego punktu widokowego wyspy.'), 'Zatoczka Coral Cove': ('risk', 'Ryzyko zalania R10 – silne fale rozbijające się o skały przy brzegu. Nie podchodź z aparatem blisko wody.'), 'Drink w Air Bar (InterContinental)': ('take', 'Najlepszy zachód słońca na Samui dla R10 – podwieszana platforma na klifie i niebo w odcieniach purpury.'), 'Samui Elephant Sanctuary (Etyczne Sanktuarium)': ('take', 'Must-have dla R10 – wspaniałe portrety słoni w naturalnym otoczeniu i kąpiele błotne.'), 'Warsztaty Gotowania Kuchni Tajskiej dla Par': ('take', 'Weź R10 – kolorowe świeże zioła, ogień z woka i wspólne pamiątkowe zdjęcia z żoną.'), 'The Dome at lebua: Toast w Sky Barze': ('take', 'Ikona Bangkoku dla R10 – złota kopuła lebua i morze świateł 250 m nad stolicą Tajlandii.'), 'Wykwintna Pożegnalna Kolacja': ('take', 'Weź R10 – elegancki wieczór i finałowe kadry z wyprawy życia.')}
+
 html_body_slides = ""
 for idx, s in enumerate(slides_data):
     is_active = " active" if idx == 0 else ""
@@ -1823,7 +1872,6 @@ for idx, s in enumerate(slides_data):
     <section class="slide{is_active}" id="slide-intro" data-index="0" data-label="🇹🇭 Start">
       <div class="slide-content">
         <div class="intro-hero">
-          <div class="intro-tag">🌴 TAJLANDIA 2027</div>
           <h1 class="intro-title">{s["title"]}</h1>
           <p class="intro-subtitle">{s["subtitle"]}</p>
 
@@ -1937,6 +1985,24 @@ for idx, s in enumerate(slides_data):
         for it in s["items"]:
             encoded_query = it["query"].replace(" ", "+")
             maps_url = f"https://www.google.com/maps/search/?api=1&query={encoded_query}"
+            # Check camera recommendation for Canon R10
+            cam_badge_html = ""
+            for rule_title, (cam_type, cam_note) in camera_rules.items():
+                if rule_title in it["title"]:
+                    if cam_type == "take":
+                        cam_badge_html = f'''
+            <div class="camera-badge camera-take">
+              <span class="camera-icon">📷</span>
+              <div><strong>Aparat R10:</strong> {cam_note}</div>
+            </div>'''
+                    else:
+                        cam_badge_html = f'''
+            <div class="camera-badge camera-risk">
+              <span class="camera-icon">🚫📷</span>
+              <div><strong>Ryzyko zalania R10:</strong> {cam_note}</div>
+            </div>'''
+                    break
+
             html_body_slides += f"""
           <div class="timeline-card">
             <div class="timeline-card-header">
@@ -1944,7 +2010,7 @@ for idx, s in enumerate(slides_data):
               <span class="timeline-price-tag">{it["price"]}</span>
             </div>
             <h3 class="timeline-title">{it["title"]}</h3>
-            <p class="timeline-desc">{it["desc"]}</p>
+            <p class="timeline-desc">{it["desc"]}</p>{cam_badge_html}
             <div class="timeline-tip-box">
               <span>💡</span>
               <div>{it["tip"]}</div>
@@ -2233,7 +2299,7 @@ html_drawer_and_script += """
       });
 
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=18')
+        navigator.serviceWorker.register('./sw.js?v=19')
           .then(reg => {
             console.log('SW registered');
             reg.update();
