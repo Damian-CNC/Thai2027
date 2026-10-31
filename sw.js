@@ -1,6 +1,5 @@
-const CACHE_NAME = 'thailand-trip-v1';
+const CACHE_NAME = 'thailand-trip-v2';
 const ASSETS_TO_CACHE = [
-  './',
   './index.html',
   './manifest.json',
   './icon-192.png',
@@ -9,8 +8,14 @@ const ASSETS_TO_CACHE = [
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS_TO_CACHE);
+    caches.open(CACHE_NAME).then(async (cache) => {
+      for (const asset of ASSETS_TO_CACHE) {
+        try {
+          await cache.add(asset);
+        } catch (e) {
+          console.warn('Failed to cache:', asset, e);
+        }
+      }
     }).then(() => self.skipWaiting())
   );
 });
@@ -30,7 +35,6 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request).then((cached) => {
       return cached || fetch(event.request).then((response) => {
-        // Cache external image assets as they are fetched
         if (response.status === 200 && event.request.url.startsWith('http')) {
           const resClone = response.clone();
           caches.open(CACHE_NAME).then((cache) => cache.put(event.request, resClone));
