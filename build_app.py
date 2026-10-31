@@ -1055,28 +1055,84 @@ html_head = """<!DOCTYPE html>
     }
 
     /* SLIDE CONTAINERS (NATURAL DOCUMENT FLOW) */
+    /* Slide Base and Transitions (Vertical slide inspired by CNC Kalkulator cubic-bezier) */
     .slide {
       display: none;
       width: 100%;
       min-height: 100vh;
       position: relative;
       box-sizing: border-box;
+      will-change: transform, opacity;
     }
 
     .slide.active {
       display: block;
-      animation: slideFadeIn 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
-    @keyframes slideFadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(22px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    /* Outgoing slide forward (slides up slightly & dims, z-index 1) */
+    .slide.slide-exit-forward {
+      display: block !important;
+      position: fixed !important;
+      left: 0;
+      right: 0;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 1;
+      animation: slideExitFwd 0.42s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    }
+
+    /* Incoming slide forward (slides up from bottom over the old slide, z-index 2) */
+    .slide.slide-enter-forward {
+      display: block !important;
+      position: relative !important;
+      z-index: 2;
+      box-shadow: 0 -12px 36px rgba(0, 0, 0, 0.65);
+      animation: slideEnterFwd 0.42s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    }
+
+    /* Outgoing slide backward (slides down to reveal previous slide, z-index 3) */
+    .slide.slide-exit-backward {
+      display: block !important;
+      position: fixed !important;
+      left: 0;
+      right: 0;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 3;
+      box-shadow: 0 -12px 36px rgba(0, 0, 0, 0.65);
+      animation: slideExitBwd 0.42s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    }
+
+    /* Incoming slide backward (comes forward from slightly shifted up, z-index 1) */
+    .slide.slide-enter-backward {
+      display: block !important;
+      position: relative !important;
+      z-index: 1;
+      animation: slideEnterBwd 0.42s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    }
+
+    @keyframes slideExitFwd {
+      from { transform: translate3d(0, 0, 0); opacity: 1; }
+      to { transform: translate3d(0, -20%, 0); opacity: 0.75; }
+    }
+
+    @keyframes slideEnterFwd {
+      from { transform: translate3d(0, 100vh, 0); opacity: 1; }
+      to { transform: translate3d(0, 0, 0); opacity: 1; }
+    }
+
+    @keyframes slideExitBwd {
+      from { transform: translate3d(0, 0, 0); opacity: 1; }
+      to { transform: translate3d(0, 100vh, 0); opacity: 1; }
+    }
+
+    @keyframes slideEnterBwd {
+      from { transform: translate3d(0, -20%, 0); opacity: 0.75; }
+      to { transform: translate3d(0, 0, 0); opacity: 1; }
     }
 
     /* Fixed Background Layer (Covers Physical Glass 100%) */
@@ -1891,18 +1947,19 @@ html_drawer_and_script += """
     const totalSlides = slides.length;
     let currentSlideIndex = 0;
 
-    function updateSlideClasses(targetIndex) {
-      slides.forEach((slide, i) => {
-        if (i === targetIndex) {
-          slide.classList.add('active');
-        } else {
-          slide.classList.remove('active');
-        }
-      });
+    let isTransitioning = false;
+
+    function goToSlide(targetIndex) {
+      if (targetIndex < 0 || targetIndex >= totalSlides || targetIndex === currentSlideIndex || isTransitioning) return;
+      
+      isTransitioning = true;
+      const direction = targetIndex > currentSlideIndex ? 1 : -1;
+      const prevSlide = slides[currentSlideIndex];
+      const nextSlide = slides[targetIndex];
+      currentSlideIndex = targetIndex;
 
       // Update Header Badge and Progress Track
-      const targetSlide = slides[targetIndex];
-      const label = targetSlide.getAttribute('data-label');
+      const label = nextSlide.getAttribute('data-label');
       if (label && navBadgeText) {
         navBadgeText.innerText = label;
       }
@@ -1910,19 +1967,50 @@ html_drawer_and_script += """
         const pct = Math.round((targetIndex / (totalSlides - 1)) * 100);
         progressFill.style.width = pct + '%';
       }
-    }
 
-    function goToSlide(targetIndex) {
-      if (targetIndex < 0 || targetIndex >= totalSlides || targetIndex === currentSlideIndex) return;
-      currentSlideIndex = targetIndex;
-      updateSlideClasses(targetIndex);
+      // Preserve visual scroll position of the exiting slide during animation
+      const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+      prevSlide.style.top = `-${scrollY}px`;
+
+      // Clear any prior transition classes
+      slides.forEach(s => {
+        s.classList.remove('slide-exit-forward', 'slide-enter-forward', 'slide-exit-backward', 'slide-enter-backward');
+      });
+
+      if (direction > 0) {
+        // Forward: next slide glides up from bottom over previous slide
+        prevSlide.classList.add('slide-exit-forward');
+        nextSlide.classList.add('active', 'slide-enter-forward');
+      } else {
+        // Backward: previous slide recedes down, revealing next slide underneath
+        prevSlide.classList.add('slide-exit-backward');
+        nextSlide.classList.add('active', 'slide-enter-backward');
+      }
+
+      // Reset scroll for incoming slide
       window.scrollTo({ top: 0, behavior: 'instant' });
+
+      // Clean up after animation finishes (420ms)
+      setTimeout(() => {
+        prevSlide.classList.remove('active', 'slide-exit-forward', 'slide-exit-backward');
+        prevSlide.style.top = '';
+        nextSlide.classList.remove('slide-enter-forward', 'slide-enter-backward');
+        isTransitioning = false;
+      }, 430);
     }
 
-    // Initialize slide positions
-    updateSlideClasses(0);
+    // Initialize initial slide position
+    slides.forEach((slide, i) => {
+      if (i === 0) slide.classList.add('active');
+      else slide.classList.remove('active');
+    });
+    if (navBadgeText && slides[0]) {
+      const lbl = slides[0].getAttribute('data-label');
+      if (lbl) navBadgeText.innerText = lbl;
+    }
+    if (progressFill) progressFill.style.width = '0%';
 
-    // TOUCH SWIPE UP / DOWN GESTURES
+    // TOUCH SWIPE GESTURES (UP/DOWN at screen edges & LEFT/RIGHT anywhere)
     let touchStartY = 0;
     let touchStartX = 0;
     let touchStartTime = 0;
@@ -1934,7 +2022,7 @@ html_drawer_and_script += """
     }, { passive: true });
 
     window.addEventListener('touchend', (e) => {
-      if (drawerSheet && drawerSheet.classList.contains('active')) return;
+      if ((drawerSheet && drawerSheet.classList.contains('active')) || isTransitioning) return;
 
       const touchEndY = e.changedTouches[0].clientY;
       const touchEndX = e.changedTouches[0].clientX;
@@ -1942,7 +2030,10 @@ html_drawer_and_script += """
       const deltaX = touchEndX - touchStartX;
       const duration = Date.now() - touchStartTime;
 
-      if (Math.abs(deltaY) > 50 && Math.abs(deltaY) > Math.abs(deltaX) * 1.3 && duration < 500) {
+      if (duration > 650) return;
+
+      // Vertical swipe: at bottom/top of page
+      if (Math.abs(deltaY) > 50 && Math.abs(deltaY) > Math.abs(deltaX) * 1.3) {
         const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
         const windowHeight = window.innerHeight;
         const docHeight = document.documentElement.scrollHeight;
@@ -1950,15 +2041,23 @@ html_drawer_and_script += """
         const isAtTop = scrollY <= 15;
 
         if (deltaY < -50) {
-          // Swiped UP ➔ Next Day (if at bottom of page or on intro)
+          // Swiped UP ➔ Next Day
           if (isAtBottom || currentSlideIndex === 0) {
             goToSlide(currentSlideIndex + 1);
           }
         } else if (deltaY > 50) {
-          // Swiped DOWN ➔ Prev Day (if at top of page)
+          // Swiped DOWN ➔ Prev Day
           if (isAtTop) {
             goToSlide(currentSlideIndex - 1);
           }
+        }
+      }
+      // Horizontal swipe: left to next day, right to prev day
+      else if (Math.abs(deltaX) > 60 && Math.abs(deltaX) > Math.abs(deltaY) * 1.4) {
+        if (deltaX < -60) {
+          goToSlide(currentSlideIndex + 1);
+        } else if (deltaX > 60) {
+          goToSlide(currentSlideIndex - 1);
         }
       }
     }, { passive: true });
@@ -2029,7 +2128,7 @@ html_drawer_and_script += """
       });
 
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=15')
+        navigator.serviceWorker.register('./sw.js?v=16')
           .then(reg => {
             console.log('SW registered');
             reg.update();
