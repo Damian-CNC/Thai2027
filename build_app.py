@@ -1135,8 +1135,8 @@ html_head = """<!DOCTYPE html>
       to { transform: translate3d(0, 0, 0); opacity: 1; }
     }
 
-    /* Fixed Background Layer (Covers Physical Glass 100%) */
-    .slide-bg {
+    /* GLOBAL STATIC BACKGROUND STACK (Rock-solid fixed, only cross-fades) */
+    .static-bg-container {
       position: fixed;
       top: 0;
       left: 0;
@@ -1144,27 +1144,41 @@ html_head = """<!DOCTYPE html>
       bottom: 0;
       width: 100vw;
       height: 100vh;
-      background-size: cover;
-      background-position: center;
-      z-index: 1;
+      z-index: 0;
       pointer-events: none;
+      overflow: hidden;
+      background-color: #090d16;
     }
 
-    .slide-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 2;
+    .static-bg-item {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      opacity: 0;
+      transition: opacity 0.45s ease-in-out;
+      will-change: opacity;
+    }
+
+    .static-bg-item.active {
+      opacity: 1;
+    }
+
+    /* Subtle Vignette Overlay - Keeps text ultra-readable while letting gorgeous photos shine through */
+    .static-bg-overlay {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
       pointer-events: none;
       background: linear-gradient(
         180deg,
-        rgba(9, 13, 22, 0.20) 0%,
-        rgba(9, 13, 22, 0.45) 45%,
-        rgba(9, 13, 22, 0.68) 100%
+        rgba(9, 13, 22, 0.10) 0%,
+        rgba(9, 13, 22, 0.20) 40%,
+        rgba(9, 13, 22, 0.40) 100%
       );
     }
 
@@ -1230,9 +1244,9 @@ html_head = """<!DOCTYPE html>
     .countdown-card {
       width: 100%;
       max-width: 360px;
-      background: rgba(15, 23, 42, 0.45);
-      backdrop-filter: blur(24px) saturate(190%);
-      -webkit-backdrop-filter: blur(24px) saturate(190%);
+      background: rgba(15, 23, 42, 0.32);
+      backdrop-filter: blur(16px) saturate(190%);
+      -webkit-backdrop-filter: blur(16px) saturate(190%);
       border: 1px solid rgba(255, 255, 255, 0.18);
       border-radius: 26px;
       padding: 20px;
@@ -1421,9 +1435,9 @@ html_head = """<!DOCTYPE html>
 
     /* Hotel Card - iOS Liquid Glass */
     .hotel-card {
-      background: rgba(15, 23, 42, 0.45);
-      backdrop-filter: blur(24px) saturate(190%);
-      -webkit-backdrop-filter: blur(24px) saturate(190%);
+      background: rgba(15, 23, 42, 0.32);
+      backdrop-filter: blur(16px) saturate(190%);
+      -webkit-backdrop-filter: blur(16px) saturate(190%);
       border: 1px solid rgba(255, 255, 255, 0.18);
       border-radius: 20px;
       padding: 14px 16px;
@@ -1462,9 +1476,9 @@ html_head = """<!DOCTYPE html>
     }
 
     .timeline-card {
-      background: rgba(15, 23, 42, 0.48);
-      backdrop-filter: blur(24px) saturate(190%);
-      -webkit-backdrop-filter: blur(24px) saturate(190%);
+      background: rgba(15, 23, 42, 0.32);
+      backdrop-filter: blur(16px) saturate(190%);
+      -webkit-backdrop-filter: blur(16px) saturate(190%);
       border: 1px solid rgba(255, 255, 255, 0.18);
       border-radius: 22px;
       padding: 16px 18px;
@@ -1742,6 +1756,17 @@ html_head = """<!DOCTYPE html>
   <main id="root" class="app-root">
 """
 
+html_static_bgs = """
+  <!-- GLOBAL STATIC BACKGROUND STACK (Photos stay fixed and do not slide) -->
+  <div id="staticBgContainer" class="static-bg-container">
+"""
+for idx, s in enumerate(slides_data):
+    is_act = " active" if idx == 0 else ""
+    html_static_bgs += f"""    <div class="static-bg-item{is_act}" id="bg-slide-{idx}" style="background-image: url('{s["bgImage"]}');"></div>\n"""
+html_static_bgs += """    <div class="static-bg-overlay"></div>
+  </div>
+"""
+
 html_body_slides = ""
 for idx, s in enumerate(slides_data):
     is_active = " active" if idx == 0 else ""
@@ -1749,8 +1774,6 @@ for idx, s in enumerate(slides_data):
         html_body_slides += f"""
     <!-- SLIDE 0: INTRO & COUNTDOWN -->
     <section class="slide{is_active}" id="slide-intro" data-index="0" data-label="🇹🇭 Start">
-      <div class="slide-bg" style="background-image: url('{s["bgImage"]}');"></div>
-      <div class="slide-overlay"></div>
       <div class="slide-content">
         <div class="intro-hero">
           <div class="intro-tag">🌴 TAJLANDIA 2027</div>
@@ -1813,8 +1836,6 @@ for idx, s in enumerate(slides_data):
         html_body_slides += f"""
     <!-- SLIDE {slide_idx}: DZIEŃ {day_num} -->
     <section class="slide{is_active}" id="{s["id"]}" data-index="{slide_idx}" data-label="Dzień {day_num} / 16 • {s["badgeDate"]}">
-      <div class="slide-bg" style="background-image: url('{s["bgImage"]}');"></div>
-      <div class="slide-overlay"></div>
       <div class="slide-content">
         
         <!-- Header -->
@@ -1956,6 +1977,17 @@ html_drawer_and_script += """
       const direction = targetIndex > currentSlideIndex ? 1 : -1;
       const prevSlide = slides[currentSlideIndex];
       const nextSlide = slides[targetIndex];
+      
+      // Cross-fade static background photo smoothly without moving it
+      const prevBg = document.getElementById(`bg-slide-${currentSlideIndex}`);
+      const nextBg = document.getElementById(`bg-slide-${targetIndex}`);
+      if (prevBg && prevBg !== nextBg) {
+        prevBg.classList.remove('active');
+      }
+      if (nextBg) {
+        nextBg.classList.add('active');
+      }
+
       currentSlideIndex = targetIndex;
 
       // Update Header Badge and Progress Track
@@ -2128,7 +2160,7 @@ html_drawer_and_script += """
       });
 
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=16')
+        navigator.serviceWorker.register('./sw.js?v=17')
           .then(reg => {
             console.log('SW registered');
             reg.update();
@@ -2141,7 +2173,7 @@ html_drawer_and_script += """
 </html>
 """
 
-full_html = html_head + html_body_slides + html_drawer_and_script
+full_html = html_head + html_static_bgs + html_body_slides + html_drawer_and_script
 
 # Write index.html to Thai2027 and Thai
 with open(r'c:\Users\mosan\Desktop\Thai\Thai2027\index.html', 'w', encoding='utf-8') as f:

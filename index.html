@@ -228,8 +228,8 @@
       to { transform: translate3d(0, 0, 0); opacity: 1; }
     }
 
-    /* Fixed Background Layer (Covers Physical Glass 100%) */
-    .slide-bg {
+    /* GLOBAL STATIC BACKGROUND STACK (Rock-solid fixed, only cross-fades) */
+    .static-bg-container {
       position: fixed;
       top: 0;
       left: 0;
@@ -237,27 +237,41 @@
       bottom: 0;
       width: 100vw;
       height: 100vh;
-      background-size: cover;
-      background-position: center;
-      z-index: 1;
+      z-index: 0;
       pointer-events: none;
+      overflow: hidden;
+      background-color: #090d16;
     }
 
-    .slide-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 2;
+    .static-bg-item {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      opacity: 0;
+      transition: opacity 0.45s ease-in-out;
+      will-change: opacity;
+    }
+
+    .static-bg-item.active {
+      opacity: 1;
+    }
+
+    /* Subtle Vignette Overlay - Keeps text ultra-readable while letting gorgeous photos shine through */
+    .static-bg-overlay {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
       pointer-events: none;
       background: linear-gradient(
         180deg,
-        rgba(9, 13, 22, 0.20) 0%,
-        rgba(9, 13, 22, 0.45) 45%,
-        rgba(9, 13, 22, 0.68) 100%
+        rgba(9, 13, 22, 0.10) 0%,
+        rgba(9, 13, 22, 0.20) 40%,
+        rgba(9, 13, 22, 0.40) 100%
       );
     }
 
@@ -323,9 +337,9 @@
     .countdown-card {
       width: 100%;
       max-width: 360px;
-      background: rgba(15, 23, 42, 0.45);
-      backdrop-filter: blur(24px) saturate(190%);
-      -webkit-backdrop-filter: blur(24px) saturate(190%);
+      background: rgba(15, 23, 42, 0.32);
+      backdrop-filter: blur(16px) saturate(190%);
+      -webkit-backdrop-filter: blur(16px) saturate(190%);
       border: 1px solid rgba(255, 255, 255, 0.18);
       border-radius: 26px;
       padding: 20px;
@@ -514,9 +528,9 @@
 
     /* Hotel Card - iOS Liquid Glass */
     .hotel-card {
-      background: rgba(15, 23, 42, 0.45);
-      backdrop-filter: blur(24px) saturate(190%);
-      -webkit-backdrop-filter: blur(24px) saturate(190%);
+      background: rgba(15, 23, 42, 0.32);
+      backdrop-filter: blur(16px) saturate(190%);
+      -webkit-backdrop-filter: blur(16px) saturate(190%);
       border: 1px solid rgba(255, 255, 255, 0.18);
       border-radius: 20px;
       padding: 14px 16px;
@@ -555,9 +569,9 @@
     }
 
     .timeline-card {
-      background: rgba(15, 23, 42, 0.48);
-      backdrop-filter: blur(24px) saturate(190%);
-      -webkit-backdrop-filter: blur(24px) saturate(190%);
+      background: rgba(15, 23, 42, 0.32);
+      backdrop-filter: blur(16px) saturate(190%);
+      -webkit-backdrop-filter: blur(16px) saturate(190%);
       border: 1px solid rgba(255, 255, 255, 0.18);
       border-radius: 22px;
       padding: 16px 18px;
@@ -834,10 +848,30 @@
   <!-- NATURAL SCROLL ROOT (LIKE CNC-KALKULATOR) -->
   <main id="root" class="app-root">
 
+  <!-- GLOBAL STATIC BACKGROUND STACK (Photos stay fixed and do not slide) -->
+  <div id="staticBgContainer" class="static-bg-container">
+    <div class="static-bg-item active" id="bg-slide-0" style="background-image: url('https://images.unsplash.com/photo-1508009603885-50cf7c579365?auto=format&fit=crop&w=1200&q=80');"></div>
+    <div class="static-bg-item" id="bg-slide-1" style="background-image: url('https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?auto=format&fit=crop&w=1200&q=80');"></div>
+    <div class="static-bg-item" id="bg-slide-2" style="background-image: url('https://images.unsplash.com/photo-1563492065599-3520f775eeed?auto=format&fit=crop&w=1200&q=80');"></div>
+    <div class="static-bg-item" id="bg-slide-3" style="background-image: url('https://images.unsplash.com/photo-1542051841857-5f90071e7989?auto=format&fit=crop&w=1200&q=80');"></div>
+    <div class="static-bg-item" id="bg-slide-4" style="background-image: url('https://images.unsplash.com/photo-1528181304800-259b08848526?auto=format&fit=crop&w=1200&q=80');"></div>
+    <div class="static-bg-item" id="bg-slide-5" style="background-image: url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1200&q=80');"></div>
+    <div class="static-bg-item" id="bg-slide-6" style="background-image: url('https://images.unsplash.com/photo-1537956965359-7573183d1f57?auto=format&fit=crop&w=1200&q=80');"></div>
+    <div class="static-bg-item" id="bg-slide-7" style="background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80');"></div>
+    <div class="static-bg-item" id="bg-slide-8" style="background-image: url('https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&w=1200&q=80');"></div>
+    <div class="static-bg-item" id="bg-slide-9" style="background-image: url('https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?auto=format&fit=crop&w=1200&q=80');"></div>
+    <div class="static-bg-item" id="bg-slide-10" style="background-image: url('https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=1200&q=80');"></div>
+    <div class="static-bg-item" id="bg-slide-11" style="background-image: url('https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1200&q=80');"></div>
+    <div class="static-bg-item" id="bg-slide-12" style="background-image: url('https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=1200&q=80');"></div>
+    <div class="static-bg-item" id="bg-slide-13" style="background-image: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80');"></div>
+    <div class="static-bg-item" id="bg-slide-14" style="background-image: url('https://images.unsplash.com/photo-1557050543-4d5f4e07ef46?auto=format&fit=crop&w=1200&q=80');"></div>
+    <div class="static-bg-item" id="bg-slide-15" style="background-image: url('https://images.unsplash.com/photo-1508009603885-50cf7c579365?auto=format&fit=crop&w=1200&q=80');"></div>
+    <div class="static-bg-item" id="bg-slide-16" style="background-image: url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1200&q=80');"></div>
+    <div class="static-bg-overlay"></div>
+  </div>
+
     <!-- SLIDE 0: INTRO & COUNTDOWN -->
     <section class="slide active" id="slide-intro" data-index="0" data-label="🇹🇭 Start">
-      <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1508009603885-50cf7c579365?auto=format&fit=crop&w=1200&q=80');"></div>
-      <div class="slide-overlay"></div>
       <div class="slide-content">
         <div class="intro-hero">
           <div class="intro-tag">🌴 TAJLANDIA 2027</div>
@@ -894,8 +928,6 @@
 
     <!-- SLIDE 1: DZIEŃ 1 -->
     <section class="slide" id="day-1" data-index="1" data-label="Dzień 1 / 16 • 9 STY">
-      <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?auto=format&fit=crop&w=1200&q=80');"></div>
-      <div class="slide-overlay"></div>
       <div class="slide-content">
         
         <!-- Header -->
@@ -1006,8 +1038,6 @@
 
     <!-- SLIDE 2: DZIEŃ 2 -->
     <section class="slide" id="day-2" data-index="2" data-label="Dzień 2 / 16 • 10 STY">
-      <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1563492065599-3520f775eeed?auto=format&fit=crop&w=1200&q=80');"></div>
-      <div class="slide-overlay"></div>
       <div class="slide-content">
         
         <!-- Header -->
@@ -1156,8 +1186,6 @@
 
     <!-- SLIDE 3: DZIEŃ 3 -->
     <section class="slide" id="day-3" data-index="3" data-label="Dzień 3 / 16 • 11 STY">
-      <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1542051841857-5f90071e7989?auto=format&fit=crop&w=1200&q=80');"></div>
-      <div class="slide-overlay"></div>
       <div class="slide-content">
         
         <!-- Header -->
@@ -1306,8 +1334,6 @@
 
     <!-- SLIDE 4: DZIEŃ 4 -->
     <section class="slide" id="day-4" data-index="4" data-label="Dzień 4 / 16 • 12 STY">
-      <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1528181304800-259b08848526?auto=format&fit=crop&w=1200&q=80');"></div>
-      <div class="slide-overlay"></div>
       <div class="slide-content">
         
         <!-- Header -->
@@ -1475,8 +1501,6 @@
 
     <!-- SLIDE 5: DZIEŃ 5 -->
     <section class="slide" id="day-5" data-index="5" data-label="Dzień 5 / 16 • 13 STY">
-      <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1200&q=80');"></div>
-      <div class="slide-overlay"></div>
       <div class="slide-content">
         
         <!-- Header -->
@@ -1625,8 +1649,6 @@
 
     <!-- SLIDE 6: DZIEŃ 6 -->
     <section class="slide" id="day-6" data-index="6" data-label="Dzień 6 / 16 • 14 STY">
-      <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1537956965359-7573183d1f57?auto=format&fit=crop&w=1200&q=80');"></div>
-      <div class="slide-overlay"></div>
       <div class="slide-content">
         
         <!-- Header -->
@@ -1775,8 +1797,6 @@
 
     <!-- SLIDE 7: DZIEŃ 7 -->
     <section class="slide" id="day-7" data-index="7" data-label="Dzień 7 / 16 • 15 STY">
-      <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80');"></div>
-      <div class="slide-overlay"></div>
       <div class="slide-content">
         
         <!-- Header -->
@@ -1887,8 +1907,6 @@
 
     <!-- SLIDE 8: DZIEŃ 8 -->
     <section class="slide" id="day-8" data-index="8" data-label="Dzień 8 / 16 • 16 STY">
-      <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&w=1200&q=80');"></div>
-      <div class="slide-overlay"></div>
       <div class="slide-content">
         
         <!-- Header -->
@@ -2037,8 +2055,6 @@
 
     <!-- SLIDE 9: DZIEŃ 9 -->
     <section class="slide" id="day-9" data-index="9" data-label="Dzień 9 / 16 • 17 STY">
-      <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?auto=format&fit=crop&w=1200&q=80');"></div>
-      <div class="slide-overlay"></div>
       <div class="slide-content">
         
         <!-- Header -->
@@ -2149,8 +2165,6 @@
 
     <!-- SLIDE 10: DZIEŃ 10 -->
     <section class="slide" id="day-10" data-index="10" data-label="Dzień 10 / 16 • 18 STY">
-      <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=1200&q=80');"></div>
-      <div class="slide-overlay"></div>
       <div class="slide-content">
         
         <!-- Header -->
@@ -2280,8 +2294,6 @@
 
     <!-- SLIDE 11: DZIEŃ 11 -->
     <section class="slide" id="day-11" data-index="11" data-label="Dzień 11 / 16 • 19 STY">
-      <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1200&q=80');"></div>
-      <div class="slide-overlay"></div>
       <div class="slide-content">
         
         <!-- Header -->
@@ -2373,8 +2385,6 @@
 
     <!-- SLIDE 12: DZIEŃ 12 -->
     <section class="slide" id="day-12" data-index="12" data-label="Dzień 12 / 16 • 20 STY">
-      <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=1200&q=80');"></div>
-      <div class="slide-overlay"></div>
       <div class="slide-content">
         
         <!-- Header -->
@@ -2485,8 +2495,6 @@
 
     <!-- SLIDE 13: DZIEŃ 13 -->
     <section class="slide" id="day-13" data-index="13" data-label="Dzień 13 / 16 • 21 STY">
-      <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80');"></div>
-      <div class="slide-overlay"></div>
       <div class="slide-content">
         
         <!-- Header -->
@@ -2597,8 +2605,6 @@
 
     <!-- SLIDE 14: DZIEŃ 14 -->
     <section class="slide" id="day-14" data-index="14" data-label="Dzień 14 / 16 • 22 STY">
-      <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1557050543-4d5f4e07ef46?auto=format&fit=crop&w=1200&q=80');"></div>
-      <div class="slide-overlay"></div>
       <div class="slide-content">
         
         <!-- Header -->
@@ -2690,8 +2696,6 @@
 
     <!-- SLIDE 15: DZIEŃ 15 -->
     <section class="slide" id="day-15" data-index="15" data-label="Dzień 15 / 16 • 23 STY">
-      <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1508009603885-50cf7c579365?auto=format&fit=crop&w=1200&q=80');"></div>
-      <div class="slide-overlay"></div>
       <div class="slide-content">
         
         <!-- Header -->
@@ -2840,8 +2844,6 @@
 
     <!-- SLIDE 16: DZIEŃ 16 -->
     <section class="slide" id="day-16" data-index="16" data-label="Dzień 16 / 16 • 24 STY">
-      <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1200&q=80');"></div>
-      <div class="slide-overlay"></div>
       <div class="slide-content">
         
         <!-- Header -->
@@ -3146,6 +3148,17 @@
       const direction = targetIndex > currentSlideIndex ? 1 : -1;
       const prevSlide = slides[currentSlideIndex];
       const nextSlide = slides[targetIndex];
+      
+      // Cross-fade static background photo smoothly without moving it
+      const prevBg = document.getElementById(`bg-slide-${currentSlideIndex}`);
+      const nextBg = document.getElementById(`bg-slide-${targetIndex}`);
+      if (prevBg && prevBg !== nextBg) {
+        prevBg.classList.remove('active');
+      }
+      if (nextBg) {
+        nextBg.classList.add('active');
+      }
+
       currentSlideIndex = targetIndex;
 
       // Update Header Badge and Progress Track
@@ -3318,7 +3331,7 @@
       });
 
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=16')
+        navigator.serviceWorker.register('./sw.js?v=17')
           .then(reg => {
             console.log('SW registered');
             reg.update();
