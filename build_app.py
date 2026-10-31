@@ -1106,9 +1106,9 @@ html_head = """<!DOCTYPE html>
       pointer-events: none;
       background: linear-gradient(
         180deg,
-        rgba(9, 13, 22, 0.30) 0%,
-        rgba(9, 13, 22, 0.60) 45%,
-        rgba(9, 13, 22, 0.85) 100%
+        rgba(9, 13, 22, 0.20) 0%,
+        rgba(9, 13, 22, 0.45) 45%,
+        rgba(9, 13, 22, 0.68) 100%
       );
     }
 
@@ -1170,16 +1170,28 @@ html_head = """<!DOCTYPE html>
       font-weight: 600;
     }
 
-    /* Countdown Widget */
+    /* Countdown Widget - iOS Liquid Glass */
     .countdown-card {
       width: 100%;
       max-width: 360px;
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 24px;
+      background: rgba(15, 23, 42, 0.45);
+      backdrop-filter: blur(24px) saturate(190%);
+      -webkit-backdrop-filter: blur(24px) saturate(190%);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 26px;
       padding: 20px;
       margin-top: 4px;
-      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 16px 40px -6px rgba(0, 0, 0, 0.5), inset 0 1px 1px 0 rgba(255, 255, 255, 0.25);
+    }
+
+    .countdown-box {
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 16px;
+      padding: 10px 4px;
+      text-align: center;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
     }
 
     .countdown-label {
@@ -1235,11 +1247,14 @@ html_head = """<!DOCTYPE html>
 
     .stat-pill {
       flex: 1;
-      background: rgba(15, 23, 42, 0.75);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 16px;
-      padding: 10px 6px;
+      background: rgba(15, 23, 42, 0.42);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 18px;
+      padding: 12px 6px;
       text-align: center;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.2);
     }
 
     .stat-pill-num {
@@ -1348,16 +1363,19 @@ html_head = """<!DOCTYPE html>
       line-height: 1.4;
     }
 
-    /* Hotel Card */
+    /* Hotel Card - iOS Liquid Glass */
     .hotel-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 16px;
-      padding: 12px 14px;
+      background: rgba(15, 23, 42, 0.45);
+      backdrop-filter: blur(24px) saturate(190%);
+      -webkit-backdrop-filter: blur(24px) saturate(190%);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 20px;
+      padding: 14px 16px;
       margin-bottom: 14px;
       display: flex;
       align-items: flex-start;
       gap: 12px;
+      box-shadow: 0 8px 28px -4px rgba(0, 0, 0, 0.4), inset 0 1px 1px 0 rgba(255, 255, 255, 0.25);
     }
 
     .hotel-icon {
@@ -1388,11 +1406,13 @@ html_head = """<!DOCTYPE html>
     }
 
     .timeline-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 18px;
-      padding: 16px;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+      background: rgba(15, 23, 42, 0.48);
+      backdrop-filter: blur(24px) saturate(190%);
+      -webkit-backdrop-filter: blur(24px) saturate(190%);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 22px;
+      padding: 16px 18px;
+      box-shadow: 0 10px 32px -4px rgba(0, 0, 0, 0.45), inset 0 1px 1px 0 rgba(255, 255, 255, 0.25);
     }
 
     .timeline-card-header {
@@ -1438,16 +1458,19 @@ html_head = """<!DOCTYPE html>
     }
 
     .timeline-tip-box {
-      background: rgba(0, 0, 0, 0.35);
+      background: rgba(0, 0, 0, 0.28);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       border-left: 3px solid #fbbf24;
-      padding: 8px 10px;
-      border-radius: 0 8px 8px 0;
+      padding: 9px 12px;
+      border-radius: 12px;
       font-size: 12px;
       color: #e2e8f0;
-      line-height: 1.35;
+      line-height: 1.4;
       margin-bottom: 12px;
       display: flex;
-      gap: 6px;
+      gap: 8px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
     }
 
     .timeline-actions {
@@ -1459,14 +1482,17 @@ html_head = """<!DOCTYPE html>
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.22);
       color: #fff;
-      padding: 7px 14px;
-      border-radius: 10px;
+      padding: 8px 16px;
+      border-radius: 12px;
       font-size: 12px;
       font-weight: 700;
       text-decoration: none;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.28);
       transition: background 0.15s, transform 0.15s;
     }
 
@@ -1716,9 +1742,8 @@ for idx, s in enumerate(slides_data):
         </div>
 
         <div class="intro-footer">
-          <button class="start-btn" onclick="goToSlide(1)">Rozpocznij Podróż ➔</button>
-          <div class="swipe-hint">
-            <span>👆 Przesuń w górę, aby przejść do Dnia 1</span>
+          <div class="swipe-hint" onclick="goToSlide(1)" style="cursor: pointer;">
+            <span>👆 Przesuń w górę, aby rozpocząć</span>
           </div>
         </div>
       </div>
@@ -1727,10 +1752,7 @@ for idx, s in enumerate(slides_data):
     else:
         day_num = s["dayNum"]
         slide_idx = day_num
-        prev_idx = slide_idx - 1
-        next_idx = slide_idx + 1
-        prev_label = f"Dzień {prev_idx}" if prev_idx > 0 else "Odliczanie"
-        next_label = f"Dzień {next_idx}" if next_idx <= 16 else "Początek"
+
 
         html_body_slides += f"""
     <!-- SLIDE {slide_idx}: DZIEŃ {day_num} -->
@@ -1788,12 +1810,7 @@ for idx, s in enumerate(slides_data):
         html_body_slides += f"""
         </div>
 
-        <!-- Bottom Day Switcher Navigation -->
-        <div class="day-nav-bar">
-          <button class="day-nav-btn" onclick="goToSlide({prev_idx})">◀ {prev_label}</button>
-          <button class="day-nav-btn day-nav-btn-main" onclick="openDrawer()">📅 Spis dni</button>
-          <button class="day-nav-btn" onclick="goToSlide({next_idx if next_idx <= 16 else 0})">{next_label} ▶</button>
-        </div>
+
 
       </div>
     </section>
@@ -2012,7 +2029,7 @@ html_drawer_and_script += """
       });
 
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=14')
+        navigator.serviceWorker.register('./sw.js?v=15')
           .then(reg => {
             console.log('SW registered');
             reg.update();
