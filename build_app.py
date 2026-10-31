@@ -1,4 +1,911 @@
-<!DOCTYPE html>
+import json
+
+# Data for all 17 slides (Slide 0: Countdown & Intro, Slides 1-16: Days 1-16)
+slides_data = [
+    {
+        "id": "intro",
+        "isIntro": True,
+        "title": "Tajlandia 2027",
+        "subtitle": "Bangkok • Kanchanaburi • Ko Samui",
+        "dateRange": "8 – 24 Stycznia 2027",
+        "bgImage": "https://images.unsplash.com/photo-1508009603885-50cf7c579365?auto=format&fit=crop&w=1200&q=80",
+        "bgFallback": "linear-gradient(135deg, #090d16 0%, #1e1b4b 50%, #0f172a 100%)",
+        "stats": [
+            {"num": "17", "label": "Dni podróży"},
+            {"num": "4", "label": "Bazy hotelowe"},
+            {"num": "3", "label": "Krainy Tajlandii"}
+        ],
+        "hotelsSummary": [
+            {"name": "Mövenpick Sukhumvit 15", "loc": "Bangkok", "nights": "3 noce"},
+            {"name": "Hilltop Erawan Camp", "loc": "Erawan / Si Sawat", "nights": "1 noc"},
+            {"name": "Lake Hill Resort", "loc": "Jezioro Srinakarin", "nights": "1 noc"},
+            {"name": "Impiana Chaweng Noi", "loc": "Ko Samui", "nights": "9 nocy"},
+            {"name": "lebua at State Tower", "loc": "Bangkok (Finał)", "nights": "1 noc"}
+        ]
+    },
+    {
+        "id": "day-1",
+        "dayNum": 1,
+        "date": "9 stycznia 2027 (Sobota)",
+        "badgeDate": "9 STY",
+        "type": "🛬 PRZYLOT & CHINATOWN",
+        "typeClass": "tag-arrival",
+        "title": "Witaj w Krainie Uśmiechu!",
+        "subtitle": "Przylot do Bangkoku i neonowe Chinatown",
+        "hotel": "Mövenpick Hotel Sukhumvit 15 (5★)",
+        "hotelTip": "Darmowy tuk-tuk ze ślepej uliczki Soi 15 do stacji BTS Asok / Terminal 21.",
+        "bgImage": "https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?auto=format&fit=crop&w=1200&q=80",
+        "bgFallback": "linear-gradient(180deg, #180926 0%, #090d16 100%)",
+        "items": [
+            {
+                "time": "14:50",
+                "title": "Lądowanie w Bangkoku (BKK)",
+                "desc": "Odbiór bagażu, zakup karty eSIM (AIS / TrueMove) i wypłata gotówki z bankomatu (najlepiej jednorazowo min. 10 000–20 000 THB na opłaty i street food, prowizja 220 THB).",
+                "price": "Koszty własne",
+                "query": "Suvarnabhumi Airport Bangkok",
+                "tip": "Oficjalne taksówki z lotniska bierze się z biletomatu na poziomie 1."
+            },
+            {
+                "time": "17:30",
+                "title": "Check-in w Mövenpick Sukhumvit 15",
+                "desc": "Zameldowanie w 5★ hotelu w sercu tętniącej życiem dzielnicy Sukhumvit. Szybki relaks i odświeżenie po locie.",
+                "price": "W cenie rezerwacji",
+                "query": "Mövenpick Hotel Sukhumvit 15 Bangkok",
+                "tip": "Hotel ma świetny basen na dachu i bar Rainforest."
+            },
+            {
+                "time": "19:30",
+                "title": "Chinatown (Yaowarat Road)",
+                "desc": "Zderzenie z kulinarną stolicą świata: feeria neonów, kłęby pary z woków, pieczone krewetki, Pad Thai i deser ze słodkiego mango ze sticky rice.",
+                "price": "Street food ~150–300 THB",
+                "query": "Yaowarat Road Chinatown Bangkok",
+                "tip": "Najlepszy klimat zaczyna się po godz. 19:00, gdy gasną światła dnia."
+            },
+            {
+                "time": "22:00",
+                "title": "Drink nad rzeką Chao Phraya",
+                "desc": "Powitalny koktajl w nadrzecznym barze (np. Eagle Cafe / The Deck) z widokiem na podświetloną majestatyczną iglicę Wat Arun odbijającą się w rzece.",
+                "price": "Koktajle ~250–350 THB",
+                "query": "Eagle Cafe Bangkok",
+                "tip": "Idealny relaks na walkę z jet lagiem."
+            }
+        ]
+    },
+    {
+        "id": "day-2",
+        "dayNum": 2,
+        "date": "10 stycznia 2027 (Niedziela)",
+        "badgeDate": "10 STY",
+        "type": "🏛️ ZWIEDZANIE INTENSYWNIE",
+        "typeClass": "tag-explore",
+        "title": "Złote Świątynie & Kanały Thonburi",
+        "subtitle": "Klasyczne ikony dawnego i dzisiejszego Bangkoku",
+        "hotel": "Mövenpick Hotel Sukhumvit 15",
+        "hotelTip": "Śniadanie o 07:15 – startujemy w miasto o 07:45!",
+        "bgImage": "https://images.unsplash.com/photo-1563492065599-3520f775eeed?auto=format&fit=crop&w=1200&q=80",
+        "bgFallback": "linear-gradient(180deg, #1e1305 0%, #090d16 100%)",
+        "items": [
+            {
+                "time": "08:30",
+                "title": "Wielki Pałac Królewski & Wat Phra Kaew",
+                "desc": "Najświętsze miejsce w Tajlandii ze słynnym Szmaragdowym Buddą. Przybycie na 08:30 gwarantuje brak upału i autokarów z turystami.",
+                "price": "500 THB / os.",
+                "query": "The Grand Palace Bangkok",
+                "tip": "Rygorystyczny dress code: zakryte ramiona, długie spodnie/spódnice."
+            },
+            {
+                "time": "10:45",
+                "title": "Wat Pho – Leżący Budda",
+                "desc": "46-metrowy monumentalny posąg pokryty płatkowym złotem oraz historyczna kolebka masażu tajskiego.",
+                "price": "300 THB / os. (w tym butelka wody)",
+                "query": "Wat Pho Bangkok",
+                "tip": "Warto wrzucić po 1 monecie do 108 mis z brązu na szczęście."
+            },
+            {
+                "time": "12:00",
+                "title": "Przeprawa promem i Wat Arun (Świątynia Świtu)",
+                "desc": "Krótki rejs promem rzecznym (5 THB) na drugi brzeg rzeki. Spacer wokół wieży prang zdobionej potłuczoną chińską porcelaną.",
+                "price": "200 THB / os.",
+                "query": "Wat Arun Bangkok",
+                "tip": "Obiad w restauracji nadrzecznej z widokiem na rzekę."
+            },
+            {
+                "time": "13:30",
+                "title": "Prywatny rejs łodzią z długim ogonem (Khlongs)",
+                "desc": "Wyprawa w labirynt kanałów Thonburi. Zobaczycie tradycyjne drewniane domy na palach oraz gigantycznego 69-metrowego Złotego Buddę w Wat Paknam z wody.",
+                "price": "~1000–1500 THB za całą prywatną łódź",
+                "query": "Wat Paknam Phasi Charoen Bangkok",
+                "tip": "Cenę wynajmu prywatnej łodzi ustala się bezpośrednio na przystani."
+            },
+            {
+                "time": "16:30",
+                "title": "Mahanakhon SkyWalk (314 m) na zachód słońca",
+                "desc": "Wjazd na najwyższy punkt widokowy Bangkoku ze szklaną podłogą zawieszoną w chmurach. Spektakularny zachód słońca.",
+                "price": "~880–1080 THB / os.",
+                "query": "King Power Mahanakhon Bangkok",
+                "tip": "Kupcie bilet 1 dzień wcześniej na Klook, by uniknąć stania w kolejce do kasy."
+            },
+            {
+                "time": "20:30",
+                "title": "Tichuca Rooftop Bar",
+                "desc": "Słynny bar na 46. piętrze z pulsującym, świecącym drzewem z filmu Avatar i panoramicznym widokiem na drapacze chmur Sukhumvit.",
+                "price": "Drinki ~400–500 THB",
+                "query": "Tichuca Rooftop Bar Bangkok",
+                "tip": "Wspaniałe zakończenie intensywnego dnia!"
+            }
+        ]
+    },
+    {
+        "id": "day-3",
+        "dayNum": 3,
+        "date": "11 stycznia 2027 (Poniedziałek)",
+        "badgeDate": "11 STY",
+        "type": "🌆 ODKRYWANIE & KONTRASTY",
+        "typeClass": "tag-explore",
+        "title": "Złota Góra, Kanał Saen Saep & ICONSIAM",
+        "subtitle": "Sekrety jedwabiu, tradycyjny transport i luksus nad rzeką",
+        "hotel": "Mövenpick Hotel Sukhumvit 15",
+        "hotelTip": "Codziennie w godz. 16:00–17:00 w hotelu trwa bezpłatny Chocolate Hour!",
+        "bgImage": "https://images.unsplash.com/photo-1542051841857-5f90071e7989?auto=format&fit=crop&w=1200&q=80",
+        "bgFallback": "linear-gradient(180deg, #111a2e 0%, #090d16 100%)",
+        "items": [
+            {
+                "time": "08:15",
+                "title": "Wat Saket (Złota Góra / Golden Mount)",
+                "desc": "Wspinaczka po 344 schodkach otoczonych mgiełką wodną i dzwonami modlitewnymi na szczyt sztucznego wzgórza z widokiem 360° na panoramę miasta.",
+                "price": "100 THB / os.",
+                "query": "Wat Saket Bangkok",
+                "tip": "Rano jest tu cudowny chłód i słychać śpiew mnichów."
+            },
+            {
+                "time": "10:00",
+                "title": "Dom Jima Thompsona (Jim Thompson House)",
+                "desc": "Kompleks zabytkowych domów z ciemnego drewna tekowego pośród bujnego ogrodu w centrum metropolii, związany z tajemniczym zniknięciem twórcy tajskiego jedwabiu.",
+                "price": "200 THB / os. (z przewodnikiem)",
+                "query": "Jim Thompson House Bangkok",
+                "tip": "Prawdziwa zielona oaza spokoju."
+            },
+            {
+                "time": "11:45",
+                "title": "Rejs lokalnym tramwajem po kanale Khlong Saen Saep",
+                "desc": "Ekscytujący przejazd szybką łodzią kanałową – autentyczny transport mieszkańców Bangkoku pozwalający błyskawicznie ominąć miejskie korki.",
+                "price": "15 THB / os.",
+                "query": "Pratunam Pier Bangkok",
+                "tip": "Trzymajcie się lin i uważajcie na rozpryski wody – wspaniała przygoda!"
+            },
+            {
+                "time": "13:00",
+                "title": "ICONSIAM & SookSiam (Obiad)",
+                "desc": "Jeden z najbardziej spektakularnych kompleksów świata. Wewnątrz znajduje się klimatyzowany pływający targ ze specjałami ze wszystkich regionów Tajlandii.",
+                "price": "Wstęp wolny / dania ~80–150 THB",
+                "query": "ICONSIAM Bangkok",
+                "tip": "Znakomity moment na obiad w przyjemnym chłodzie klimatyzacji."
+            },
+            {
+                "time": "16:00",
+                "title": "Chocolate Hour & Relaks w Mövenpick",
+                "desc": "Powrót do hotelu na słynną darmową godzinę szwajcarskiej czekolady, relaks na leżakach przy basenie na dachu i przygotowanie do jutrzejszej wyprawy autem.",
+                "price": "W cenie hotelu",
+                "query": "Mövenpick Hotel Sukhumvit 15 Bangkok",
+                "tip": "Czekoladowe fontanny, owoce i ciasta codziennie o 16:00!"
+            },
+            {
+                "time": "19:30",
+                "title": "Nocny targ Jodd Fairs Rama 9",
+                "desc": "Tętniący życiem nocny targ słynący z gigantycznych żeberek wieprzowych w pikantnym bulionie (Leng Saap) i owocowych smoothie.",
+                "price": "Kolacja ~200–350 THB",
+                "query": "JODD FAIRS Rama 9 Bangkok",
+                "tip": "Spróbujcie deseru w postaci lodów kokosowych lub bingsu."
+            }
+        ]
+    },
+    {
+        "id": "day-4",
+        "dayNum": 4,
+        "date": "12 stycznia 2027 (Wtorek)",
+        "badgeDate": "12 STY",
+        "type": "🚗 WYPRAWA SAMOCHODOWA",
+        "typeClass": "tag-drive",
+        "title": "Auto z BKK ➔ Targ na Torach ➔ Hilltop Erawan",
+        "subtitle": "Kolej przecinająca stragany, gigantyczny Budda i Most na rzece Kwai",
+        "hotel": "Hilltop Erawan Camp (Tha Kradan, Si Sawat)",
+        "hotelTip": "Glamping na wzgórzu z panoramicznym widokiem na jezioro Srinakarin i góry.",
+        "bgImage": "https://images.unsplash.com/photo-1528181304800-259b08848526?auto=format&fit=crop&w=1200&q=80",
+        "bgFallback": "linear-gradient(180deg, #1c1409 0%, #090d16 100%)",
+        "items": [
+            {
+                "time": "07:15",
+                "title": "Przejazd z hotelu na lotnisko BKK",
+                "desc": "Wymeldowanie z Mövenpick i transfer na lotnisko Suvarnabhumi (BKK) po odbiór samochodu z wypożyczalni.",
+                "price": "Bolt ~350 THB",
+                "query": "Suvarnabhumi Airport Bangkok",
+                "tip": "Odbiór auta na BKK pozwala wjechać od razu na autostradę obwodową i ominąć korki!"
+            },
+            {
+                "time": "08:15",
+                "title": "Odbiór samochodu & Start trasy na zachód",
+                "desc": "Formalności w wypożyczalni (wymagane Międzynarodowe Prawo Jazdy Konwencja 1949 r., paszport, karta kredytowa). Ruszamy w trasę!",
+                "price": "Wynajem auta",
+                "query": "Suvarnabhumi Airport Car Rental",
+                "tip": "Ruch lewostronny – automatyczna skrzynia biegów bardzo ułatwia jazdę."
+            },
+            {
+                "time": "10:00",
+                "title": "Maeklong Railway Market (Targ na Torach)",
+                "desc": "Kultowy targ, gdzie tory kolejowe biegną przez środek stoisk warzywnych. Na dźwięk syreny kupcy w ułamku sekundy składają markizy, a pociąg ociera się o arbuzy.",
+                "price": "Wstęp wolny",
+                "query": "Maeklong Railway Market",
+                "tip": "Przejazdy pociągu: ok. 09:00, 11:10, 11:30. Stójcie bezpiecznie za czerwoną linią!"
+            },
+            {
+                "time": "13:00",
+                "title": "Świątynia Wat Tham Suea (Tiger Cave Temple)",
+                "desc": "Jedna z najbardziej fotogenicznych świątyń Tajlandii. Olbrzymi, lśniący w słońcu Złoty Budda wznosi się na szczycie wzgórza pośród szmaragdowych pól ryżowych.",
+                "price": "Wstęp wolny (kolejka szynowa na szczyt 20 THB)",
+                "query": "Wat Tham Suea Kanchanaburi",
+                "tip": "Na dole można wstąpić do kawiarni z pomostami nad polami ryżowymi."
+            },
+            {
+                "time": "14:30",
+                "title": "Most na rzece Kwai w Kanchanaburi",
+                "desc": "Słynny historyczny most Kolei Śmierci. Spacer po torach i nadrzeczny obiad w pływającej restauracji nad rzeką Kwai.",
+                "price": "Wstęp wolny / obiad ~250–400 THB",
+                "query": "The Bridge of the River Kwai",
+                "tip": "Piękne pamiątkowe zdjęcia z mostu."
+            },
+            {
+                "time": "16:15",
+                "title": "Malownicza trasa 3199 w góry do Hilltop Erawan",
+                "desc": "Przepiękna górska droga prowadząca wzdłuż rzeki i lasów deszczowych do dystryktu Si Sawat.",
+                "price": "Paliwo",
+                "query": "Hilltop Erawan Camp",
+                "tip": "Czas jazdy: ok. 1 godzina 15 minut."
+            },
+            {
+                "time": "17:30",
+                "title": "Check-in w Hilltop Erawan Camp",
+                "desc": "Powitanie w luksusowym namiocie glampingowym / domku na zboczu wzgórza. Zachód słońca nad jeziorem Srinakarin, kolacja pod gwiazdami i cisza natury.",
+                "price": "W cenie rezerwacji",
+                "query": "Hilltop Erawan Camp",
+                "tip": "Zaledwie 10 minut jazdy od bramy Parku Erawan na jutrzejszy poranek!"
+            }
+        ]
+    },
+    {
+        "id": "day-5",
+        "dayNum": 5,
+        "date": "13 stycznia 2027 (Środa)",
+        "badgeDate": "13 STY",
+        "type": "🌿 WODOSPADY & JEZIORO",
+        "typeClass": "tag-nature",
+        "title": "Park Erawan ➔ Zapora Srinakarin ➔ Lake Hill",
+        "subtitle": "Kąpiele w 7 turkusowych kaskadach i nocleg nad samą taflą wody",
+        "hotel": "Lake Hill Kanchanaburi Resort (Tha Kradan)",
+        "hotelTip": "Pokoje/domki nad samym jeziorem, darmowe kajaki i prywatny pomost do wody.",
+        "bgImage": "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1200&q=80",
+        "bgFallback": "linear-gradient(180deg, #051e17 0%, #090d16 100%)",
+        "items": [
+            {
+                "time": "08:00",
+                "title": "Park Narodowy Erawan (Wodospady 1–7)",
+                "desc": "Wejście o 08:00 – zanim przyjadą wycieczki z Bangkoku! 7 poziomów kaskad wapiennych z krystaliczną szmaragdową wodą. Kąpiel w naturalnych basenach z rybkami.",
+                "price": "300 THB / os. + 30 THB auto (GOTÓWKA!)",
+                "query": "Erawan National Park",
+                "tip": "Zabierzcie buty ze stabilną podeszwą i kostiumy. Najlepsze baseny są na poziomach 3, 4 i 7."
+            },
+            {
+                "time": "12:30",
+                "title": "Tajski obiad przy parku",
+                "desc": "Świeże curry, pieczony kurczak Gai Yang z sosem tamaryndowym i kleistym ryżem w lokalnej knajpce.",
+                "price": "Obiad ~150–250 THB",
+                "query": "Erawan National Park Restaurant",
+                "tip": "Znakomite, proste lokalne jedzenie."
+            },
+            {
+                "time": "13:30",
+                "title": "Zapora Srinakarin & Punkt Widokowy",
+                "desc": "Zaledwie 10 minut od Erawanu. Potężna zapora hydroelektryczna z zadbanym ogrodem i spektakularną panoramą jeziora pośród zielonych gór.",
+                "price": "Wstęp wolny",
+                "query": "Srinagarind Dam Viewpoint",
+                "tip": "Wspaniałe miejsce na zdjęcia – krajobraz przypomina norweskie fiordy!"
+            },
+            {
+                "time": "14:45",
+                "title": "Kawiarnia nad jeziorem (Lakeview Cafe / Z9)",
+                "desc": "Relaks przy mrożonej tajskiej herbacie z mlekiem (Cha Yen) i kokosowych deserach z widokiem na gładką taflę wody.",
+                "price": "Kawa ~80–120 THB",
+                "query": "Lakeview Cafe Kanchanaburi",
+                "tip": "Cudowna atmosfera sprzyjająca wyciszeniu."
+            },
+            {
+                "time": "16:30",
+                "title": "Check-in w Lake Hill Kanchanaburi Resort",
+                "desc": "Przyjazd do Waszego drugiego resortu w Tha Kradan. Pokoje tuż nad taflą wody.",
+                "price": "W cenie rezerwacji",
+                "query": "Lake Hill Resort Kanchanaburi",
+                "tip": "Wypożyczcie darmowe kajaki i popływajcie o zachodzie słońca!"
+            },
+            {
+                "time": "18:30",
+                "title": "Kolacja na tarasie nad wodą",
+                "desc": "Romantyczny wieczór w ciszy natury. Świeże ryby z jeziora, tajskie zioła i szum delikatnych fal pod tarasem.",
+                "price": "Kolacja ~300–500 THB",
+                "query": "Lake Hill Resort Kanchanaburi",
+                "tip": "Wczesny sen przed jutrzejszym porannym powrotem na lotnisko BKK."
+            }
+        ]
+    },
+    {
+        "id": "day-6",
+        "dayNum": 6,
+        "date": "14 stycznia 2027 (Czwartek)",
+        "badgeDate": "14 STY",
+        "type": "✈️ LOT NA KO SAMUI",
+        "typeClass": "tag-flight",
+        "title": "Powrót na BKK ➔ Lot PG155 (14:55) ➔ Ko Samui",
+        "subtitle": "Z krainy rzek do tropikalnego raju Zatoki Tajlandzkiej",
+        "hotel": "Impiana Resort Chaweng Noi (4★)",
+        "hotelTip": "Bezpośrednio przy plaży Chaweng Noi – najdrobniejszy, jasny piasek na wyspie.",
+        "bgImage": "https://images.unsplash.com/photo-1537956965359-7573183d1f57?auto=format&fit=crop&w=1200&q=80",
+        "bgFallback": "linear-gradient(180deg, #091f2c 0%, #090d16 100%)",
+        "items": [
+            {
+                "time": "07:30",
+                "title": "Wyjazd samochodem na lotnisko BKK",
+                "desc": "Spokojna podróż powrotna autostradami w kierunku Bangkoku (ok. 235 km, ok. 3.5–4 h jazdy).",
+                "price": "Opłaty drogowe ~100 THB",
+                "query": "Suvarnabhumi Airport Bangkok",
+                "tip": "Start o 07:30–08:00 daje pełen bufor czasowy bez stresu."
+            },
+            {
+                "time": "12:00",
+                "title": "Zwrot samochodu na lotnisku BKK",
+                "desc": "Oddanie kluczyków w wypożyczalni, szybki protokół zwrotu i przejście schodami ruchomymi do hali odlotów krajowych.",
+                "price": "Rozliczenie wypożyczalni",
+                "query": "Suvarnabhumi Airport Car Rental",
+                "tip": "Zatankujcie auto do pełna na stacji benzynowej tuż przed lotniskiem."
+            },
+            {
+                "time": "13:00",
+                "title": "Odprawa & Bangkok Airways Lounge",
+                "desc": "Wszyscy pasażerowie Bangkok Airways mają darmowy wstęp do saloniku Boutique Lounge z darmową kawą, sokami i przekąskami (np. tradycyjne ciastka ryżowe Khao Tom Mud).",
+                "price": "Darmowe w cenie biletu",
+                "query": "Bangkok Airways Boutique Lounge BKK",
+                "tip": "Relaks w klimatyzowanym saloniku przed boardingiem."
+            },
+            {
+                "time": "14:55",
+                "title": "Wylot na Ko Samui (Lot PG155)",
+                "desc": "Malowniczy lot nad Zatoką Tajlandzką. Lądowanie o 16:05 na bajkowym lotnisku na Samui (ogród tropikalny bez tradycyjnych ścian).",
+                "price": "Bilet lotniczy PG155",
+                "query": "Samui International Airport",
+                "tip": "Jedno z najpiękniejszych lotnisk świata!"
+            },
+            {
+                "time": "17:00",
+                "title": "Check-in w Impiana Resort Chaweng Noi",
+                "desc": "Zameldowanie w Waszym resorcie. Powitanie chłodnym ręcznikiem i świeżym napojem.",
+                "price": "W cenie rezerwacji",
+                "query": "Impiana Resort Chaweng Noi Koh Samui",
+                "tip": "Wyjście na plażę dosłownie kilkanaście kroków od pokoju."
+            },
+            {
+                "time": "18:30",
+                "title": "Powitalna kolacja na piasku",
+                "desc": "Szum ciepłych fal, świeży kokos i kolacja przy świecach na plaży Chaweng Noi.",
+                "price": "Kolacja ~500–800 THB",
+                "query": "Impiana Resort Chaweng Noi Koh Samui",
+                "tip": "Rozpoczynamy 9 dni wyspiarskiego relaksu!"
+            }
+        ]
+    },
+    {
+        "id": "day-7",
+        "dayNum": 7,
+        "date": "15 stycznia 2027 (Piątek)",
+        "badgeDate": "15 STY",
+        "type": "🧘 RELAKS #1",
+        "typeClass": "tag-relax",
+        "title": "Wyspiarski Reset na Chaweng Noi",
+        "subtitle": "Brak budzika, ciepłe morze i masaże pod palmami",
+        "hotel": "Impiana Resort Chaweng Noi",
+        "hotelTip": "Śniadanie serwowane jest na zadaszonym tarasie nad samym morzem.",
+        "bgImage": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80",
+        "bgFallback": "linear-gradient(180deg, #06222b 0%, #090d16 100%)",
+        "items": [
+            {
+                "time": "09:30",
+                "title": "Leniwe śniadanie z widokiem na Zatokę",
+                "desc": "Owoce marakui, mango, świeżo parzona kawa i naleśniki z bananem.",
+                "price": "W cenie hotelu",
+                "query": "Impiana Resort Chaweng Noi Koh Samui",
+                "tip": "Żadnego pośpiechu – dziś pełny reset."
+            },
+            {
+                "time": "11:00",
+                "title": "Kąpiele i plażowanie na Chaweng Noi",
+                "desc": "Chaweng Noi słynie z braku ostrych koralowców i łagodnego wejścia do głębokiej wody. Cudowny, jasny piasek i ciepłe morze.",
+                "price": "Wstęp wolny",
+                "query": "Chaweng Noi Beach Koh Samui",
+                "tip": "Pamiętajcie o kremie z filtrem UV 50+ – słońce w styczniu jest zdradliwe!"
+            },
+            {
+                "time": "15:00",
+                "title": "Tradycyjny masaż olejkowy na plaży",
+                "desc": "Relaksujący masaż kokosowy w zadaszonej altanie na piasku. Szum fal w tle tworzy najpiękniejszą muzykę.",
+                "price": "~300–400 THB / os.",
+                "query": "Chaweng Noi Beach Koh Samui",
+                "tip": "Masażystki na plaży robią doskonały masaż karku i stóp."
+            },
+            {
+                "time": "18:30",
+                "title": "Zachód słońca i spacer",
+                "desc": "Koktajle z owoców tropikalnych i romantyczna kolacja w restauracji plażowej.",
+                "price": "Kolacja ~400–700 THB",
+                "query": "Chaweng Noi Beach Koh Samui",
+                "tip": "Wspaniałe wyciszenie przed jutrzejszym zwiedzaniem."
+            }
+        ]
+    },
+    {
+        "id": "day-8",
+        "dayNum": 8,
+        "date": "16 stycznia 2027 (Sobota)",
+        "badgeDate": "16 STY",
+        "type": "🛕 ZWIEDZANIE #1",
+        "typeClass": "tag-explore",
+        "title": "Big Buddha, Wat Plai Laem & Coco Tam's",
+        "subtitle": "Kultura wyspy, niezwykłe skały i legendarny pokaz ognia",
+        "hotel": "Impiana Resort Chaweng Noi",
+        "hotelTip": "Transport: małe auto na ten dzień lub aplikacja Bolt.",
+        "bgImage": "https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&w=1200&q=80",
+        "bgFallback": "linear-gradient(180deg, #1c1507 0%, #090d16 100%)",
+        "items": [
+            {
+                "time": "09:00",
+                "title": "Wielki Budda (Wat Phra Yai)",
+                "desc": "12-metrowy Złoty Budda wznoszący się na małej wysepce połączonej z lądem groblą. Święte miejsce mieszkańców wyspy.",
+                "price": "Wstęp wolny",
+                "query": "Wat Phra Yai Koh Samui",
+                "tip": "Pamiętajcie o zakrytych ramionach i kolanach."
+            },
+            {
+                "time": "10:30",
+                "title": "Wat Plai Laem – Świątynia na Jeziorze",
+                "desc": "Kolorowy kompleks świątynny ze spektakularną 18-ramienną statuą Bogini Guanyin wznoszącą się pośrodku jeziora.",
+                "price": "Wstęp wolny (karma dla ryb 10 THB)",
+                "query": "Wat Plai Laem Koh Samui",
+                "tip": "Kupcie paczkę karmy i nakarmcie potężne sumy pływające w wodzie!"
+            },
+            {
+                "time": "12:30",
+                "title": "Obiad w The Jungle Club z widokiem",
+                "desc": "Słynna restauracja zawieszona na zboczu góry nad Chaweng. Pufy, leżaki i zapierająca dech panorama całej zatoki.",
+                "price": "Obiad ~350–600 THB",
+                "query": "The Jungle Club Samui",
+                "tip": "Stromy podjazd – jeśli jedziecie autem, jedźcie ostrożnie na 1. biegu."
+            },
+            {
+                "time": "14:45",
+                "title": "Skały Hin Ta & Hin Yai (Dziadek i Babcia)",
+                "desc": "Słynne formacje skalne uformowane przez naturę w Lamai. Przy wejściu targowisko z lokalnymi słodyczami.",
+                "price": "Wstęp wolny (parking 20 THB)",
+                "query": "Hin Ta Hin Yai Koh Samui",
+                "tip": "Koniecznie spróbujcie lodów kokosowych w orzechu i karmelków Kalamae."
+            },
+            {
+                "time": "18:00",
+                "title": "Fisherman's Village w Bophut",
+                "desc": "Nastrojowy deptak w dawnej osadzie rybackiej z drewnianą architekturą, butikami i nadrzecznymi restauracjami.",
+                "price": "Wstęp wolny",
+                "query": "Fisherman's Village Bophut",
+                "tip": "Cudowna atmosfera na wieczorny spacer."
+            },
+            {
+                "time": "20:30",
+                "title": "Coco Tam's & Fire Show na plaży",
+                "desc": "Kultowy klub plażowy z pufami i hamakami na piasku. Widowiskowy, profesjonalny taniec z ogniem nad brzegiem morza.",
+                "price": "Koktajle ~280–380 THB",
+                "query": "Coco Tam's Bophut",
+                "tip": "Pokazy ognia odbywają się o 21:00 i 22:30 – spektakl jest oszałamiający!"
+            }
+        ]
+    },
+    {
+        "id": "day-9",
+        "dayNum": 9,
+        "date": "17 stycznia 2027 (Niedziela)",
+        "badgeDate": "17 STY",
+        "type": "🧘 RELAKS #2",
+        "typeClass": "tag-relax",
+        "title": "Seszelskie Klimaty Silver Beach",
+        "subtitle": "Krystaliczna zatoka Crystal Bay i snorkeling z brzegu",
+        "hotel": "Impiana Resort Chaweng Noi",
+        "hotelTip": "Zaledwie 7 minut jazdy samochodem lub Boltem z Waszego hotelu!",
+        "bgImage": "https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?auto=format&fit=crop&w=1200&q=80",
+        "bgFallback": "linear-gradient(180deg, #092026 0%, #090d16 100%)",
+        "items": [
+            {
+                "time": "09:30",
+                "title": "Przejazd na Silver Beach (Crystal Bay)",
+                "desc": "Jedna z najbardziej malowniczych plaż w całej Tajlandii, otoczona potężnymi, gładkimi głazami granitowymi niczym na Seszelach.",
+                "price": "Wstęp wolny (Bolt ~150 THB)",
+                "query": "Silver Beach Crystal Bay Samui",
+                "tip": "Woda jest tu niewiarygodnie przezroczysta i spokojna."
+            },
+            {
+                "time": "11:00",
+                "title": "Snorkeling wśród granitowych skał",
+                "desc": "Wystarczy założyć maskę i zanurzyć się tuż przy brzegu – wokół głazów pływają setki kolorowych rybek i ławice morskich stworzeń.",
+                "price": "Darmowe (wypożyczenie maski ~100 THB)",
+                "query": "Silver Beach Crystal Bay Samui",
+                "tip": "Idealne, bezpieczne warunki do snorkelingu dla każdego."
+            },
+            {
+                "time": "13:30",
+                "title": "Lunch w cieniu palm na plaży",
+                "desc": "Chłodne shake'i z arbuza i ananasa, sałatka Som Tam i krewetki w chrupiącym cieście.",
+                "price": "Lunch ~250–400 THB",
+                "query": "Crystal Bay Beach Club Samui",
+                "tip": "Stoliki stoją w cieniu tropikalnych drzew tuż nad wodą."
+            },
+            {
+                "time": "16:30",
+                "title": "Popołudnie przy hotelowym basenie",
+                "desc": "Powrót do Impiana Resort. Kąpiel w basenie, czytanie książki i chillout o zachodzie słońca.",
+                "price": "W cenie hotelu",
+                "query": "Impiana Resort Chaweng Noi Koh Samui",
+                "tip": "Spokojny wieczór i wczesny sen przed jutrzejszym rejsem morskim."
+            }
+        ]
+    },
+    {
+        "id": "day-10",
+        "dayNum": 10,
+        "date": "18 stycznia 2027 (Poniedziałek)",
+        "badgeDate": "18 STY",
+        "type": "🚤 MORSKA WYPRAWA",
+        "typeClass": "tag-boat",
+        "title": "Morski Park Narodowy Ang Thong",
+        "subtitle": "Archipelag 42 bezludnych wysp, Szmaragdowe Jezioro i kajaki",
+        "hotel": "Impiana Resort Chaweng Noi",
+        "hotelTip": "Wycieczkę motorówką zarezerwujcie 2 dni wcześniej w recepcji lub na Klook.",
+        "bgImage": "https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=1200&q=80",
+        "bgFallback": "linear-gradient(180deg, #071c24 0%, #090d16 100%)",
+        "items": [
+            {
+                "time": "08:00",
+                "title": "Odbiór z hotelu Impiana i transfer na przystań",
+                "desc": "Klimatyzowany busik odbiera Was bezpośrednio z lobby hotelu i wiezie do przystani motorówek na północy wyspy.",
+                "price": "W cenie wycieczki",
+                "query": "Impiana Resort Chaweng Noi Koh Samui",
+                "tip": "Załóżcie wygodne sandały/buty do wody i zabierzcie wodoodporny worek na telefon."
+            },
+            {
+                "time": "10:00",
+                "title": "Punkt widokowy Pha Jun Jaras (Koh Wua Talap)",
+                "desc": "Wejście drewnianymi schodkami na szczyt wyspy – z platformy roztacza się jeden z najbardziej pocztówkowych widoków w Azji na 42 wapienne wyspy.",
+                "price": "Wstęp do parku 300 THB / os. (GOTÓWKA)",
+                "query": "Ang Thong National Marine Park",
+                "tip": "Wspinaczka trwa ok. 30 minut – widok ze szczytu rekompensuje każdy wysiłek!"
+            },
+            {
+                "time": "12:00",
+                "title": "Szmaragdowa Laguna (Emerald Lake / Talay Nai)",
+                "desc": "Przejście na wyspę Koh Mae Ko. Schody prowadzą do ukrytego w starym kraterze jeziora o jaskrawozielonej, szmaragdowej barwie.",
+                "price": "W cenie wycieczki",
+                "query": "Emerald Lake Koh Mae Ko",
+                "tip": "Niezwykłe zjawisko geologiczne połączone podziemnymi tunelami z morzem."
+            },
+            {
+                "time": "13:30",
+                "title": "Kajaki morskie i snorkeling w jaskiniach",
+                "desc": "Pływanie dwuosobowym kajakiem wzdłuż wapiennych klifów krasowych i snorkeling nad rafą pełną koralowców.",
+                "price": "W cenie wycieczki",
+                "query": "Ang Thong National Marine Park",
+                "tip": "Tajski lunch w formie bufetu serwowany na bezludnej plaży."
+            },
+            {
+                "time": "16:30",
+                "title": "Powrót do Impiana Resort",
+                "desc": "Rejs powrotny motorówką na Samui, transfer do hotelu, gorący prysznic i regeneracja po dniu pełnym przygód.",
+                "price": "W cenie",
+                "query": "Impiana Resort Chaweng Noi Koh Samui",
+                "tip": "Pyszna, lekka kolacja w hotelu i relaksujący sen."
+            }
+        ]
+    },
+    {
+        "id": "day-11",
+        "dayNum": 11,
+        "date": "19 stycznia 2027 (Wtorek)",
+        "badgeDate": "19 STY",
+        "type": "🧘 RELAKS #3",
+        "typeClass": "tag-relax",
+        "title": "Dzień Tajskiego SPA & Plaża Mae Nam",
+        "subtitle": "Królewski rytuał dla dwojga i oaza spokoju na północy",
+        "hotel": "Impiana Resort Chaweng Noi",
+        "hotelTip": "Pakiet spa warto zarezerwować dzień wcześniej.",
+        "bgImage": "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1200&q=80",
+        "bgFallback": "linear-gradient(180deg, #1f101f 0%, #090d16 100%)",
+        "items": [
+            {
+                "time": "10:00",
+                "title": "Królewski Rytuał Day-SPA dla Dwojga",
+                "desc": "2.5-godzinna sesja w renomowanym tajskim spa: peeling kokosowy, aromaterapeutyczny masaż całego ciała ciepłym olejkiem i kąpiel w płatkach kwiatów.",
+                "price": "~1500–2500 THB / os.",
+                "query": "Eranda Herbal Spa Koh Samui",
+                "tip": "Ciało i umysł zrelaksują się w 100%."
+            },
+            {
+                "time": "14:00",
+                "title": "Plaża Mae Nam – Ucieczka od Zgiełku",
+                "desc": "Przejazd na plażę Mae Nam na północy wyspy. Szeroka, spokojna plaża z głębszą wodą i pięknym widokiem na góry wyspy Koh Phangan.",
+                "price": "Wstęp wolny",
+                "query": "Mae Nam Beach Samui",
+                "tip": "Brak tłumów i głośnych skuterów wodnych – idealna na spacer i czytanie."
+            },
+            {
+                "time": "18:30",
+                "title": "Kolacja z rybą pieczoną w soli (Pla Pao)",
+                "desc": "Tradycyjna tajska kolacja w plażowej restauracji. Cała świeża ryba pieczona w grubej skorupie soli morskiej z trawą cytrynową i sosem z limonki.",
+                "price": "Kolacja ~300–450 THB",
+                "query": "Mae Nam Beach Samui",
+                "tip": "Pla Pao to absolutny przysmak tajskiego wybrzeża!"
+            }
+        ]
+    },
+    {
+        "id": "day-12",
+        "dayNum": 12,
+        "date": "20 stycznia 2027 (Środa)",
+        "badgeDate": "20 STY",
+        "type": "🌴 DŻUNGLA LUB ŚWINKI",
+        "typeClass": "tag-explore",
+        "title": "Wodospady Na Muang & Ogród w Chmurach",
+        "subtitle": "Kąpiel w basenie skalnym i tajemniczy Secret Buddha Garden",
+        "hotel": "Impiana Resort Chaweng Noi",
+        "hotelTip": "Dzień pełen zieleni i górskiego chłodu we wnętrzu wyspy.",
+        "bgImage": "https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=1200&q=80",
+        "bgFallback": "linear-gradient(180deg, #0f1c0f 0%, #090d16 100%)",
+        "items": [
+            {
+                "time": "09:00",
+                "title": "Wodospady Na Muang 1 i 2",
+                "desc": "Trekking przez las deszczowy do majestatycznych wodospadów spływających po fioletowych skałach. Kąpiel w chłodnym, naturalnym basenie pod kaskadą.",
+                "price": "Wstęp wolny (parking 30 THB)",
+                "query": "Na Muang Waterfall Koh Samui",
+                "tip": "Wybierzcie Na Muang 2 dla bardziej kameralnej atmosfery."
+            },
+            {
+                "time": "11:30",
+                "title": "Tarnim Magic Garden (Secret Buddha Garden)",
+                "desc": "Mistyczny ogród rzeźb ukryty wysoko na najwyższych wzgórzach wyspy pośród mgieł i dżungli. Stworzony przez 77-letniego mnicha i farmera.",
+                "price": "80 THB / os.",
+                "query": "Secret Buddha Garden Koh Samui",
+                "tip": "Niezwykła energia, kamienne posągi buddyjskie i strumyki."
+            },
+            {
+                "time": "13:30",
+                "title": "Lunch w restauracji Giant Summit",
+                "desc": "Posiłek w restauracji zawieszonej nad przepaścią z widokiem na południowy kraniec wyspy i sąsiednie wysepki.",
+                "price": "Lunch ~250–400 THB",
+                "query": "Giant Summit Samui",
+                "tip": "Cudowna panorama i orzeźwiający górski wiaterek."
+            },
+            {
+                "time": "Alternatywa",
+                "title": "Wyspa Świnek (Koh Madsum) – opcjonalnie",
+                "desc": "Zamiast gór możecie wybrać popołudniowy rejs drewnianą łodzią z Thong Krut na plażę z oswojonymi, pływającymi świnkami.",
+                "price": "Łódź ~1500 THB za dwoje",
+                "query": "Koh Madsum Pig Island",
+                "tip": "Zabawne zdjęcia ze świnkami spacerującymi po białym piasku!"
+            }
+        ]
+    },
+    {
+        "id": "day-13",
+        "dayNum": 13,
+        "date": "21 stycznia 2027 (Czwartek)",
+        "badgeDate": "21 STY",
+        "type": "🧘 RELAKS #4",
+        "typeClass": "tag-relax",
+        "title": "Coral Cove & Krwisty Zachód Słońca",
+        "subtitle": "Kameralna zatoczka i pożegnanie dnia w Lipa Noi",
+        "hotel": "Impiana Resort Chaweng Noi",
+        "hotelTip": "Zatoczka Coral Cove znajduje się dosłownie 3 minuty od Chaweng Noi.",
+        "bgImage": "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80",
+        "bgFallback": "linear-gradient(180deg, #1f0a14 0%, #090d16 100%)",
+        "items": [
+            {
+                "time": "10:00",
+                "title": "Zatoczka Coral Cove",
+                "desc": "Mała, urocza zatoczka wciśnięta między skaliste cyple. Płytka, szmaragdowa woda, głazy i cień palm.",
+                "price": "Wstęp wolny",
+                "query": "Coral Cove Beach Samui",
+                "tip": "Świetne miejsce na ustronne plażowanie z dala od jakichkolwiek tłumów."
+            },
+            {
+                "time": "16:00",
+                "title": "Wyjazd na zachodnie wybrzeże (Lipa Noi / Taling Ngam)",
+                "desc": "Przejazd na zachodnią stronę wyspy, gdzie słońce chowa się bezpośrednio za horyzontem Zatoki Tajlandzkiej.",
+                "price": "Bolt ~400 THB",
+                "query": "Lipa Noi Beach Samui",
+                "tip": "To tu powstają najwspanialsze zachody słońca w całej Tajlandii."
+            },
+            {
+                "time": "17:30",
+                "title": "Drink w Air Bar (InterContinental)",
+                "desc": "Elegancki taras zawieszony na klifie nad morzem. Muzyka na żywo i widok na mieniące się purpurą i złotem morze.",
+                "price": "Drinki ~350–500 THB",
+                "query": "Air Bar Koh Samui",
+                "tip": "Niezwykle romantyczna chwila."
+            },
+            {
+                "time": "19:30",
+                "title": "Kolacja przy świecach na plaży Lipa Noi",
+                "desc": "Stolik w piasku oświetlony lampionami, pieczone kalmary, krewetki tygrysie i białe wino.",
+                "price": "Kolacja ~600–900 THB",
+                "query": "Lipa Noi Beach Samui",
+                "tip": "Magiczny wieczór."
+            }
+        ]
+    },
+    {
+        "id": "day-14",
+        "dayNum": 14,
+        "date": "22 stycznia 2027 (Piątek)",
+        "badgeDate": "22 STY",
+        "type": "🐘 SŁONIE & KULINARIA",
+        "typeClass": "tag-explore",
+        "title": "Etyczne Słonie & Lekcja Gotowania",
+        "subtitle": "Bliskie spotkanie z olbrzymami i sekrety tajskich przypraw",
+        "hotel": "Impiana Resort Chaweng Noi",
+        "hotelTip": "Ostatnia noc na Ko Samui – jutro powrót do Bangkoku!",
+        "bgImage": "https://images.unsplash.com/photo-1557050543-4d5f4e07ef46?auto=format&fit=crop&w=1200&q=80",
+        "bgFallback": "linear-gradient(180deg, #1c1809 0%, #090d16 100%)",
+        "items": [
+            {
+                "time": "09:00",
+                "title": "Samui Elephant Sanctuary (Etyczne Sanktuarium)",
+                "desc": "Certyfikowany rezerwat ratujący słonie z niewoli. Przygotowywanie kul witaminowych, karmienie bananami z ręki, wspólny spacer przez dżunglę i podglądanie ich kąpieli w błocie.",
+                "price": "~3000 THB / os. (REZERWACJA ONLINE!)",
+                "query": "Samui Elephant Sanctuary",
+                "tip": "Żadnego ujeżdżania czy łańcuchów – 100% szacunku i etyki. Zarezerwujcie min. 2 tyg. wcześniej!"
+            },
+            {
+                "time": "14:00",
+                "title": "Warsztaty Gotowania Kuchni Tajskiej dla Par",
+                "desc": "Prywatna lekcja z szefem kuchni: wizyta na targu po zioła, gotowanie autentycznego Pad Thaia, zupy Tom Kha Gai i mango sticky rice.",
+                "price": "~1200–1600 THB / os.",
+                "query": "Samui Cooking Class",
+                "tip": "Zabierzecie do domu książkę kucharską i umiejętności na całe życie!"
+            },
+            {
+                "time": "18:30",
+                "title": "Ostatni wieczór na plaży Chaweng Noi",
+                "desc": "Pożegnalny koktajl w barze Impiana Resort, spacer brzegiem ciepłego morza i pakowanie walizek.",
+                "price": "Koszty własne",
+                "query": "Impiana Resort Chaweng Noi Koh Samui",
+                "tip": "Sprawdźcie bilety lotnicze na jutrzejszy lot PG1190 o 11:35."
+            }
+        ]
+    },
+    {
+        "id": "day-15",
+        "dayNum": 15,
+        "date": "23 stycznia 2027 (Sobota)",
+        "badgeDate": "23 STY",
+        "type": "👑 KRÓLEWSKI FINAŁ",
+        "typeClass": "tag-luxury",
+        "title": "Lot do Bangkoku (11:35) & lebua at State Tower",
+        "subtitle": "Apartament nad rzeką i legendarny Sky Bar na 63. piętrze",
+        "hotel": "lebua at State Tower Bangkok (5★ Luxury)",
+        "hotelTip": "The Dome & Sky Bar na 63. piętrze – sceneria z filmu Kac Vegas w Bangkoku!",
+        "bgImage": "https://images.unsplash.com/photo-1508009603885-50cf7c579365?auto=format&fit=crop&w=1200&q=80",
+        "bgFallback": "linear-gradient(180deg, #181124 0%, #090d16 100%)",
+        "items": [
+            {
+                "time": "09:30",
+                "title": "Przejazd na lotnisko Ko Samui (USM)",
+                "desc": "Wymeldowanie z Impiana Resort i krótki transfer na lotnisko Samui (ok. 15 minut jazdy).",
+                "price": "Bolt ~300 THB",
+                "query": "Samui International Airport",
+                "tip": "Klimatyczny spacer wśród palm w otwartym terminalu ogrodowym."
+            },
+            {
+                "time": "11:35",
+                "title": "Wylot do Bangkoku (Lot PG1190)",
+                "desc": "Rejsowy lot Bangkok Airways. Lądowanie o 12:55 na lotnisku Suvarnabhumi (BKK).",
+                "price": "Bilet lotniczy PG1190",
+                "query": "Suvarnabhumi Airport Bangkok",
+                "tip": "Odbiór bagażu i przejazd taksówką do serca Bangkoku."
+            },
+            {
+                "time": "14:30",
+                "title": "Check-in w lebua at State Tower",
+                "desc": "Zameldowanie w 5★ wieżowcu. Wasz luksusowy apartament z prywatnym balkonem oferuje zapierający dech widok na meandry rzeki Chao Phraya i morze wieżowców.",
+                "price": "W cenie rezerwacji",
+                "query": "lebua at State Tower Bangkok",
+                "tip": "Wyjdźcie na balkon i poczujcie potęgę tej metropolii!"
+            },
+            {
+                "time": "16:30",
+                "title": "Ostatnie zakupy pamiątek",
+                "desc": "Krótki wypad na zakupy wysokiej jakości pamiątek (tajski jedwab, kosmetyki kokosowe, herbata Blue Butterfly Pea, suszone mango).",
+                "price": "Koszty własne",
+                "query": "Siam Paragon Bangkok",
+                "tip": "Możliwość uzyskania zwrotu podatku VAT (formularz VAT Refund w sklepach)."
+            },
+            {
+                "time": "18:00",
+                "title": "The Dome at lebua: Toast w Sky Barze",
+                "desc": "Wjazd na 63. piętro pod słynną Złotą Kopułę. Toast kieliszkiem szampana na otwartej platformie zawieszonej setki metrów nad ziemią o zachodzie słońca.",
+                "price": "Koktajle ~800–1200 THB",
+                "query": "Sky Bar lebua Bangkok",
+                "tip": "OBOWIĄZKOWY DRESS CODE SMART CASUAL: Mężczyźni: długie spodnie, kryte buty, koszula/polo. Kobiety: elegancka sukienka."
+            },
+            {
+                "time": "20:30",
+                "title": "Wykwintna Pożegnalna Kolacja",
+                "desc": "Królewski finał podróży pod rozgwieżdżonym niebem Bangkoku. Wspomnienia, które zostaną z Wami na całe życie.",
+                "price": "Koszty własne",
+                "query": "Sirocco Restaurant Bangkok",
+                "tip": "Niezapomniane zwieńczenie wyprawy."
+            }
+        ]
+    },
+    {
+        "id": "day-16",
+        "dayNum": 16,
+        "date": "24 stycznia 2027 (Niedziela)",
+        "badgeDate": "24 STY",
+        "type": "🛫 POWRÓT DO POLSKI",
+        "typeClass": "tag-flight",
+        "title": "Do Zobaczenia, Tajlandio!",
+        "subtitle": "Królewskie śniadanie i lot powrotny z BKK o 10:50",
+        "hotel": "Wylot do Polski",
+        "hotelTip": "Bądźcie na lotnisku BKK o 08:00 (dokładnie 2h50m przed startem).",
+        "bgImage": "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1200&q=80",
+        "bgFallback": "linear-gradient(180deg, #111a2e 0%, #090d16 100%)",
+        "items": [
+            {
+                "time": "07:00",
+                "title": "Królewskie śniadanie w restauracji Cafe Mozu",
+                "desc": "Jedno z najbardziej renomowanych śniadań hotelowych w Azji z widokiem na basen w stylu marokańskim.",
+                "price": "W cenie rezerwacji",
+                "query": "lebua at State Tower Bangkok",
+                "tip": "Wspaniały wybór owoców, pieczywa i dań z całego świata."
+            },
+            {
+                "time": "07:30",
+                "title": "Wymeldowanie i transfer na lotnisko BKK",
+                "desc": "Taksówka autostradą Sirat Expressway na lotnisko Suvarnabhumi. Niedzielny poranek gwarantuje brak jakichkolwiek korków (ok. 30–35 min jazdy).",
+                "price": "Taksówka ~400 THB",
+                "query": "Suvarnabhumi Airport Bangkok",
+                "tip": "Poproście boya hotelowego o wezwanie taksówki z włączonym taksometrem lub zamówcie Bolt."
+            },
+            {
+                "time": "08:15",
+                "title": "Terminal BKK: Odprawa i Kontrola",
+                "desc": "Nadanie bagaży rejestrowanych, ewentualne podbicie pieczątek VAT Refund w urzędzie celnym, kontrola bezpieczeństwa i paszportowa.",
+                "price": "W cenie biletu",
+                "query": "Suvarnabhumi Airport Departures",
+                "tip": "W strefie bezcłowej King Power możecie wydać ostatnie bahty na pamiątki."
+            },
+            {
+                "time": "10:50",
+                "title": "Wylot do Polski",
+                "desc": "Start samolotu powrotnego. Szczęśliwy powrót do domu z tysiącem zdjęć, opalenizną i wspaniałymi wspomnieniami!",
+                "price": "Lot powrotny",
+                "query": "Suvarnabhumi Airport Bangkok",
+                "tip": "Khai Khup Khun Krap – dziękujemy, Tajlandio!"
+            }
+        ]
+    }
+]
+
+html_template = '''<!DOCTYPE html>
 <html lang="pl">
 <head>
   <meta charset="UTF-8">
@@ -16,15 +923,13 @@
   <style>
     :root {
       --bg-dark: #090d16;
-      --card-bg: rgba(15, 23, 42, 0.88);
+      --card-bg: rgba(15, 23, 42, 0.90);
       --card-border: rgba(255, 255, 255, 0.16);
       --gold: #f59e0b;
       --gold-light: #fef3c7;
       --gold-gradient: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
-      --safe-top: env(safe-area-inset-top, 20px);
-      --safe-bottom: env(safe-area-inset-bottom, 20px);
     }
 
     * {
@@ -34,11 +939,19 @@
       -webkit-tap-highlight-color: transparent;
     }
 
+    /* TRUE FULLSCREEN ROOT (ANCHORED TOP:0, BOTTOM:0 - ZERO DEAD SPACE) */
     html, body {
       width: 100%;
       height: 100%;
+      height: 100dvh;
+      margin: 0;
+      padding: 0;
       overflow: hidden;
       position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
       background: var(--bg-dark);
       font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
       color: var(--text-main);
@@ -54,16 +967,16 @@
       left: 0;
       right: 0;
       z-index: 100;
-      height: calc(max(var(--safe-top), 20px) + 52px);
-      padding-top: max(var(--safe-top), 20px);
+      height: calc(max(env(safe-area-inset-top, 20px), 20px) + 52px);
+      padding-top: max(env(safe-area-inset-top, 20px), 20px);
       padding-left: 16px;
       padding-right: 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: #090d16; /* SOLID OPAQUE DARK - NO BLUR */
+      background: #090d16; /* 100% SOLID OPAQUE DARK - ZERO BLUR */
       border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.8);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.85);
       box-sizing: border-box;
     }
 
@@ -135,25 +1048,30 @@
       transition: width 0.3s ease-out;
     }
 
-    /* MASTER VIEWPORT (DECK CONTAINER) */
+    /* MASTER VIEWPORT (EDGE-TO-EDGE DECK CONTAINER) */
     .app-viewport {
-      width: 100vw;
+      width: 100%;
       height: 100%;
-      position: relative;
+      height: 100dvh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
       overflow: hidden;
       background: #090d16;
     }
 
-    /* INDIVIDUAL DISCRETE SLIDES (NO OVERLAPPING, NO JUMPING) */
+    /* INDIVIDUAL DISCRETE SLIDES (TRUE 100% FULLSCREEN) */
     .slide {
       width: 100%;
       height: 100%;
       position: absolute;
       top: 0;
       left: 0;
-      overflow-y: auto;
-      overflow-x: hidden;
-      -webkit-overflow-scrolling: touch;
+      right: 0;
+      bottom: 0;
+      overflow: hidden;
       box-sizing: border-box;
       opacity: 0;
       pointer-events: none;
@@ -176,41 +1094,64 @@
       z-index: 1;
     }
 
-    /* Slide Background Photo */
+    /* Fixed Decoupled Background - NEVER SCROLLS AWAY */
     .slide-bg {
-      position: fixed;
+      position: absolute;
       top: 0;
       left: 0;
+      right: 0;
+      bottom: 0;
       width: 100%;
       height: 100%;
       background-size: cover;
       background-position: center;
       z-index: 1;
+      pointer-events: none;
+      transform: scale(1.04);
     }
 
     .slide-overlay {
-      position: fixed;
+      position: absolute;
       top: 0;
       left: 0;
+      right: 0;
+      bottom: 0;
       width: 100%;
       height: 100%;
       z-index: 2;
+      pointer-events: none;
       background: linear-gradient(
         180deg,
-        rgba(9, 13, 22, 0.45) 0%,
-        rgba(9, 13, 22, 0.75) 40%,
-        rgba(9, 13, 22, 0.90) 100%
+        rgba(9, 13, 22, 0.35) 0%,
+        rgba(9, 13, 22, 0.65) 45%,
+        rgba(9, 13, 22, 0.82) 100%
       );
     }
 
-    /* Content Layout */
+    /* Independent Scroll Layer */
+    .slide-scroll-view {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      z-index: 10;
+      box-sizing: border-box;
+    }
+
+    /* Content Layout - ZERO BOTTOM VOID */
     .slide-content {
       position: relative;
-      z-index: 10;
       width: 100%;
+      min-height: 100%;
       box-sizing: border-box;
-      padding-top: calc(max(var(--safe-top), 20px) + 64px);
-      padding-bottom: calc(max(var(--safe-bottom), 20px) + 16px);
+      padding-top: calc(max(env(safe-area-inset-top, 20px), 20px) + 64px);
+      padding-bottom: max(env(safe-area-inset-bottom, 0px), 12px);
       padding-left: 16px;
       padding-right: 16px;
       display: flex;
@@ -342,7 +1283,8 @@
     .intro-footer {
       margin-top: auto;
       text-align: center;
-      padding-top: 20px;
+      padding-top: 16px;
+      padding-bottom: max(env(safe-area-inset-bottom, 0px), 12px);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -479,11 +1421,12 @@
       line-height: 1.35;
     }
 
-    /* Timeline Items */
+    /* Timeline Items - ZERO DEAD MARGIN */
     .timeline-container {
       display: flex;
       flex-direction: column;
       gap: 12px;
+      margin-bottom: 0;
     }
 
     .timeline-card {
@@ -574,16 +1517,6 @@
       background: rgba(245, 158, 11, 0.3);
     }
 
-    /* End-of-Day footer pill */
-    .day-end-hint {
-      text-align: center;
-      padding-top: 16px;
-      padding-bottom: 8px;
-      font-size: 12px;
-      color: rgba(255, 255, 255, 0.45);
-      font-weight: 600;
-    }
-
     /* Modal / Bottom Drawer for Day Selection */
     .drawer-backdrop {
       position: fixed;
@@ -614,7 +1547,7 @@
       background: #0f172a;
       border-top: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 28px 28px 0 0;
-      padding: 20px 20px calc(max(var(--safe-bottom), 16px) + 20px);
+      padding: 20px 20px calc(max(env(safe-area-inset-bottom, 20px), 20px) + 16px);
       z-index: 201;
       transform: translateY(100%);
       transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
@@ -729,18 +1662,25 @@
     </div>
   </header>
 
-  <!-- MASTER VIEWPORT (DECK CONTAINER) -->
+  <!-- MASTER VIEWPORT (EDGE-TO-EDGE DECK CONTAINER) -->
   <main class="app-viewport" id="viewport">
+'''
 
+# Build slides HTML
+for idx, s in enumerate(slides_data):
+    is_active = " active" if idx == 0 else ""
+    if s.get("isIntro"):
+        html_template += f'''
     <!-- SLIDE 0: INTRO & COUNTDOWN -->
-    <section class="slide active" id="slide-intro" data-index="0" data-label="🇹🇭 Start">
-      <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1508009603885-50cf7c579365?auto=format&fit=crop&w=1200&q=80'); linear-gradient(135deg, #090d16 0%, #1e1b4b 50%, #0f172a 100%)"></div>
+    <section class="slide{is_active}" id="slide-intro" data-index="0" data-label="🇹🇭 Start">
+      <div class="slide-bg" style="background-image: url('{s["bgImage"]}'); {s.get("bgFallback", "")}"></div>
       <div class="slide-overlay"></div>
-      <div class="slide-content">
+      <div class="slide-scroll-view">
+        <div class="slide-content">
         <div class="intro-hero">
           <div class="intro-tag">🌴 TAJLANDIA 2027</div>
-          <h1 class="intro-title">Tajlandia 2027</h1>
-          <p class="intro-subtitle">Bangkok • Kanchanaburi • Ko Samui</p>
+          <h1 class="intro-title">{s["title"]}</h1>
+          <p class="intro-subtitle">{s["subtitle"]}</p>
 
           <!-- Live Countdown Card -->
           <div class="countdown-card">
@@ -788,2099 +1728,77 @@
             <span>👆 Przesuń w górę, aby zobaczyć Dzień 1</span>
           </div>
         </div>
+        </div>
       </div>
     </section>
-
-    <!-- SLIDE 1: DZIEŃ 1 -->
-    <section class="slide" id="day-1" data-index="1" data-label="Dzień 1 / 16 • 9 STY">
-      <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?auto=format&fit=crop&w=1200&q=80'); linear-gradient(180deg, #180926 0%, #090d16 100%)"></div>
+'''
+    else:
+        day_num = s["dayNum"]
+        slide_idx = day_num
+        html_template += f'''
+    <!-- SLIDE {slide_idx}: DZIEŃ {day_num} -->
+    <section class="slide{is_active}" id="{s["id"]}" data-index="{slide_idx}" data-label="Dzień {day_num} / 16 • {s["badgeDate"]}">
+      <div class="slide-bg" style="background-image: url('{s["bgImage"]}'); {s.get("bgFallback", "")}"></div>
       <div class="slide-overlay"></div>
-      <div class="slide-content">
+      <div class="slide-scroll-view">
+        <div class="slide-content">
         
         <!-- Header -->
         <div class="day-header">
           <div class="day-top-meta">
-            <span class="day-pill">Dzień 1 z 16</span>
-            <span class="day-pill tag-arrival">🛬 PRZYLOT & CHINATOWN</span>
-            <span class="day-date-text">9 stycznia 2027 (Sobota)</span>
+            <span class="day-pill">Dzień {day_num} z 16</span>
+            <span class="day-pill {s.get('typeClass', 'tag-explore')}">{s["type"]}</span>
+            <span class="day-date-text">{s["date"]}</span>
           </div>
-          <h2 class="day-title">Witaj w Krainie Uśmiechu!</h2>
-          <p class="day-subtitle">Przylot do Bangkoku i neonowe Chinatown</p>
+          <h2 class="day-title">{s["title"]}</h2>
+          <p class="day-subtitle">{s["subtitle"]}</p>
         </div>
 
         <!-- Hotel Card -->
         <div class="hotel-card">
           <div class="hotel-icon">🏨</div>
           <div class="hotel-info">
-            <div class="hotel-info-name">Mövenpick Hotel Sukhumvit 15 (5★)</div>
-            <div class="hotel-info-tip">Darmowy tuk-tuk ze ślepej uliczki Soi 15 do stacji BTS Asok / Terminal 21.</div>
+            <div class="hotel-info-name">{s["hotel"]}</div>
+            <div class="hotel-info-tip">{s["hotelTip"]}</div>
           </div>
         </div>
 
         <!-- Timeline Items -->
         <div class="timeline-container">
-
+'''
+        for it in s["items"]:
+            encoded_query = it["query"].replace(" ", "+")
+            maps_url = f"https://www.google.com/maps/search/?api=1&query={encoded_query}"
+            html_template += f'''
           <div class="timeline-card">
             <div class="timeline-card-header">
-              <span class="time-badge">14:50</span>
-              <span class="timeline-price-tag">Koszty własne</span>
+              <span class="time-badge">{it["time"]}</span>
+              <span class="timeline-price-tag">{it["price"]}</span>
             </div>
-            <h3 class="timeline-title">Lądowanie w Bangkoku (BKK)</h3>
-            <p class="timeline-desc">Odbiór bagażu, zakup karty eSIM (AIS / TrueMove) i wypłata gotówki z bankomatu (najlepiej jednorazowo min. 10 000–20 000 THB na opłaty i street food, prowizja 220 THB).</p>
+            <h3 class="timeline-title">{it["title"]}</h3>
+            <p class="timeline-desc">{it["desc"]}</p>
             <div class="timeline-tip-box">
               <span>💡</span>
-              <div>Oficjalne taksówki z lotniska bierze się z biletomatu na poziomie 1.</div>
+              <div>{it["tip"]}</div>
             </div>
             <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Suvarnabhumi+Airport+Bangkok" target="_blank" rel="noopener" class="maps-btn">
+              <a href="{maps_url}" target="_blank" rel="noopener" class="maps-btn">
                 <span>📍</span>
                 <span>Otwórz w Google Maps</span>
               </a>
             </div>
           </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">17:30</span>
-              <span class="timeline-price-tag">W cenie rezerwacji</span>
-            </div>
-            <h3 class="timeline-title">Check-in w Mövenpick Sukhumvit 15</h3>
-            <p class="timeline-desc">Zameldowanie w 5★ hotelu w sercu tętniącej życiem dzielnicy Sukhumvit. Szybki relaks i odświeżenie po locie.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Hotel ma świetny basen na dachu i bar Rainforest.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Mövenpick+Hotel+Sukhumvit+15+Bangkok" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">19:30</span>
-              <span class="timeline-price-tag">Street food ~150–300 THB</span>
-            </div>
-            <h3 class="timeline-title">Chinatown (Yaowarat Road)</h3>
-            <p class="timeline-desc">Zderzenie z kulinarną stolicą świata: feeria neonów, kłęby pary z woków, pieczone krewetki, Pad Thai i deser ze słodkiego mango ze sticky rice.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Najlepszy klimat zaczyna się po godz. 19:00, gdy gasną światła dnia.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Yaowarat+Road+Chinatown+Bangkok" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">22:00</span>
-              <span class="timeline-price-tag">Koktajle ~250–350 THB</span>
-            </div>
-            <h3 class="timeline-title">Drink nad rzeką Chao Phraya</h3>
-            <p class="timeline-desc">Powitalny koktajl w nadrzecznym barze (np. Eagle Cafe / The Deck) z widokiem na podświetloną majestatyczną iglicę Wat Arun odbijającą się w rzece.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Idealny relaks na walkę z jet lagiem.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Eagle+Cafe+Bangkok" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
+'''
+        html_template += '''
         </div>
 
-        <div class="day-end-hint">
-          <span>👆 Przesuń w górę: Dzień 2 z 16 ➔</span>
         </div>
-
       </div>
     </section>
+'''
 
-    <!-- SLIDE 2: DZIEŃ 2 -->
-    <section class="slide" id="day-2" data-index="2" data-label="Dzień 2 / 16 • 10 STY">
-      <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1563492065599-3520f775eeed?auto=format&fit=crop&w=1200&q=80'); linear-gradient(180deg, #1e1305 0%, #090d16 100%)"></div>
-      <div class="slide-overlay"></div>
-      <div class="slide-content">
-        
-        <!-- Header -->
-        <div class="day-header">
-          <div class="day-top-meta">
-            <span class="day-pill">Dzień 2 z 16</span>
-            <span class="day-pill tag-explore">🏛️ ZWIEDZANIE INTENSYWNIE</span>
-            <span class="day-date-text">10 stycznia 2027 (Niedziela)</span>
-          </div>
-          <h2 class="day-title">Złote Świątynie & Kanały Thonburi</h2>
-          <p class="day-subtitle">Klasyczne ikony dawnego i dzisiejszego Bangkoku</p>
-        </div>
-
-        <!-- Hotel Card -->
-        <div class="hotel-card">
-          <div class="hotel-icon">🏨</div>
-          <div class="hotel-info">
-            <div class="hotel-info-name">Mövenpick Hotel Sukhumvit 15</div>
-            <div class="hotel-info-tip">Śniadanie o 07:15 – startujemy w miasto o 07:45!</div>
-          </div>
-        </div>
-
-        <!-- Timeline Items -->
-        <div class="timeline-container">
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">08:30</span>
-              <span class="timeline-price-tag">500 THB / os.</span>
-            </div>
-            <h3 class="timeline-title">Wielki Pałac Królewski & Wat Phra Kaew</h3>
-            <p class="timeline-desc">Najświętsze miejsce w Tajlandii ze słynnym Szmaragdowym Buddą. Przybycie na 08:30 gwarantuje brak upału i autokarów z turystami.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Rygorystyczny dress code: zakryte ramiona, długie spodnie/spódnice.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=The+Grand+Palace+Bangkok" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">10:45</span>
-              <span class="timeline-price-tag">300 THB / os. (w tym butelka wody)</span>
-            </div>
-            <h3 class="timeline-title">Wat Pho – Leżący Budda</h3>
-            <p class="timeline-desc">46-metrowy monumentalny posąg pokryty płatkowym złotem oraz historyczna kolebka masażu tajskiego.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Warto wrzucić po 1 monecie do 108 mis z brązu na szczęście.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Wat+Pho+Bangkok" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">12:00</span>
-              <span class="timeline-price-tag">200 THB / os.</span>
-            </div>
-            <h3 class="timeline-title">Przeprawa promem i Wat Arun (Świątynia Świtu)</h3>
-            <p class="timeline-desc">Krótki rejs promem rzecznym (5 THB) na drugi brzeg rzeki. Spacer wokół wieży prang zdobionej potłuczoną chińską porcelaną.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Obiad w restauracji nadrzecznej z widokiem na rzekę.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Wat+Arun+Bangkok" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">13:30</span>
-              <span class="timeline-price-tag">~1000–1500 THB za całą prywatną łódź</span>
-            </div>
-            <h3 class="timeline-title">Prywatny rejs łodzią z długim ogonem (Khlongs)</h3>
-            <p class="timeline-desc">Wyprawa w labirynt kanałów Thonburi. Zobaczycie tradycyjne drewniane domy na palach oraz gigantycznego 69-metrowego Złotego Buddę w Wat Paknam z wody.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Cenę wynajmu prywatnej łodzi ustala się bezpośrednio na przystani.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Wat+Paknam+Phasi+Charoen+Bangkok" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">16:30</span>
-              <span class="timeline-price-tag">~880–1080 THB / os.</span>
-            </div>
-            <h3 class="timeline-title">Mahanakhon SkyWalk (314 m) na zachód słońca</h3>
-            <p class="timeline-desc">Wjazd na najwyższy punkt widokowy Bangkoku ze szklaną podłogą zawieszoną w chmurach. Spektakularny zachód słońca.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Kupcie bilet 1 dzień wcześniej na Klook, by uniknąć stania w kolejce do kasy.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=King+Power+Mahanakhon+Bangkok" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">20:30</span>
-              <span class="timeline-price-tag">Drinki ~400–500 THB</span>
-            </div>
-            <h3 class="timeline-title">Tichuca Rooftop Bar</h3>
-            <p class="timeline-desc">Słynny bar na 46. piętrze z pulsującym, świecącym drzewem z filmu Avatar i panoramicznym widokiem na drapacze chmur Sukhumvit.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Wspaniałe zakończenie intensywnego dnia!</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Tichuca+Rooftop+Bar+Bangkok" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-        </div>
-
-        <div class="day-end-hint">
-          <span>👆 Przesuń w górę: Dzień 3 z 16 ➔</span>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- SLIDE 3: DZIEŃ 3 -->
-    <section class="slide" id="day-3" data-index="3" data-label="Dzień 3 / 16 • 11 STY">
-      <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1542051841857-5f90071e7989?auto=format&fit=crop&w=1200&q=80'); linear-gradient(180deg, #111a2e 0%, #090d16 100%)"></div>
-      <div class="slide-overlay"></div>
-      <div class="slide-content">
-        
-        <!-- Header -->
-        <div class="day-header">
-          <div class="day-top-meta">
-            <span class="day-pill">Dzień 3 z 16</span>
-            <span class="day-pill tag-explore">🌆 ODKRYWANIE & KONTRASTY</span>
-            <span class="day-date-text">11 stycznia 2027 (Poniedziałek)</span>
-          </div>
-          <h2 class="day-title">Złota Góra, Kanał Saen Saep & ICONSIAM</h2>
-          <p class="day-subtitle">Sekrety jedwabiu, tradycyjny transport i luksus nad rzeką</p>
-        </div>
-
-        <!-- Hotel Card -->
-        <div class="hotel-card">
-          <div class="hotel-icon">🏨</div>
-          <div class="hotel-info">
-            <div class="hotel-info-name">Mövenpick Hotel Sukhumvit 15</div>
-            <div class="hotel-info-tip">Codziennie w godz. 16:00–17:00 w hotelu trwa bezpłatny Chocolate Hour!</div>
-          </div>
-        </div>
-
-        <!-- Timeline Items -->
-        <div class="timeline-container">
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">08:15</span>
-              <span class="timeline-price-tag">100 THB / os.</span>
-            </div>
-            <h3 class="timeline-title">Wat Saket (Złota Góra / Golden Mount)</h3>
-            <p class="timeline-desc">Wspinaczka po 344 schodkach otoczonych mgiełką wodną i dzwonami modlitewnymi na szczyt sztucznego wzgórza z widokiem 360° na panoramę miasta.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Rano jest tu cudowny chłód i słychać śpiew mnichów.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Wat+Saket+Bangkok" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">10:00</span>
-              <span class="timeline-price-tag">200 THB / os. (z przewodnikiem)</span>
-            </div>
-            <h3 class="timeline-title">Dom Jima Thompsona (Jim Thompson House)</h3>
-            <p class="timeline-desc">Kompleks zabytkowych domów z ciemnego drewna tekowego pośród bujnego ogrodu w centrum metropolii, związany z tajemniczym zniknięciem twórcy tajskiego jedwabiu.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Prawdziwa zielona oaza spokoju.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Jim+Thompson+House+Bangkok" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">11:45</span>
-              <span class="timeline-price-tag">15 THB / os.</span>
-            </div>
-            <h3 class="timeline-title">Rejs lokalnym tramwajem po kanale Khlong Saen Saep</h3>
-            <p class="timeline-desc">Ekscytujący przejazd szybką łodzią kanałową – autentyczny transport mieszkańców Bangkoku pozwalający błyskawicznie ominąć miejskie korki.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Trzymajcie się lin i uważajcie na rozpryski wody – wspaniała przygoda!</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Pratunam+Pier+Bangkok" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">13:00</span>
-              <span class="timeline-price-tag">Wstęp wolny / dania ~80–150 THB</span>
-            </div>
-            <h3 class="timeline-title">ICONSIAM & SookSiam (Obiad)</h3>
-            <p class="timeline-desc">Jeden z najbardziej spektakularnych kompleksów świata. Wewnątrz znajduje się klimatyzowany pływający targ ze specjałami ze wszystkich regionów Tajlandii.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Znakomity moment na obiad w przyjemnym chłodzie klimatyzacji.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=ICONSIAM+Bangkok" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">16:00</span>
-              <span class="timeline-price-tag">W cenie hotelu</span>
-            </div>
-            <h3 class="timeline-title">Chocolate Hour & Relaks w Mövenpick</h3>
-            <p class="timeline-desc">Powrót do hotelu na słynną darmową godzinę szwajcarskiej czekolady, relaks na leżakach przy basenie na dachu i przygotowanie do jutrzejszej wyprawy autem.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Czekoladowe fontanny, owoce i ciasta codziennie o 16:00!</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Mövenpick+Hotel+Sukhumvit+15+Bangkok" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">19:30</span>
-              <span class="timeline-price-tag">Kolacja ~200–350 THB</span>
-            </div>
-            <h3 class="timeline-title">Nocny targ Jodd Fairs Rama 9</h3>
-            <p class="timeline-desc">Tętniący życiem nocny targ słynący z gigantycznych żeberek wieprzowych w pikantnym bulionie (Leng Saap) i owocowych smoothie.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Spróbujcie deseru w postaci lodów kokosowych lub bingsu.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=JODD+FAIRS+Rama+9+Bangkok" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-        </div>
-
-        <div class="day-end-hint">
-          <span>👆 Przesuń w górę: Dzień 4 z 16 ➔</span>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- SLIDE 4: DZIEŃ 4 -->
-    <section class="slide" id="day-4" data-index="4" data-label="Dzień 4 / 16 • 12 STY">
-      <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1528181304800-259b08848526?auto=format&fit=crop&w=1200&q=80'); linear-gradient(180deg, #1c1409 0%, #090d16 100%)"></div>
-      <div class="slide-overlay"></div>
-      <div class="slide-content">
-        
-        <!-- Header -->
-        <div class="day-header">
-          <div class="day-top-meta">
-            <span class="day-pill">Dzień 4 z 16</span>
-            <span class="day-pill tag-drive">🚗 WYPRAWA SAMOCHODOWA</span>
-            <span class="day-date-text">12 stycznia 2027 (Wtorek)</span>
-          </div>
-          <h2 class="day-title">Auto z BKK ➔ Targ na Torach ➔ Hilltop Erawan</h2>
-          <p class="day-subtitle">Kolej przecinająca stragany, gigantyczny Budda i Most na rzece Kwai</p>
-        </div>
-
-        <!-- Hotel Card -->
-        <div class="hotel-card">
-          <div class="hotel-icon">🏨</div>
-          <div class="hotel-info">
-            <div class="hotel-info-name">Hilltop Erawan Camp (Tha Kradan, Si Sawat)</div>
-            <div class="hotel-info-tip">Glamping na wzgórzu z panoramicznym widokiem na jezioro Srinakarin i góry.</div>
-          </div>
-        </div>
-
-        <!-- Timeline Items -->
-        <div class="timeline-container">
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">07:15</span>
-              <span class="timeline-price-tag">Bolt ~350 THB</span>
-            </div>
-            <h3 class="timeline-title">Przejazd z hotelu na lotnisko BKK</h3>
-            <p class="timeline-desc">Wymeldowanie z Mövenpick i transfer na lotnisko Suvarnabhumi (BKK) po odbiór samochodu z wypożyczalni.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Odbiór auta na BKK pozwala wjechać od razu na autostradę obwodową i ominąć korki!</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Suvarnabhumi+Airport+Bangkok" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">08:15</span>
-              <span class="timeline-price-tag">Wynajem auta</span>
-            </div>
-            <h3 class="timeline-title">Odbiór samochodu & Start trasy na zachód</h3>
-            <p class="timeline-desc">Formalności w wypożyczalni (wymagane Międzynarodowe Prawo Jazdy Konwencja 1949 r., paszport, karta kredytowa). Ruszamy w trasę!</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Ruch lewostronny – automatyczna skrzynia biegów bardzo ułatwia jazdę.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Suvarnabhumi+Airport+Car+Rental" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">10:00</span>
-              <span class="timeline-price-tag">Wstęp wolny</span>
-            </div>
-            <h3 class="timeline-title">Maeklong Railway Market (Targ na Torach)</h3>
-            <p class="timeline-desc">Kultowy targ, gdzie tory kolejowe biegną przez środek stoisk warzywnych. Na dźwięk syreny kupcy w ułamku sekundy składają markizy, a pociąg ociera się o arbuzy.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Przejazdy pociągu: ok. 09:00, 11:10, 11:30. Stójcie bezpiecznie za czerwoną linią!</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Maeklong+Railway+Market" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">13:00</span>
-              <span class="timeline-price-tag">Wstęp wolny (kolejka szynowa na szczyt 20 THB)</span>
-            </div>
-            <h3 class="timeline-title">Świątynia Wat Tham Suea (Tiger Cave Temple)</h3>
-            <p class="timeline-desc">Jedna z najbardziej fotogenicznych świątyń Tajlandii. Olbrzymi, lśniący w słońcu Złoty Budda wznosi się na szczycie wzgórza pośród szmaragdowych pól ryżowych.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Na dole można wstąpić do kawiarni z pomostami nad polami ryżowymi.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Wat+Tham+Suea+Kanchanaburi" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">14:30</span>
-              <span class="timeline-price-tag">Wstęp wolny / obiad ~250–400 THB</span>
-            </div>
-            <h3 class="timeline-title">Most na rzece Kwai w Kanchanaburi</h3>
-            <p class="timeline-desc">Słynny historyczny most Kolei Śmierci. Spacer po torach i nadrzeczny obiad w pływającej restauracji nad rzeką Kwai.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Piękne pamiątkowe zdjęcia z mostu.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=The+Bridge+of+the+River+Kwai" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">16:15</span>
-              <span class="timeline-price-tag">Paliwo</span>
-            </div>
-            <h3 class="timeline-title">Malownicza trasa 3199 w góry do Hilltop Erawan</h3>
-            <p class="timeline-desc">Przepiękna górska droga prowadząca wzdłuż rzeki i lasów deszczowych do dystryktu Si Sawat.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Czas jazdy: ok. 1 godzina 15 minut.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Hilltop+Erawan+Camp" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">17:30</span>
-              <span class="timeline-price-tag">W cenie rezerwacji</span>
-            </div>
-            <h3 class="timeline-title">Check-in w Hilltop Erawan Camp</h3>
-            <p class="timeline-desc">Powitanie w luksusowym namiocie glampingowym / domku na zboczu wzgórza. Zachód słońca nad jeziorem Srinakarin, kolacja pod gwiazdami i cisza natury.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Zaledwie 10 minut jazdy od bramy Parku Erawan na jutrzejszy poranek!</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Hilltop+Erawan+Camp" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-        </div>
-
-        <div class="day-end-hint">
-          <span>👆 Przesuń w górę: Dzień 5 z 16 ➔</span>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- SLIDE 5: DZIEŃ 5 -->
-    <section class="slide" id="day-5" data-index="5" data-label="Dzień 5 / 16 • 13 STY">
-      <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1200&q=80'); linear-gradient(180deg, #051e17 0%, #090d16 100%)"></div>
-      <div class="slide-overlay"></div>
-      <div class="slide-content">
-        
-        <!-- Header -->
-        <div class="day-header">
-          <div class="day-top-meta">
-            <span class="day-pill">Dzień 5 z 16</span>
-            <span class="day-pill tag-nature">🌿 WODOSPADY & JEZIORO</span>
-            <span class="day-date-text">13 stycznia 2027 (Środa)</span>
-          </div>
-          <h2 class="day-title">Park Erawan ➔ Zapora Srinakarin ➔ Lake Hill</h2>
-          <p class="day-subtitle">Kąpiele w 7 turkusowych kaskadach i nocleg nad samą taflą wody</p>
-        </div>
-
-        <!-- Hotel Card -->
-        <div class="hotel-card">
-          <div class="hotel-icon">🏨</div>
-          <div class="hotel-info">
-            <div class="hotel-info-name">Lake Hill Kanchanaburi Resort (Tha Kradan)</div>
-            <div class="hotel-info-tip">Pokoje/domki nad samym jeziorem, darmowe kajaki i prywatny pomost do wody.</div>
-          </div>
-        </div>
-
-        <!-- Timeline Items -->
-        <div class="timeline-container">
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">08:00</span>
-              <span class="timeline-price-tag">300 THB / os. + 30 THB auto (GOTÓWKA!)</span>
-            </div>
-            <h3 class="timeline-title">Park Narodowy Erawan (Wodospady 1–7)</h3>
-            <p class="timeline-desc">Wejście o 08:00 – zanim przyjadą wycieczki z Bangkoku! 7 poziomów kaskad wapiennych z krystaliczną szmaragdową wodą. Kąpiel w naturalnych basenach z rybkami.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Zabierzcie buty ze stabilną podeszwą i kostiumy. Najlepsze baseny są na poziomach 3, 4 i 7.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Erawan+National+Park" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">12:30</span>
-              <span class="timeline-price-tag">Obiad ~150–250 THB</span>
-            </div>
-            <h3 class="timeline-title">Tajski obiad przy parku</h3>
-            <p class="timeline-desc">Świeże curry, pieczony kurczak Gai Yang z sosem tamaryndowym i kleistym ryżem w lokalnej knajpce.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Znakomite, proste lokalne jedzenie.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Erawan+National+Park+Restaurant" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">13:30</span>
-              <span class="timeline-price-tag">Wstęp wolny</span>
-            </div>
-            <h3 class="timeline-title">Zapora Srinakarin & Punkt Widokowy</h3>
-            <p class="timeline-desc">Zaledwie 10 minut od Erawanu. Potężna zapora hydroelektryczna z zadbanym ogrodem i spektakularną panoramą jeziora pośród zielonych gór.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Wspaniałe miejsce na zdjęcia – krajobraz przypomina norweskie fiordy!</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Srinagarind+Dam+Viewpoint" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">14:45</span>
-              <span class="timeline-price-tag">Kawa ~80–120 THB</span>
-            </div>
-            <h3 class="timeline-title">Kawiarnia nad jeziorem (Lakeview Cafe / Z9)</h3>
-            <p class="timeline-desc">Relaks przy mrożonej tajskiej herbacie z mlekiem (Cha Yen) i kokosowych deserach z widokiem na gładką taflę wody.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Cudowna atmosfera sprzyjająca wyciszeniu.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Lakeview+Cafe+Kanchanaburi" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">16:30</span>
-              <span class="timeline-price-tag">W cenie rezerwacji</span>
-            </div>
-            <h3 class="timeline-title">Check-in w Lake Hill Kanchanaburi Resort</h3>
-            <p class="timeline-desc">Przyjazd do Waszego drugiego resortu w Tha Kradan. Pokoje tuż nad taflą wody.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Wypożyczcie darmowe kajaki i popływajcie o zachodzie słońca!</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Lake+Hill+Resort+Kanchanaburi" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">18:30</span>
-              <span class="timeline-price-tag">Kolacja ~300–500 THB</span>
-            </div>
-            <h3 class="timeline-title">Kolacja na tarasie nad wodą</h3>
-            <p class="timeline-desc">Romantyczny wieczór w ciszy natury. Świeże ryby z jeziora, tajskie zioła i szum delikatnych fal pod tarasem.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Wczesny sen przed jutrzejszym porannym powrotem na lotnisko BKK.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Lake+Hill+Resort+Kanchanaburi" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-        </div>
-
-        <div class="day-end-hint">
-          <span>👆 Przesuń w górę: Dzień 6 z 16 ➔</span>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- SLIDE 6: DZIEŃ 6 -->
-    <section class="slide" id="day-6" data-index="6" data-label="Dzień 6 / 16 • 14 STY">
-      <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1537956965359-7573183d1f57?auto=format&fit=crop&w=1200&q=80'); linear-gradient(180deg, #091f2c 0%, #090d16 100%)"></div>
-      <div class="slide-overlay"></div>
-      <div class="slide-content">
-        
-        <!-- Header -->
-        <div class="day-header">
-          <div class="day-top-meta">
-            <span class="day-pill">Dzień 6 z 16</span>
-            <span class="day-pill tag-flight">✈️ LOT NA KO SAMUI</span>
-            <span class="day-date-text">14 stycznia 2027 (Czwartek)</span>
-          </div>
-          <h2 class="day-title">Powrót na BKK ➔ Lot PG155 (14:55) ➔ Ko Samui</h2>
-          <p class="day-subtitle">Z krainy rzek do tropikalnego raju Zatoki Tajlandzkiej</p>
-        </div>
-
-        <!-- Hotel Card -->
-        <div class="hotel-card">
-          <div class="hotel-icon">🏨</div>
-          <div class="hotel-info">
-            <div class="hotel-info-name">Impiana Resort Chaweng Noi (4★)</div>
-            <div class="hotel-info-tip">Bezpośrednio przy plaży Chaweng Noi – najdrobniejszy, jasny piasek na wyspie.</div>
-          </div>
-        </div>
-
-        <!-- Timeline Items -->
-        <div class="timeline-container">
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">07:30</span>
-              <span class="timeline-price-tag">Opłaty drogowe ~100 THB</span>
-            </div>
-            <h3 class="timeline-title">Wyjazd samochodem na lotnisko BKK</h3>
-            <p class="timeline-desc">Spokojna podróż powrotna autostradami w kierunku Bangkoku (ok. 235 km, ok. 3.5–4 h jazdy).</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Start o 07:30–08:00 daje pełen bufor czasowy bez stresu.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Suvarnabhumi+Airport+Bangkok" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">12:00</span>
-              <span class="timeline-price-tag">Rozliczenie wypożyczalni</span>
-            </div>
-            <h3 class="timeline-title">Zwrot samochodu na lotnisku BKK</h3>
-            <p class="timeline-desc">Oddanie kluczyków w wypożyczalni, szybki protokół zwrotu i przejście schodami ruchomymi do hali odlotów krajowych.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Zatankujcie auto do pełna na stacji benzynowej tuż przed lotniskiem.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Suvarnabhumi+Airport+Car+Rental" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">13:00</span>
-              <span class="timeline-price-tag">Darmowe w cenie biletu</span>
-            </div>
-            <h3 class="timeline-title">Odprawa & Bangkok Airways Lounge</h3>
-            <p class="timeline-desc">Wszyscy pasażerowie Bangkok Airways mają darmowy wstęp do saloniku Boutique Lounge z darmową kawą, sokami i przekąskami (np. tradycyjne ciastka ryżowe Khao Tom Mud).</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Relaks w klimatyzowanym saloniku przed boardingiem.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Bangkok+Airways+Boutique+Lounge+BKK" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">14:55</span>
-              <span class="timeline-price-tag">Bilet lotniczy PG155</span>
-            </div>
-            <h3 class="timeline-title">Wylot na Ko Samui (Lot PG155)</h3>
-            <p class="timeline-desc">Malowniczy lot nad Zatoką Tajlandzką. Lądowanie o 16:05 na bajkowym lotnisku na Samui (ogród tropikalny bez tradycyjnych ścian).</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Jedno z najpiękniejszych lotnisk świata!</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Samui+International+Airport" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">17:00</span>
-              <span class="timeline-price-tag">W cenie rezerwacji</span>
-            </div>
-            <h3 class="timeline-title">Check-in w Impiana Resort Chaweng Noi</h3>
-            <p class="timeline-desc">Zameldowanie w Waszym resorcie. Powitanie chłodnym ręcznikiem i świeżym napojem.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Wyjście na plażę dosłownie kilkanaście kroków od pokoju.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Impiana+Resort+Chaweng+Noi+Koh+Samui" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">18:30</span>
-              <span class="timeline-price-tag">Kolacja ~500–800 THB</span>
-            </div>
-            <h3 class="timeline-title">Powitalna kolacja na piasku</h3>
-            <p class="timeline-desc">Szum ciepłych fal, świeży kokos i kolacja przy świecach na plaży Chaweng Noi.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Rozpoczynamy 9 dni wyspiarskiego relaksu!</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Impiana+Resort+Chaweng+Noi+Koh+Samui" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-        </div>
-
-        <div class="day-end-hint">
-          <span>👆 Przesuń w górę: Dzień 7 z 16 ➔</span>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- SLIDE 7: DZIEŃ 7 -->
-    <section class="slide" id="day-7" data-index="7" data-label="Dzień 7 / 16 • 15 STY">
-      <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80'); linear-gradient(180deg, #06222b 0%, #090d16 100%)"></div>
-      <div class="slide-overlay"></div>
-      <div class="slide-content">
-        
-        <!-- Header -->
-        <div class="day-header">
-          <div class="day-top-meta">
-            <span class="day-pill">Dzień 7 z 16</span>
-            <span class="day-pill tag-relax">🧘 RELAKS #1</span>
-            <span class="day-date-text">15 stycznia 2027 (Piątek)</span>
-          </div>
-          <h2 class="day-title">Wyspiarski Reset na Chaweng Noi</h2>
-          <p class="day-subtitle">Brak budzika, ciepłe morze i masaże pod palmami</p>
-        </div>
-
-        <!-- Hotel Card -->
-        <div class="hotel-card">
-          <div class="hotel-icon">🏨</div>
-          <div class="hotel-info">
-            <div class="hotel-info-name">Impiana Resort Chaweng Noi</div>
-            <div class="hotel-info-tip">Śniadanie serwowane jest na zadaszonym tarasie nad samym morzem.</div>
-          </div>
-        </div>
-
-        <!-- Timeline Items -->
-        <div class="timeline-container">
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">09:30</span>
-              <span class="timeline-price-tag">W cenie hotelu</span>
-            </div>
-            <h3 class="timeline-title">Leniwe śniadanie z widokiem na Zatokę</h3>
-            <p class="timeline-desc">Owoce marakui, mango, świeżo parzona kawa i naleśniki z bananem.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Żadnego pośpiechu – dziś pełny reset.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Impiana+Resort+Chaweng+Noi+Koh+Samui" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">11:00</span>
-              <span class="timeline-price-tag">Wstęp wolny</span>
-            </div>
-            <h3 class="timeline-title">Kąpiele i plażowanie na Chaweng Noi</h3>
-            <p class="timeline-desc">Chaweng Noi słynie z braku ostrych koralowców i łagodnego wejścia do głębokiej wody. Cudowny, jasny piasek i ciepłe morze.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Pamiętajcie o kremie z filtrem UV 50+ – słońce w styczniu jest zdradliwe!</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Chaweng+Noi+Beach+Koh+Samui" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">15:00</span>
-              <span class="timeline-price-tag">~300–400 THB / os.</span>
-            </div>
-            <h3 class="timeline-title">Tradycyjny masaż olejkowy na plaży</h3>
-            <p class="timeline-desc">Relaksujący masaż kokosowy w zadaszonej altanie na piasku. Szum fal w tle tworzy najpiękniejszą muzykę.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Masażystki na plaży robią doskonały masaż karku i stóp.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Chaweng+Noi+Beach+Koh+Samui" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">18:30</span>
-              <span class="timeline-price-tag">Kolacja ~400–700 THB</span>
-            </div>
-            <h3 class="timeline-title">Zachód słońca i spacer</h3>
-            <p class="timeline-desc">Koktajle z owoców tropikalnych i romantyczna kolacja w restauracji plażowej.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Wspaniałe wyciszenie przed jutrzejszym zwiedzaniem.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Chaweng+Noi+Beach+Koh+Samui" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-        </div>
-
-        <div class="day-end-hint">
-          <span>👆 Przesuń w górę: Dzień 8 z 16 ➔</span>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- SLIDE 8: DZIEŃ 8 -->
-    <section class="slide" id="day-8" data-index="8" data-label="Dzień 8 / 16 • 16 STY">
-      <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&w=1200&q=80'); linear-gradient(180deg, #1c1507 0%, #090d16 100%)"></div>
-      <div class="slide-overlay"></div>
-      <div class="slide-content">
-        
-        <!-- Header -->
-        <div class="day-header">
-          <div class="day-top-meta">
-            <span class="day-pill">Dzień 8 z 16</span>
-            <span class="day-pill tag-explore">🛕 ZWIEDZANIE #1</span>
-            <span class="day-date-text">16 stycznia 2027 (Sobota)</span>
-          </div>
-          <h2 class="day-title">Big Buddha, Wat Plai Laem & Coco Tam's</h2>
-          <p class="day-subtitle">Kultura wyspy, niezwykłe skały i legendarny pokaz ognia</p>
-        </div>
-
-        <!-- Hotel Card -->
-        <div class="hotel-card">
-          <div class="hotel-icon">🏨</div>
-          <div class="hotel-info">
-            <div class="hotel-info-name">Impiana Resort Chaweng Noi</div>
-            <div class="hotel-info-tip">Transport: małe auto na ten dzień lub aplikacja Bolt.</div>
-          </div>
-        </div>
-
-        <!-- Timeline Items -->
-        <div class="timeline-container">
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">09:00</span>
-              <span class="timeline-price-tag">Wstęp wolny</span>
-            </div>
-            <h3 class="timeline-title">Wielki Budda (Wat Phra Yai)</h3>
-            <p class="timeline-desc">12-metrowy Złoty Budda wznoszący się na małej wysepce połączonej z lądem groblą. Święte miejsce mieszkańców wyspy.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Pamiętajcie o zakrytych ramionach i kolanach.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Wat+Phra+Yai+Koh+Samui" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">10:30</span>
-              <span class="timeline-price-tag">Wstęp wolny (karma dla ryb 10 THB)</span>
-            </div>
-            <h3 class="timeline-title">Wat Plai Laem – Świątynia na Jeziorze</h3>
-            <p class="timeline-desc">Kolorowy kompleks świątynny ze spektakularną 18-ramienną statuą Bogini Guanyin wznoszącą się pośrodku jeziora.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Kupcie paczkę karmy i nakarmcie potężne sumy pływające w wodzie!</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Wat+Plai+Laem+Koh+Samui" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">12:30</span>
-              <span class="timeline-price-tag">Obiad ~350–600 THB</span>
-            </div>
-            <h3 class="timeline-title">Obiad w The Jungle Club z widokiem</h3>
-            <p class="timeline-desc">Słynna restauracja zawieszona na zboczu góry nad Chaweng. Pufy, leżaki i zapierająca dech panorama całej zatoki.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Stromy podjazd – jeśli jedziecie autem, jedźcie ostrożnie na 1. biegu.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=The+Jungle+Club+Samui" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">14:45</span>
-              <span class="timeline-price-tag">Wstęp wolny (parking 20 THB)</span>
-            </div>
-            <h3 class="timeline-title">Skały Hin Ta & Hin Yai (Dziadek i Babcia)</h3>
-            <p class="timeline-desc">Słynne formacje skalne uformowane przez naturę w Lamai. Przy wejściu targowisko z lokalnymi słodyczami.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Koniecznie spróbujcie lodów kokosowych w orzechu i karmelków Kalamae.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Hin+Ta+Hin+Yai+Koh+Samui" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">18:00</span>
-              <span class="timeline-price-tag">Wstęp wolny</span>
-            </div>
-            <h3 class="timeline-title">Fisherman's Village w Bophut</h3>
-            <p class="timeline-desc">Nastrojowy deptak w dawnej osadzie rybackiej z drewnianą architekturą, butikami i nadrzecznymi restauracjami.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Cudowna atmosfera na wieczorny spacer.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Fisherman's+Village+Bophut" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">20:30</span>
-              <span class="timeline-price-tag">Koktajle ~280–380 THB</span>
-            </div>
-            <h3 class="timeline-title">Coco Tam's & Fire Show na plaży</h3>
-            <p class="timeline-desc">Kultowy klub plażowy z pufami i hamakami na piasku. Widowiskowy, profesjonalny taniec z ogniem nad brzegiem morza.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Pokazy ognia odbywają się o 21:00 i 22:30 – spektakl jest oszałamiający!</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Coco+Tam's+Bophut" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-        </div>
-
-        <div class="day-end-hint">
-          <span>👆 Przesuń w górę: Dzień 9 z 16 ➔</span>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- SLIDE 9: DZIEŃ 9 -->
-    <section class="slide" id="day-9" data-index="9" data-label="Dzień 9 / 16 • 17 STY">
-      <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?auto=format&fit=crop&w=1200&q=80'); linear-gradient(180deg, #092026 0%, #090d16 100%)"></div>
-      <div class="slide-overlay"></div>
-      <div class="slide-content">
-        
-        <!-- Header -->
-        <div class="day-header">
-          <div class="day-top-meta">
-            <span class="day-pill">Dzień 9 z 16</span>
-            <span class="day-pill tag-relax">🧘 RELAKS #2</span>
-            <span class="day-date-text">17 stycznia 2027 (Niedziela)</span>
-          </div>
-          <h2 class="day-title">Seszelskie Klimaty Silver Beach</h2>
-          <p class="day-subtitle">Krystaliczna zatoka Crystal Bay i snorkeling z brzegu</p>
-        </div>
-
-        <!-- Hotel Card -->
-        <div class="hotel-card">
-          <div class="hotel-icon">🏨</div>
-          <div class="hotel-info">
-            <div class="hotel-info-name">Impiana Resort Chaweng Noi</div>
-            <div class="hotel-info-tip">Zaledwie 7 minut jazdy samochodem lub Boltem z Waszego hotelu!</div>
-          </div>
-        </div>
-
-        <!-- Timeline Items -->
-        <div class="timeline-container">
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">09:30</span>
-              <span class="timeline-price-tag">Wstęp wolny (Bolt ~150 THB)</span>
-            </div>
-            <h3 class="timeline-title">Przejazd na Silver Beach (Crystal Bay)</h3>
-            <p class="timeline-desc">Jedna z najbardziej malowniczych plaż w całej Tajlandii, otoczona potężnymi, gładkimi głazami granitowymi niczym na Seszelach.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Woda jest tu niewiarygodnie przezroczysta i spokojna.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Silver+Beach+Crystal+Bay+Samui" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">11:00</span>
-              <span class="timeline-price-tag">Darmowe (wypożyczenie maski ~100 THB)</span>
-            </div>
-            <h3 class="timeline-title">Snorkeling wśród granitowych skał</h3>
-            <p class="timeline-desc">Wystarczy założyć maskę i zanurzyć się tuż przy brzegu – wokół głazów pływają setki kolorowych rybek i ławice morskich stworzeń.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Idealne, bezpieczne warunki do snorkelingu dla każdego.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Silver+Beach+Crystal+Bay+Samui" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">13:30</span>
-              <span class="timeline-price-tag">Lunch ~250–400 THB</span>
-            </div>
-            <h3 class="timeline-title">Lunch w cieniu palm na plaży</h3>
-            <p class="timeline-desc">Chłodne shake'i z arbuza i ananasa, sałatka Som Tam i krewetki w chrupiącym cieście.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Stoliki stoją w cieniu tropikalnych drzew tuż nad wodą.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Crystal+Bay+Beach+Club+Samui" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">16:30</span>
-              <span class="timeline-price-tag">W cenie hotelu</span>
-            </div>
-            <h3 class="timeline-title">Popołudnie przy hotelowym basenie</h3>
-            <p class="timeline-desc">Powrót do Impiana Resort. Kąpiel w basenie, czytanie książki i chillout o zachodzie słońca.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Spokojny wieczór i wczesny sen przed jutrzejszym rejsem morskim.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Impiana+Resort+Chaweng+Noi+Koh+Samui" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-        </div>
-
-        <div class="day-end-hint">
-          <span>👆 Przesuń w górę: Dzień 10 z 16 ➔</span>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- SLIDE 10: DZIEŃ 10 -->
-    <section class="slide" id="day-10" data-index="10" data-label="Dzień 10 / 16 • 18 STY">
-      <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=1200&q=80'); linear-gradient(180deg, #071c24 0%, #090d16 100%)"></div>
-      <div class="slide-overlay"></div>
-      <div class="slide-content">
-        
-        <!-- Header -->
-        <div class="day-header">
-          <div class="day-top-meta">
-            <span class="day-pill">Dzień 10 z 16</span>
-            <span class="day-pill tag-boat">🚤 MORSKA WYPRAWA</span>
-            <span class="day-date-text">18 stycznia 2027 (Poniedziałek)</span>
-          </div>
-          <h2 class="day-title">Morski Park Narodowy Ang Thong</h2>
-          <p class="day-subtitle">Archipelag 42 bezludnych wysp, Szmaragdowe Jezioro i kajaki</p>
-        </div>
-
-        <!-- Hotel Card -->
-        <div class="hotel-card">
-          <div class="hotel-icon">🏨</div>
-          <div class="hotel-info">
-            <div class="hotel-info-name">Impiana Resort Chaweng Noi</div>
-            <div class="hotel-info-tip">Wycieczkę motorówką zarezerwujcie 2 dni wcześniej w recepcji lub na Klook.</div>
-          </div>
-        </div>
-
-        <!-- Timeline Items -->
-        <div class="timeline-container">
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">08:00</span>
-              <span class="timeline-price-tag">W cenie wycieczki</span>
-            </div>
-            <h3 class="timeline-title">Odbiór z hotelu Impiana i transfer na przystań</h3>
-            <p class="timeline-desc">Klimatyzowany busik odbiera Was bezpośrednio z lobby hotelu i wiezie do przystani motorówek na północy wyspy.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Załóżcie wygodne sandały/buty do wody i zabierzcie wodoodporny worek na telefon.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Impiana+Resort+Chaweng+Noi+Koh+Samui" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">10:00</span>
-              <span class="timeline-price-tag">Wstęp do parku 300 THB / os. (GOTÓWKA)</span>
-            </div>
-            <h3 class="timeline-title">Punkt widokowy Pha Jun Jaras (Koh Wua Talap)</h3>
-            <p class="timeline-desc">Wejście drewnianymi schodkami na szczyt wyspy – z platformy roztacza się jeden z najbardziej pocztówkowych widoków w Azji na 42 wapienne wyspy.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Wspinaczka trwa ok. 30 minut – widok ze szczytu rekompensuje każdy wysiłek!</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Ang+Thong+National+Marine+Park" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">12:00</span>
-              <span class="timeline-price-tag">W cenie wycieczki</span>
-            </div>
-            <h3 class="timeline-title">Szmaragdowa Laguna (Emerald Lake / Talay Nai)</h3>
-            <p class="timeline-desc">Przejście na wyspę Koh Mae Ko. Schody prowadzą do ukrytego w starym kraterze jeziora o jaskrawozielonej, szmaragdowej barwie.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Niezwykłe zjawisko geologiczne połączone podziemnymi tunelami z morzem.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Emerald+Lake+Koh+Mae+Ko" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">13:30</span>
-              <span class="timeline-price-tag">W cenie wycieczki</span>
-            </div>
-            <h3 class="timeline-title">Kajaki morskie i snorkeling w jaskiniach</h3>
-            <p class="timeline-desc">Pływanie dwuosobowym kajakiem wzdłuż wapiennych klifów krasowych i snorkeling nad rafą pełną koralowców.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Tajski lunch w formie bufetu serwowany na bezludnej plaży.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Ang+Thong+National+Marine+Park" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">16:30</span>
-              <span class="timeline-price-tag">W cenie</span>
-            </div>
-            <h3 class="timeline-title">Powrót do Impiana Resort</h3>
-            <p class="timeline-desc">Rejs powrotny motorówką na Samui, transfer do hotelu, gorący prysznic i regeneracja po dniu pełnym przygód.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Pyszna, lekka kolacja w hotelu i relaksujący sen.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Impiana+Resort+Chaweng+Noi+Koh+Samui" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-        </div>
-
-        <div class="day-end-hint">
-          <span>👆 Przesuń w górę: Dzień 11 z 16 ➔</span>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- SLIDE 11: DZIEŃ 11 -->
-    <section class="slide" id="day-11" data-index="11" data-label="Dzień 11 / 16 • 19 STY">
-      <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1200&q=80'); linear-gradient(180deg, #1f101f 0%, #090d16 100%)"></div>
-      <div class="slide-overlay"></div>
-      <div class="slide-content">
-        
-        <!-- Header -->
-        <div class="day-header">
-          <div class="day-top-meta">
-            <span class="day-pill">Dzień 11 z 16</span>
-            <span class="day-pill tag-relax">🧘 RELAKS #3</span>
-            <span class="day-date-text">19 stycznia 2027 (Wtorek)</span>
-          </div>
-          <h2 class="day-title">Dzień Tajskiego SPA & Plaża Mae Nam</h2>
-          <p class="day-subtitle">Królewski rytuał dla dwojga i oaza spokoju na północy</p>
-        </div>
-
-        <!-- Hotel Card -->
-        <div class="hotel-card">
-          <div class="hotel-icon">🏨</div>
-          <div class="hotel-info">
-            <div class="hotel-info-name">Impiana Resort Chaweng Noi</div>
-            <div class="hotel-info-tip">Pakiet spa warto zarezerwować dzień wcześniej.</div>
-          </div>
-        </div>
-
-        <!-- Timeline Items -->
-        <div class="timeline-container">
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">10:00</span>
-              <span class="timeline-price-tag">~1500–2500 THB / os.</span>
-            </div>
-            <h3 class="timeline-title">Królewski Rytuał Day-SPA dla Dwojga</h3>
-            <p class="timeline-desc">2.5-godzinna sesja w renomowanym tajskim spa: peeling kokosowy, aromaterapeutyczny masaż całego ciała ciepłym olejkiem i kąpiel w płatkach kwiatów.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Ciało i umysł zrelaksują się w 100%.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Eranda+Herbal+Spa+Koh+Samui" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">14:00</span>
-              <span class="timeline-price-tag">Wstęp wolny</span>
-            </div>
-            <h3 class="timeline-title">Plaża Mae Nam – Ucieczka od Zgiełku</h3>
-            <p class="timeline-desc">Przejazd na plażę Mae Nam na północy wyspy. Szeroka, spokojna plaża z głębszą wodą i pięknym widokiem na góry wyspy Koh Phangan.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Brak tłumów i głośnych skuterów wodnych – idealna na spacer i czytanie.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Mae+Nam+Beach+Samui" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">18:30</span>
-              <span class="timeline-price-tag">Kolacja ~300–450 THB</span>
-            </div>
-            <h3 class="timeline-title">Kolacja z rybą pieczoną w soli (Pla Pao)</h3>
-            <p class="timeline-desc">Tradycyjna tajska kolacja w plażowej restauracji. Cała świeża ryba pieczona w grubej skorupie soli morskiej z trawą cytrynową i sosem z limonki.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Pla Pao to absolutny przysmak tajskiego wybrzeża!</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Mae+Nam+Beach+Samui" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-        </div>
-
-        <div class="day-end-hint">
-          <span>👆 Przesuń w górę: Dzień 12 z 16 ➔</span>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- SLIDE 12: DZIEŃ 12 -->
-    <section class="slide" id="day-12" data-index="12" data-label="Dzień 12 / 16 • 20 STY">
-      <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=1200&q=80'); linear-gradient(180deg, #0f1c0f 0%, #090d16 100%)"></div>
-      <div class="slide-overlay"></div>
-      <div class="slide-content">
-        
-        <!-- Header -->
-        <div class="day-header">
-          <div class="day-top-meta">
-            <span class="day-pill">Dzień 12 z 16</span>
-            <span class="day-pill tag-explore">🌴 DŻUNGLA LUB ŚWINKI</span>
-            <span class="day-date-text">20 stycznia 2027 (Środa)</span>
-          </div>
-          <h2 class="day-title">Wodospady Na Muang & Ogród w Chmurach</h2>
-          <p class="day-subtitle">Kąpiel w basenie skalnym i tajemniczy Secret Buddha Garden</p>
-        </div>
-
-        <!-- Hotel Card -->
-        <div class="hotel-card">
-          <div class="hotel-icon">🏨</div>
-          <div class="hotel-info">
-            <div class="hotel-info-name">Impiana Resort Chaweng Noi</div>
-            <div class="hotel-info-tip">Dzień pełen zieleni i górskiego chłodu we wnętrzu wyspy.</div>
-          </div>
-        </div>
-
-        <!-- Timeline Items -->
-        <div class="timeline-container">
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">09:00</span>
-              <span class="timeline-price-tag">Wstęp wolny (parking 30 THB)</span>
-            </div>
-            <h3 class="timeline-title">Wodospady Na Muang 1 i 2</h3>
-            <p class="timeline-desc">Trekking przez las deszczowy do majestatycznych wodospadów spływających po fioletowych skałach. Kąpiel w chłodnym, naturalnym basenie pod kaskadą.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Wybierzcie Na Muang 2 dla bardziej kameralnej atmosfery.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Na+Muang+Waterfall+Koh+Samui" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">11:30</span>
-              <span class="timeline-price-tag">80 THB / os.</span>
-            </div>
-            <h3 class="timeline-title">Tarnim Magic Garden (Secret Buddha Garden)</h3>
-            <p class="timeline-desc">Mistyczny ogród rzeźb ukryty wysoko na najwyższych wzgórzach wyspy pośród mgieł i dżungli. Stworzony przez 77-letniego mnicha i farmera.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Niezwykła energia, kamienne posągi buddyjskie i strumyki.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Secret+Buddha+Garden+Koh+Samui" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">13:30</span>
-              <span class="timeline-price-tag">Lunch ~250–400 THB</span>
-            </div>
-            <h3 class="timeline-title">Lunch w restauracji Giant Summit</h3>
-            <p class="timeline-desc">Posiłek w restauracji zawieszonej nad przepaścią z widokiem na południowy kraniec wyspy i sąsiednie wysepki.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Cudowna panorama i orzeźwiający górski wiaterek.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Giant+Summit+Samui" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">Alternatywa</span>
-              <span class="timeline-price-tag">Łódź ~1500 THB za dwoje</span>
-            </div>
-            <h3 class="timeline-title">Wyspa Świnek (Koh Madsum) – opcjonalnie</h3>
-            <p class="timeline-desc">Zamiast gór możecie wybrać popołudniowy rejs drewnianą łodzią z Thong Krut na plażę z oswojonymi, pływającymi świnkami.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Zabawne zdjęcia ze świnkami spacerującymi po białym piasku!</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Koh+Madsum+Pig+Island" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-        </div>
-
-        <div class="day-end-hint">
-          <span>👆 Przesuń w górę: Dzień 13 z 16 ➔</span>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- SLIDE 13: DZIEŃ 13 -->
-    <section class="slide" id="day-13" data-index="13" data-label="Dzień 13 / 16 • 21 STY">
-      <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80'); linear-gradient(180deg, #1f0a14 0%, #090d16 100%)"></div>
-      <div class="slide-overlay"></div>
-      <div class="slide-content">
-        
-        <!-- Header -->
-        <div class="day-header">
-          <div class="day-top-meta">
-            <span class="day-pill">Dzień 13 z 16</span>
-            <span class="day-pill tag-relax">🧘 RELAKS #4</span>
-            <span class="day-date-text">21 stycznia 2027 (Czwartek)</span>
-          </div>
-          <h2 class="day-title">Coral Cove & Krwisty Zachód Słońca</h2>
-          <p class="day-subtitle">Kameralna zatoczka i pożegnanie dnia w Lipa Noi</p>
-        </div>
-
-        <!-- Hotel Card -->
-        <div class="hotel-card">
-          <div class="hotel-icon">🏨</div>
-          <div class="hotel-info">
-            <div class="hotel-info-name">Impiana Resort Chaweng Noi</div>
-            <div class="hotel-info-tip">Zatoczka Coral Cove znajduje się dosłownie 3 minuty od Chaweng Noi.</div>
-          </div>
-        </div>
-
-        <!-- Timeline Items -->
-        <div class="timeline-container">
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">10:00</span>
-              <span class="timeline-price-tag">Wstęp wolny</span>
-            </div>
-            <h3 class="timeline-title">Zatoczka Coral Cove</h3>
-            <p class="timeline-desc">Mała, urocza zatoczka wciśnięta między skaliste cyple. Płytka, szmaragdowa woda, głazy i cień palm.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Świetne miejsce na ustronne plażowanie z dala od jakichkolwiek tłumów.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Coral+Cove+Beach+Samui" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">16:00</span>
-              <span class="timeline-price-tag">Bolt ~400 THB</span>
-            </div>
-            <h3 class="timeline-title">Wyjazd na zachodnie wybrzeże (Lipa Noi / Taling Ngam)</h3>
-            <p class="timeline-desc">Przejazd na zachodnią stronę wyspy, gdzie słońce chowa się bezpośrednio za horyzontem Zatoki Tajlandzkiej.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>To tu powstają najwspanialsze zachody słońca w całej Tajlandii.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Lipa+Noi+Beach+Samui" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">17:30</span>
-              <span class="timeline-price-tag">Drinki ~350–500 THB</span>
-            </div>
-            <h3 class="timeline-title">Drink w Air Bar (InterContinental)</h3>
-            <p class="timeline-desc">Elegancki taras zawieszony na klifie nad morzem. Muzyka na żywo i widok na mieniące się purpurą i złotem morze.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Niezwykle romantyczna chwila.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Air+Bar+Koh+Samui" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">19:30</span>
-              <span class="timeline-price-tag">Kolacja ~600–900 THB</span>
-            </div>
-            <h3 class="timeline-title">Kolacja przy świecach na plaży Lipa Noi</h3>
-            <p class="timeline-desc">Stolik w piasku oświetlony lampionami, pieczone kalmary, krewetki tygrysie i białe wino.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Magiczny wieczór.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Lipa+Noi+Beach+Samui" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-        </div>
-
-        <div class="day-end-hint">
-          <span>👆 Przesuń w górę: Dzień 14 z 16 ➔</span>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- SLIDE 14: DZIEŃ 14 -->
-    <section class="slide" id="day-14" data-index="14" data-label="Dzień 14 / 16 • 22 STY">
-      <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1557050543-4d5f4e07ef46?auto=format&fit=crop&w=1200&q=80'); linear-gradient(180deg, #1c1809 0%, #090d16 100%)"></div>
-      <div class="slide-overlay"></div>
-      <div class="slide-content">
-        
-        <!-- Header -->
-        <div class="day-header">
-          <div class="day-top-meta">
-            <span class="day-pill">Dzień 14 z 16</span>
-            <span class="day-pill tag-explore">🐘 SŁONIE & KULINARIA</span>
-            <span class="day-date-text">22 stycznia 2027 (Piątek)</span>
-          </div>
-          <h2 class="day-title">Etyczne Słonie & Lekcja Gotowania</h2>
-          <p class="day-subtitle">Bliskie spotkanie z olbrzymami i sekrety tajskich przypraw</p>
-        </div>
-
-        <!-- Hotel Card -->
-        <div class="hotel-card">
-          <div class="hotel-icon">🏨</div>
-          <div class="hotel-info">
-            <div class="hotel-info-name">Impiana Resort Chaweng Noi</div>
-            <div class="hotel-info-tip">Ostatnia noc na Ko Samui – jutro powrót do Bangkoku!</div>
-          </div>
-        </div>
-
-        <!-- Timeline Items -->
-        <div class="timeline-container">
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">09:00</span>
-              <span class="timeline-price-tag">~3000 THB / os. (REZERWACJA ONLINE!)</span>
-            </div>
-            <h3 class="timeline-title">Samui Elephant Sanctuary (Etyczne Sanktuarium)</h3>
-            <p class="timeline-desc">Certyfikowany rezerwat ratujący słonie z niewoli. Przygotowywanie kul witaminowych, karmienie bananami z ręki, wspólny spacer przez dżunglę i podglądanie ich kąpieli w błocie.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Żadnego ujeżdżania czy łańcuchów – 100% szacunku i etyki. Zarezerwujcie min. 2 tyg. wcześniej!</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Samui+Elephant+Sanctuary" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">14:00</span>
-              <span class="timeline-price-tag">~1200–1600 THB / os.</span>
-            </div>
-            <h3 class="timeline-title">Warsztaty Gotowania Kuchni Tajskiej dla Par</h3>
-            <p class="timeline-desc">Prywatna lekcja z szefem kuchni: wizyta na targu po zioła, gotowanie autentycznego Pad Thaia, zupy Tom Kha Gai i mango sticky rice.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Zabierzecie do domu książkę kucharską i umiejętności na całe życie!</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Samui+Cooking+Class" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">18:30</span>
-              <span class="timeline-price-tag">Koszty własne</span>
-            </div>
-            <h3 class="timeline-title">Ostatni wieczór na plaży Chaweng Noi</h3>
-            <p class="timeline-desc">Pożegnalny koktajl w barze Impiana Resort, spacer brzegiem ciepłego morza i pakowanie walizek.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Sprawdźcie bilety lotnicze na jutrzejszy lot PG1190 o 11:35.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Impiana+Resort+Chaweng+Noi+Koh+Samui" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-        </div>
-
-        <div class="day-end-hint">
-          <span>👆 Przesuń w górę: Dzień 15 z 16 ➔</span>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- SLIDE 15: DZIEŃ 15 -->
-    <section class="slide" id="day-15" data-index="15" data-label="Dzień 15 / 16 • 23 STY">
-      <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1508009603885-50cf7c579365?auto=format&fit=crop&w=1200&q=80'); linear-gradient(180deg, #181124 0%, #090d16 100%)"></div>
-      <div class="slide-overlay"></div>
-      <div class="slide-content">
-        
-        <!-- Header -->
-        <div class="day-header">
-          <div class="day-top-meta">
-            <span class="day-pill">Dzień 15 z 16</span>
-            <span class="day-pill tag-luxury">👑 KRÓLEWSKI FINAŁ</span>
-            <span class="day-date-text">23 stycznia 2027 (Sobota)</span>
-          </div>
-          <h2 class="day-title">Lot do Bangkoku (11:35) & lebua at State Tower</h2>
-          <p class="day-subtitle">Apartament nad rzeką i legendarny Sky Bar na 63. piętrze</p>
-        </div>
-
-        <!-- Hotel Card -->
-        <div class="hotel-card">
-          <div class="hotel-icon">🏨</div>
-          <div class="hotel-info">
-            <div class="hotel-info-name">lebua at State Tower Bangkok (5★ Luxury)</div>
-            <div class="hotel-info-tip">The Dome & Sky Bar na 63. piętrze – sceneria z filmu Kac Vegas w Bangkoku!</div>
-          </div>
-        </div>
-
-        <!-- Timeline Items -->
-        <div class="timeline-container">
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">09:30</span>
-              <span class="timeline-price-tag">Bolt ~300 THB</span>
-            </div>
-            <h3 class="timeline-title">Przejazd na lotnisko Ko Samui (USM)</h3>
-            <p class="timeline-desc">Wymeldowanie z Impiana Resort i krótki transfer na lotnisko Samui (ok. 15 minut jazdy).</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Klimatyczny spacer wśród palm w otwartym terminalu ogrodowym.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Samui+International+Airport" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">11:35</span>
-              <span class="timeline-price-tag">Bilet lotniczy PG1190</span>
-            </div>
-            <h3 class="timeline-title">Wylot do Bangkoku (Lot PG1190)</h3>
-            <p class="timeline-desc">Rejsowy lot Bangkok Airways. Lądowanie o 12:55 na lotnisku Suvarnabhumi (BKK).</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Odbiór bagażu i przejazd taksówką do serca Bangkoku.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Suvarnabhumi+Airport+Bangkok" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">14:30</span>
-              <span class="timeline-price-tag">W cenie rezerwacji</span>
-            </div>
-            <h3 class="timeline-title">Check-in w lebua at State Tower</h3>
-            <p class="timeline-desc">Zameldowanie w 5★ wieżowcu. Wasz luksusowy apartament z prywatnym balkonem oferuje zapierający dech widok na meandry rzeki Chao Phraya i morze wieżowców.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Wyjdźcie na balkon i poczujcie potęgę tej metropolii!</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=lebua+at+State+Tower+Bangkok" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">16:30</span>
-              <span class="timeline-price-tag">Koszty własne</span>
-            </div>
-            <h3 class="timeline-title">Ostatnie zakupy pamiątek</h3>
-            <p class="timeline-desc">Krótki wypad na zakupy wysokiej jakości pamiątek (tajski jedwab, kosmetyki kokosowe, herbata Blue Butterfly Pea, suszone mango).</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Możliwość uzyskania zwrotu podatku VAT (formularz VAT Refund w sklepach).</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Siam+Paragon+Bangkok" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">18:00</span>
-              <span class="timeline-price-tag">Koktajle ~800–1200 THB</span>
-            </div>
-            <h3 class="timeline-title">The Dome at lebua: Toast w Sky Barze</h3>
-            <p class="timeline-desc">Wjazd na 63. piętro pod słynną Złotą Kopułę. Toast kieliszkiem szampana na otwartej platformie zawieszonej setki metrów nad ziemią o zachodzie słońca.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>OBOWIĄZKOWY DRESS CODE SMART CASUAL: Mężczyźni: długie spodnie, kryte buty, koszula/polo. Kobiety: elegancka sukienka.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Sky+Bar+lebua+Bangkok" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">20:30</span>
-              <span class="timeline-price-tag">Koszty własne</span>
-            </div>
-            <h3 class="timeline-title">Wykwintna Pożegnalna Kolacja</h3>
-            <p class="timeline-desc">Królewski finał podróży pod rozgwieżdżonym niebem Bangkoku. Wspomnienia, które zostaną z Wami na całe życie.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Niezapomniane zwieńczenie wyprawy.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Sirocco+Restaurant+Bangkok" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-        </div>
-
-        <div class="day-end-hint">
-          <span>👆 Przesuń w górę: Dzień 16 z 16 ➔</span>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- SLIDE 16: DZIEŃ 16 -->
-    <section class="slide" id="day-16" data-index="16" data-label="Dzień 16 / 16 • 24 STY">
-      <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1200&q=80'); linear-gradient(180deg, #111a2e 0%, #090d16 100%)"></div>
-      <div class="slide-overlay"></div>
-      <div class="slide-content">
-        
-        <!-- Header -->
-        <div class="day-header">
-          <div class="day-top-meta">
-            <span class="day-pill">Dzień 16 z 16</span>
-            <span class="day-pill tag-flight">🛫 POWRÓT DO POLSKI</span>
-            <span class="day-date-text">24 stycznia 2027 (Niedziela)</span>
-          </div>
-          <h2 class="day-title">Do Zobaczenia, Tajlandio!</h2>
-          <p class="day-subtitle">Królewskie śniadanie i lot powrotny z BKK o 10:50</p>
-        </div>
-
-        <!-- Hotel Card -->
-        <div class="hotel-card">
-          <div class="hotel-icon">🏨</div>
-          <div class="hotel-info">
-            <div class="hotel-info-name">Wylot do Polski</div>
-            <div class="hotel-info-tip">Bądźcie na lotnisku BKK o 08:00 (dokładnie 2h50m przed startem).</div>
-          </div>
-        </div>
-
-        <!-- Timeline Items -->
-        <div class="timeline-container">
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">07:00</span>
-              <span class="timeline-price-tag">W cenie rezerwacji</span>
-            </div>
-            <h3 class="timeline-title">Królewskie śniadanie w restauracji Cafe Mozu</h3>
-            <p class="timeline-desc">Jedno z najbardziej renomowanych śniadań hotelowych w Azji z widokiem na basen w stylu marokańskim.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Wspaniały wybór owoców, pieczywa i dań z całego świata.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=lebua+at+State+Tower+Bangkok" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">07:30</span>
-              <span class="timeline-price-tag">Taksówka ~400 THB</span>
-            </div>
-            <h3 class="timeline-title">Wymeldowanie i transfer na lotnisko BKK</h3>
-            <p class="timeline-desc">Taksówka autostradą Sirat Expressway na lotnisko Suvarnabhumi. Niedzielny poranek gwarantuje brak jakichkolwiek korków (ok. 30–35 min jazdy).</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Poproście boya hotelowego o wezwanie taksówki z włączonym taksometrem lub zamówcie Bolt.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Suvarnabhumi+Airport+Bangkok" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">08:15</span>
-              <span class="timeline-price-tag">W cenie biletu</span>
-            </div>
-            <h3 class="timeline-title">Terminal BKK: Odprawa i Kontrola</h3>
-            <p class="timeline-desc">Nadanie bagaży rejestrowanych, ewentualne podbicie pieczątek VAT Refund w urzędzie celnym, kontrola bezpieczeństwa i paszportowa.</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>W strefie bezcłowej King Power możecie wydać ostatnie bahty na pamiątki.</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Suvarnabhumi+Airport+Departures" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <span class="time-badge">10:50</span>
-              <span class="timeline-price-tag">Lot powrotny</span>
-            </div>
-            <h3 class="timeline-title">Wylot do Polski</h3>
-            <p class="timeline-desc">Start samolotu powrotnego. Szczęśliwy powrót do domu z tysiącem zdjęć, opalenizną i wspaniałymi wspomnieniami!</p>
-            <div class="timeline-tip-box">
-              <span>💡</span>
-              <div>Khai Khup Khun Krap – dziękujemy, Tajlandio!</div>
-            </div>
-            <div class="timeline-actions">
-              <a href="https://www.google.com/maps/search/?api=1&query=Suvarnabhumi+Airport+Bangkok" target="_blank" rel="noopener" class="maps-btn">
-                <span>📍</span>
-                <span>Otwórz w Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-        </div>
-
-        <div class="day-end-hint">
-          <span>👆 Przesuń w górę: Koniec planu podróży ✨</span>
-        </div>
-
-      </div>
-    </section>
-
+# Add bottom sheet drawer
+html_template += '''
   </main>
 
   <!-- Backdrop for drawer -->
@@ -2901,135 +1819,22 @@
         </div>
         <span class="drawer-item-badge">START</span>
       </a>
+'''
 
-      <a class="drawer-item" onclick="selectDay(1)">
+for idx, s in enumerate(slides_data):
+    if not s.get("isIntro"):
+        d_num = s["dayNum"]
+        html_template += f'''
+      <a class="drawer-item" onclick="selectDay({d_num})">
         <div>
-          <div class="drawer-item-title">Dzień 1: Witaj w Krainie Uśmiechu!</div>
-          <div class="drawer-item-sub">9 stycznia 2027 (Sobota) • Mövenpick Hotel Sukhumvit 15</div>
+          <div class="drawer-item-title">Dzień {d_num}: {s["title"]}</div>
+          <div class="drawer-item-sub">{s["date"]} • {s["hotel"].split('(')[0].strip()}</div>
         </div>
-        <span class="drawer-item-badge">9 STY</span>
+        <span class="drawer-item-badge">{s["badgeDate"]}</span>
       </a>
+'''
 
-      <a class="drawer-item" onclick="selectDay(2)">
-        <div>
-          <div class="drawer-item-title">Dzień 2: Złote Świątynie & Kanały Thonburi</div>
-          <div class="drawer-item-sub">10 stycznia 2027 (Niedziela) • Mövenpick Hotel Sukhumvit 15</div>
-        </div>
-        <span class="drawer-item-badge">10 STY</span>
-      </a>
-
-      <a class="drawer-item" onclick="selectDay(3)">
-        <div>
-          <div class="drawer-item-title">Dzień 3: Złota Góra, Kanał Saen Saep & ICONSIAM</div>
-          <div class="drawer-item-sub">11 stycznia 2027 (Poniedziałek) • Mövenpick Hotel Sukhumvit 15</div>
-        </div>
-        <span class="drawer-item-badge">11 STY</span>
-      </a>
-
-      <a class="drawer-item" onclick="selectDay(4)">
-        <div>
-          <div class="drawer-item-title">Dzień 4: Auto z BKK ➔ Targ na Torach ➔ Hilltop Erawan</div>
-          <div class="drawer-item-sub">12 stycznia 2027 (Wtorek) • Hilltop Erawan Camp</div>
-        </div>
-        <span class="drawer-item-badge">12 STY</span>
-      </a>
-
-      <a class="drawer-item" onclick="selectDay(5)">
-        <div>
-          <div class="drawer-item-title">Dzień 5: Park Erawan ➔ Zapora Srinakarin ➔ Lake Hill</div>
-          <div class="drawer-item-sub">13 stycznia 2027 (Środa) • Lake Hill Kanchanaburi Resort</div>
-        </div>
-        <span class="drawer-item-badge">13 STY</span>
-      </a>
-
-      <a class="drawer-item" onclick="selectDay(6)">
-        <div>
-          <div class="drawer-item-title">Dzień 6: Powrót na BKK ➔ Lot PG155 (14:55) ➔ Ko Samui</div>
-          <div class="drawer-item-sub">14 stycznia 2027 (Czwartek) • Impiana Resort Chaweng Noi</div>
-        </div>
-        <span class="drawer-item-badge">14 STY</span>
-      </a>
-
-      <a class="drawer-item" onclick="selectDay(7)">
-        <div>
-          <div class="drawer-item-title">Dzień 7: Wyspiarski Reset na Chaweng Noi</div>
-          <div class="drawer-item-sub">15 stycznia 2027 (Piątek) • Impiana Resort Chaweng Noi</div>
-        </div>
-        <span class="drawer-item-badge">15 STY</span>
-      </a>
-
-      <a class="drawer-item" onclick="selectDay(8)">
-        <div>
-          <div class="drawer-item-title">Dzień 8: Big Buddha, Wat Plai Laem & Coco Tam's</div>
-          <div class="drawer-item-sub">16 stycznia 2027 (Sobota) • Impiana Resort Chaweng Noi</div>
-        </div>
-        <span class="drawer-item-badge">16 STY</span>
-      </a>
-
-      <a class="drawer-item" onclick="selectDay(9)">
-        <div>
-          <div class="drawer-item-title">Dzień 9: Seszelskie Klimaty Silver Beach</div>
-          <div class="drawer-item-sub">17 stycznia 2027 (Niedziela) • Impiana Resort Chaweng Noi</div>
-        </div>
-        <span class="drawer-item-badge">17 STY</span>
-      </a>
-
-      <a class="drawer-item" onclick="selectDay(10)">
-        <div>
-          <div class="drawer-item-title">Dzień 10: Morski Park Narodowy Ang Thong</div>
-          <div class="drawer-item-sub">18 stycznia 2027 (Poniedziałek) • Impiana Resort Chaweng Noi</div>
-        </div>
-        <span class="drawer-item-badge">18 STY</span>
-      </a>
-
-      <a class="drawer-item" onclick="selectDay(11)">
-        <div>
-          <div class="drawer-item-title">Dzień 11: Dzień Tajskiego SPA & Plaża Mae Nam</div>
-          <div class="drawer-item-sub">19 stycznia 2027 (Wtorek) • Impiana Resort Chaweng Noi</div>
-        </div>
-        <span class="drawer-item-badge">19 STY</span>
-      </a>
-
-      <a class="drawer-item" onclick="selectDay(12)">
-        <div>
-          <div class="drawer-item-title">Dzień 12: Wodospady Na Muang & Ogród w Chmurach</div>
-          <div class="drawer-item-sub">20 stycznia 2027 (Środa) • Impiana Resort Chaweng Noi</div>
-        </div>
-        <span class="drawer-item-badge">20 STY</span>
-      </a>
-
-      <a class="drawer-item" onclick="selectDay(13)">
-        <div>
-          <div class="drawer-item-title">Dzień 13: Coral Cove & Krwisty Zachód Słońca</div>
-          <div class="drawer-item-sub">21 stycznia 2027 (Czwartek) • Impiana Resort Chaweng Noi</div>
-        </div>
-        <span class="drawer-item-badge">21 STY</span>
-      </a>
-
-      <a class="drawer-item" onclick="selectDay(14)">
-        <div>
-          <div class="drawer-item-title">Dzień 14: Etyczne Słonie & Lekcja Gotowania</div>
-          <div class="drawer-item-sub">22 stycznia 2027 (Piątek) • Impiana Resort Chaweng Noi</div>
-        </div>
-        <span class="drawer-item-badge">22 STY</span>
-      </a>
-
-      <a class="drawer-item" onclick="selectDay(15)">
-        <div>
-          <div class="drawer-item-title">Dzień 15: Lot do Bangkoku (11:35) & lebua at State Tower</div>
-          <div class="drawer-item-sub">23 stycznia 2027 (Sobota) • lebua at State Tower Bangkok</div>
-        </div>
-        <span class="drawer-item-badge">23 STY</span>
-      </a>
-
-      <a class="drawer-item" onclick="selectDay(16)">
-        <div>
-          <div class="drawer-item-title">Dzień 16: Do Zobaczenia, Tajlandio!</div>
-          <div class="drawer-item-sub">24 stycznia 2027 (Niedziela) • Wylot do Polski</div>
-        </div>
-        <span class="drawer-item-badge">24 STY</span>
-      </a>
-
+html_template += '''
     </div>
   </div>
 
@@ -3069,6 +1874,10 @@
     let currentSlideIndex = 0;
     let isTransitioning = false;
 
+    function getScrollContainer(slide) {
+      return slide.querySelector('.slide-scroll-view') || slide;
+    }
+
     function updateSlideClasses(targetIndex, direction) {
       slides.forEach((slide, i) => {
         slide.classList.remove('active', 'prev');
@@ -3083,7 +1892,8 @@
           slide.style.opacity = '1';
           slide.style.pointerEvents = 'auto';
           // Ensure new slide starts cleanly from the top
-          slide.scrollTop = 0;
+          const scroller = getScrollContainer(slide);
+          if (scroller) scroller.scrollTop = 0;
         } else {
           slide.style.transform = 'translateY(100%)';
           slide.style.opacity = '0';
@@ -3138,18 +1948,19 @@
       const duration = Date.now() - touchStartTime;
 
       // Must be a decisive vertical swipe
-      if (Math.abs(deltaY) > 40 && Math.abs(deltaY) > Math.abs(deltaX) * 1.2 && duration < 600) {
+      if (Math.abs(deltaY) > 35 && Math.abs(deltaY) > Math.abs(deltaX) * 1.2 && duration < 600) {
         const curSlide = slides[currentSlideIndex];
-        const isAtTop = curSlide.scrollTop <= 8;
-        const isAtBottom = (curSlide.scrollHeight - curSlide.scrollTop - curSlide.clientHeight) <= 12;
+        const scroller = getScrollContainer(curSlide);
+        const isAtTop = scroller.scrollTop <= 8;
+        const isAtBottom = (scroller.scrollHeight - scroller.scrollTop - scroller.clientHeight) <= 14;
         const tappedHeader = e.target.closest('.day-header') || e.target.closest('.hotel-card') || e.target.closest('.intro-hero') || e.target.closest('.top-bar');
 
-        if (deltaY < -40) {
+        if (deltaY < -35) {
           // Swipe UP ➔ Next Day
           if (isAtBottom || tappedHeader || currentSlideIndex === 0) {
             goToSlide(currentSlideIndex + 1);
           }
-        } else if (deltaY > 40) {
+        } else if (deltaY > 35) {
           // Swipe DOWN ➔ Prev Day
           if (isAtTop || tappedHeader) {
             goToSlide(currentSlideIndex - 1);
@@ -3194,12 +2005,12 @@
       }
     });
 
-    // Network-First Service Worker registration with instant update check
+    // Network-First Service Worker registration with instant update check (v5)
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=4')
+        navigator.serviceWorker.register('./sw.js?v=5')
           .then(reg => {
-            console.log('SW zarejestrowany:', reg);
+            console.log('SW v5 zarejestrowany:', reg);
             reg.update();
           })
           .catch(err => console.log('Błąd SW:', err));
@@ -3208,3 +2019,13 @@
   </script>
 </body>
 </html>
+'''
+
+# Write to both repositories
+with open('c:/Users/mosan/Desktop/Thai/Thai2027/index.html', 'w', encoding='utf-8') as f:
+    f.write(html_template)
+
+with open('c:/Users/mosan/Desktop/Thai/index.html', 'w', encoding='utf-8') as f:
+    f.write(html_template)
+
+print('Full-screen edge-to-edge index.html generated successfully!')

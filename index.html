@@ -16,15 +16,13 @@
   <style>
     :root {
       --bg-dark: #090d16;
-      --card-bg: rgba(15, 23, 42, 0.88);
+      --card-bg: rgba(15, 23, 42, 0.90);
       --card-border: rgba(255, 255, 255, 0.16);
       --gold: #f59e0b;
       --gold-light: #fef3c7;
       --gold-gradient: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
-      --safe-top: env(safe-area-inset-top, 20px);
-      --safe-bottom: env(safe-area-inset-bottom, 20px);
     }
 
     * {
@@ -34,11 +32,19 @@
       -webkit-tap-highlight-color: transparent;
     }
 
+    /* TRUE FULLSCREEN ROOT (ANCHORED TOP:0, BOTTOM:0 - ZERO DEAD SPACE) */
     html, body {
       width: 100%;
       height: 100%;
+      height: 100dvh;
+      margin: 0;
+      padding: 0;
       overflow: hidden;
       position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
       background: var(--bg-dark);
       font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
       color: var(--text-main);
@@ -54,16 +60,16 @@
       left: 0;
       right: 0;
       z-index: 100;
-      height: calc(max(var(--safe-top), 20px) + 52px);
-      padding-top: max(var(--safe-top), 20px);
+      height: calc(max(env(safe-area-inset-top, 20px), 20px) + 52px);
+      padding-top: max(env(safe-area-inset-top, 20px), 20px);
       padding-left: 16px;
       padding-right: 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: #090d16; /* SOLID OPAQUE DARK - NO BLUR */
+      background: #090d16; /* 100% SOLID OPAQUE DARK - ZERO BLUR */
       border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.8);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.85);
       box-sizing: border-box;
     }
 
@@ -135,25 +141,30 @@
       transition: width 0.3s ease-out;
     }
 
-    /* MASTER VIEWPORT (DECK CONTAINER) */
+    /* MASTER VIEWPORT (EDGE-TO-EDGE DECK CONTAINER) */
     .app-viewport {
-      width: 100vw;
+      width: 100%;
       height: 100%;
-      position: relative;
+      height: 100dvh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
       overflow: hidden;
       background: #090d16;
     }
 
-    /* INDIVIDUAL DISCRETE SLIDES (NO OVERLAPPING, NO JUMPING) */
+    /* INDIVIDUAL DISCRETE SLIDES (TRUE 100% FULLSCREEN) */
     .slide {
       width: 100%;
       height: 100%;
       position: absolute;
       top: 0;
       left: 0;
-      overflow-y: auto;
-      overflow-x: hidden;
-      -webkit-overflow-scrolling: touch;
+      right: 0;
+      bottom: 0;
+      overflow: hidden;
       box-sizing: border-box;
       opacity: 0;
       pointer-events: none;
@@ -176,41 +187,64 @@
       z-index: 1;
     }
 
-    /* Slide Background Photo */
+    /* Fixed Decoupled Background - NEVER SCROLLS AWAY */
     .slide-bg {
-      position: fixed;
+      position: absolute;
       top: 0;
       left: 0;
+      right: 0;
+      bottom: 0;
       width: 100%;
       height: 100%;
       background-size: cover;
       background-position: center;
       z-index: 1;
+      pointer-events: none;
+      transform: scale(1.04);
     }
 
     .slide-overlay {
-      position: fixed;
+      position: absolute;
       top: 0;
       left: 0;
+      right: 0;
+      bottom: 0;
       width: 100%;
       height: 100%;
       z-index: 2;
+      pointer-events: none;
       background: linear-gradient(
         180deg,
-        rgba(9, 13, 22, 0.45) 0%,
-        rgba(9, 13, 22, 0.75) 40%,
-        rgba(9, 13, 22, 0.90) 100%
+        rgba(9, 13, 22, 0.35) 0%,
+        rgba(9, 13, 22, 0.65) 45%,
+        rgba(9, 13, 22, 0.82) 100%
       );
     }
 
-    /* Content Layout */
+    /* Independent Scroll Layer */
+    .slide-scroll-view {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      z-index: 10;
+      box-sizing: border-box;
+    }
+
+    /* Content Layout - ZERO BOTTOM VOID */
     .slide-content {
       position: relative;
-      z-index: 10;
       width: 100%;
+      min-height: 100%;
       box-sizing: border-box;
-      padding-top: calc(max(var(--safe-top), 20px) + 64px);
-      padding-bottom: calc(max(var(--safe-bottom), 20px) + 16px);
+      padding-top: calc(max(env(safe-area-inset-top, 20px), 20px) + 64px);
+      padding-bottom: max(env(safe-area-inset-bottom, 0px), 12px);
       padding-left: 16px;
       padding-right: 16px;
       display: flex;
@@ -342,7 +376,8 @@
     .intro-footer {
       margin-top: auto;
       text-align: center;
-      padding-top: 20px;
+      padding-top: 16px;
+      padding-bottom: max(env(safe-area-inset-bottom, 0px), 12px);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -479,11 +514,12 @@
       line-height: 1.35;
     }
 
-    /* Timeline Items */
+    /* Timeline Items - ZERO DEAD MARGIN */
     .timeline-container {
       display: flex;
       flex-direction: column;
       gap: 12px;
+      margin-bottom: 0;
     }
 
     .timeline-card {
@@ -574,16 +610,6 @@
       background: rgba(245, 158, 11, 0.3);
     }
 
-    /* End-of-Day footer pill */
-    .day-end-hint {
-      text-align: center;
-      padding-top: 16px;
-      padding-bottom: 8px;
-      font-size: 12px;
-      color: rgba(255, 255, 255, 0.45);
-      font-weight: 600;
-    }
-
     /* Modal / Bottom Drawer for Day Selection */
     .drawer-backdrop {
       position: fixed;
@@ -614,7 +640,7 @@
       background: #0f172a;
       border-top: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 28px 28px 0 0;
-      padding: 20px 20px calc(max(var(--safe-bottom), 16px) + 20px);
+      padding: 20px 20px calc(max(env(safe-area-inset-bottom, 20px), 20px) + 16px);
       z-index: 201;
       transform: translateY(100%);
       transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
@@ -729,14 +755,15 @@
     </div>
   </header>
 
-  <!-- MASTER VIEWPORT (DECK CONTAINER) -->
+  <!-- MASTER VIEWPORT (EDGE-TO-EDGE DECK CONTAINER) -->
   <main class="app-viewport" id="viewport">
 
     <!-- SLIDE 0: INTRO & COUNTDOWN -->
     <section class="slide active" id="slide-intro" data-index="0" data-label="🇹🇭 Start">
       <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1508009603885-50cf7c579365?auto=format&fit=crop&w=1200&q=80'); linear-gradient(135deg, #090d16 0%, #1e1b4b 50%, #0f172a 100%)"></div>
       <div class="slide-overlay"></div>
-      <div class="slide-content">
+      <div class="slide-scroll-view">
+        <div class="slide-content">
         <div class="intro-hero">
           <div class="intro-tag">🌴 TAJLANDIA 2027</div>
           <h1 class="intro-title">Tajlandia 2027</h1>
@@ -788,6 +815,7 @@
             <span>👆 Przesuń w górę, aby zobaczyć Dzień 1</span>
           </div>
         </div>
+        </div>
       </div>
     </section>
 
@@ -795,7 +823,8 @@
     <section class="slide" id="day-1" data-index="1" data-label="Dzień 1 / 16 • 9 STY">
       <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?auto=format&fit=crop&w=1200&q=80'); linear-gradient(180deg, #180926 0%, #090d16 100%)"></div>
       <div class="slide-overlay"></div>
-      <div class="slide-content">
+      <div class="slide-scroll-view">
+        <div class="slide-content">
         
         <!-- Header -->
         <div class="day-header">
@@ -898,10 +927,7 @@
 
         </div>
 
-        <div class="day-end-hint">
-          <span>👆 Przesuń w górę: Dzień 2 z 16 ➔</span>
         </div>
-
       </div>
     </section>
 
@@ -909,7 +935,8 @@
     <section class="slide" id="day-2" data-index="2" data-label="Dzień 2 / 16 • 10 STY">
       <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1563492065599-3520f775eeed?auto=format&fit=crop&w=1200&q=80'); linear-gradient(180deg, #1e1305 0%, #090d16 100%)"></div>
       <div class="slide-overlay"></div>
-      <div class="slide-content">
+      <div class="slide-scroll-view">
+        <div class="slide-content">
         
         <!-- Header -->
         <div class="day-header">
@@ -1050,10 +1077,7 @@
 
         </div>
 
-        <div class="day-end-hint">
-          <span>👆 Przesuń w górę: Dzień 3 z 16 ➔</span>
         </div>
-
       </div>
     </section>
 
@@ -1061,7 +1085,8 @@
     <section class="slide" id="day-3" data-index="3" data-label="Dzień 3 / 16 • 11 STY">
       <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1542051841857-5f90071e7989?auto=format&fit=crop&w=1200&q=80'); linear-gradient(180deg, #111a2e 0%, #090d16 100%)"></div>
       <div class="slide-overlay"></div>
-      <div class="slide-content">
+      <div class="slide-scroll-view">
+        <div class="slide-content">
         
         <!-- Header -->
         <div class="day-header">
@@ -1202,10 +1227,7 @@
 
         </div>
 
-        <div class="day-end-hint">
-          <span>👆 Przesuń w górę: Dzień 4 z 16 ➔</span>
         </div>
-
       </div>
     </section>
 
@@ -1213,7 +1235,8 @@
     <section class="slide" id="day-4" data-index="4" data-label="Dzień 4 / 16 • 12 STY">
       <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1528181304800-259b08848526?auto=format&fit=crop&w=1200&q=80'); linear-gradient(180deg, #1c1409 0%, #090d16 100%)"></div>
       <div class="slide-overlay"></div>
-      <div class="slide-content">
+      <div class="slide-scroll-view">
+        <div class="slide-content">
         
         <!-- Header -->
         <div class="day-header">
@@ -1373,10 +1396,7 @@
 
         </div>
 
-        <div class="day-end-hint">
-          <span>👆 Przesuń w górę: Dzień 5 z 16 ➔</span>
         </div>
-
       </div>
     </section>
 
@@ -1384,7 +1404,8 @@
     <section class="slide" id="day-5" data-index="5" data-label="Dzień 5 / 16 • 13 STY">
       <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1200&q=80'); linear-gradient(180deg, #051e17 0%, #090d16 100%)"></div>
       <div class="slide-overlay"></div>
-      <div class="slide-content">
+      <div class="slide-scroll-view">
+        <div class="slide-content">
         
         <!-- Header -->
         <div class="day-header">
@@ -1525,10 +1546,7 @@
 
         </div>
 
-        <div class="day-end-hint">
-          <span>👆 Przesuń w górę: Dzień 6 z 16 ➔</span>
         </div>
-
       </div>
     </section>
 
@@ -1536,7 +1554,8 @@
     <section class="slide" id="day-6" data-index="6" data-label="Dzień 6 / 16 • 14 STY">
       <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1537956965359-7573183d1f57?auto=format&fit=crop&w=1200&q=80'); linear-gradient(180deg, #091f2c 0%, #090d16 100%)"></div>
       <div class="slide-overlay"></div>
-      <div class="slide-content">
+      <div class="slide-scroll-view">
+        <div class="slide-content">
         
         <!-- Header -->
         <div class="day-header">
@@ -1677,10 +1696,7 @@
 
         </div>
 
-        <div class="day-end-hint">
-          <span>👆 Przesuń w górę: Dzień 7 z 16 ➔</span>
         </div>
-
       </div>
     </section>
 
@@ -1688,7 +1704,8 @@
     <section class="slide" id="day-7" data-index="7" data-label="Dzień 7 / 16 • 15 STY">
       <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80'); linear-gradient(180deg, #06222b 0%, #090d16 100%)"></div>
       <div class="slide-overlay"></div>
-      <div class="slide-content">
+      <div class="slide-scroll-view">
+        <div class="slide-content">
         
         <!-- Header -->
         <div class="day-header">
@@ -1791,10 +1808,7 @@
 
         </div>
 
-        <div class="day-end-hint">
-          <span>👆 Przesuń w górę: Dzień 8 z 16 ➔</span>
         </div>
-
       </div>
     </section>
 
@@ -1802,7 +1816,8 @@
     <section class="slide" id="day-8" data-index="8" data-label="Dzień 8 / 16 • 16 STY">
       <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&w=1200&q=80'); linear-gradient(180deg, #1c1507 0%, #090d16 100%)"></div>
       <div class="slide-overlay"></div>
-      <div class="slide-content">
+      <div class="slide-scroll-view">
+        <div class="slide-content">
         
         <!-- Header -->
         <div class="day-header">
@@ -1943,10 +1958,7 @@
 
         </div>
 
-        <div class="day-end-hint">
-          <span>👆 Przesuń w górę: Dzień 9 z 16 ➔</span>
         </div>
-
       </div>
     </section>
 
@@ -1954,7 +1966,8 @@
     <section class="slide" id="day-9" data-index="9" data-label="Dzień 9 / 16 • 17 STY">
       <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?auto=format&fit=crop&w=1200&q=80'); linear-gradient(180deg, #092026 0%, #090d16 100%)"></div>
       <div class="slide-overlay"></div>
-      <div class="slide-content">
+      <div class="slide-scroll-view">
+        <div class="slide-content">
         
         <!-- Header -->
         <div class="day-header">
@@ -2057,10 +2070,7 @@
 
         </div>
 
-        <div class="day-end-hint">
-          <span>👆 Przesuń w górę: Dzień 10 z 16 ➔</span>
         </div>
-
       </div>
     </section>
 
@@ -2068,7 +2078,8 @@
     <section class="slide" id="day-10" data-index="10" data-label="Dzień 10 / 16 • 18 STY">
       <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=1200&q=80'); linear-gradient(180deg, #071c24 0%, #090d16 100%)"></div>
       <div class="slide-overlay"></div>
-      <div class="slide-content">
+      <div class="slide-scroll-view">
+        <div class="slide-content">
         
         <!-- Header -->
         <div class="day-header">
@@ -2190,10 +2201,7 @@
 
         </div>
 
-        <div class="day-end-hint">
-          <span>👆 Przesuń w górę: Dzień 11 z 16 ➔</span>
         </div>
-
       </div>
     </section>
 
@@ -2201,7 +2209,8 @@
     <section class="slide" id="day-11" data-index="11" data-label="Dzień 11 / 16 • 19 STY">
       <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1200&q=80'); linear-gradient(180deg, #1f101f 0%, #090d16 100%)"></div>
       <div class="slide-overlay"></div>
-      <div class="slide-content">
+      <div class="slide-scroll-view">
+        <div class="slide-content">
         
         <!-- Header -->
         <div class="day-header">
@@ -2285,10 +2294,7 @@
 
         </div>
 
-        <div class="day-end-hint">
-          <span>👆 Przesuń w górę: Dzień 12 z 16 ➔</span>
         </div>
-
       </div>
     </section>
 
@@ -2296,7 +2302,8 @@
     <section class="slide" id="day-12" data-index="12" data-label="Dzień 12 / 16 • 20 STY">
       <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=1200&q=80'); linear-gradient(180deg, #0f1c0f 0%, #090d16 100%)"></div>
       <div class="slide-overlay"></div>
-      <div class="slide-content">
+      <div class="slide-scroll-view">
+        <div class="slide-content">
         
         <!-- Header -->
         <div class="day-header">
@@ -2399,10 +2406,7 @@
 
         </div>
 
-        <div class="day-end-hint">
-          <span>👆 Przesuń w górę: Dzień 13 z 16 ➔</span>
         </div>
-
       </div>
     </section>
 
@@ -2410,7 +2414,8 @@
     <section class="slide" id="day-13" data-index="13" data-label="Dzień 13 / 16 • 21 STY">
       <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80'); linear-gradient(180deg, #1f0a14 0%, #090d16 100%)"></div>
       <div class="slide-overlay"></div>
-      <div class="slide-content">
+      <div class="slide-scroll-view">
+        <div class="slide-content">
         
         <!-- Header -->
         <div class="day-header">
@@ -2513,10 +2518,7 @@
 
         </div>
 
-        <div class="day-end-hint">
-          <span>👆 Przesuń w górę: Dzień 14 z 16 ➔</span>
         </div>
-
       </div>
     </section>
 
@@ -2524,7 +2526,8 @@
     <section class="slide" id="day-14" data-index="14" data-label="Dzień 14 / 16 • 22 STY">
       <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1557050543-4d5f4e07ef46?auto=format&fit=crop&w=1200&q=80'); linear-gradient(180deg, #1c1809 0%, #090d16 100%)"></div>
       <div class="slide-overlay"></div>
-      <div class="slide-content">
+      <div class="slide-scroll-view">
+        <div class="slide-content">
         
         <!-- Header -->
         <div class="day-header">
@@ -2608,10 +2611,7 @@
 
         </div>
 
-        <div class="day-end-hint">
-          <span>👆 Przesuń w górę: Dzień 15 z 16 ➔</span>
         </div>
-
       </div>
     </section>
 
@@ -2619,7 +2619,8 @@
     <section class="slide" id="day-15" data-index="15" data-label="Dzień 15 / 16 • 23 STY">
       <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1508009603885-50cf7c579365?auto=format&fit=crop&w=1200&q=80'); linear-gradient(180deg, #181124 0%, #090d16 100%)"></div>
       <div class="slide-overlay"></div>
-      <div class="slide-content">
+      <div class="slide-scroll-view">
+        <div class="slide-content">
         
         <!-- Header -->
         <div class="day-header">
@@ -2760,10 +2761,7 @@
 
         </div>
 
-        <div class="day-end-hint">
-          <span>👆 Przesuń w górę: Dzień 16 z 16 ➔</span>
         </div>
-
       </div>
     </section>
 
@@ -2771,7 +2769,8 @@
     <section class="slide" id="day-16" data-index="16" data-label="Dzień 16 / 16 • 24 STY">
       <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1200&q=80'); linear-gradient(180deg, #111a2e 0%, #090d16 100%)"></div>
       <div class="slide-overlay"></div>
-      <div class="slide-content">
+      <div class="slide-scroll-view">
+        <div class="slide-content">
         
         <!-- Header -->
         <div class="day-header">
@@ -2874,10 +2873,7 @@
 
         </div>
 
-        <div class="day-end-hint">
-          <span>👆 Przesuń w górę: Koniec planu podróży ✨</span>
         </div>
-
       </div>
     </section>
 
@@ -3069,6 +3065,10 @@
     let currentSlideIndex = 0;
     let isTransitioning = false;
 
+    function getScrollContainer(slide) {
+      return slide.querySelector('.slide-scroll-view') || slide;
+    }
+
     function updateSlideClasses(targetIndex, direction) {
       slides.forEach((slide, i) => {
         slide.classList.remove('active', 'prev');
@@ -3083,7 +3083,8 @@
           slide.style.opacity = '1';
           slide.style.pointerEvents = 'auto';
           // Ensure new slide starts cleanly from the top
-          slide.scrollTop = 0;
+          const scroller = getScrollContainer(slide);
+          if (scroller) scroller.scrollTop = 0;
         } else {
           slide.style.transform = 'translateY(100%)';
           slide.style.opacity = '0';
@@ -3138,18 +3139,19 @@
       const duration = Date.now() - touchStartTime;
 
       // Must be a decisive vertical swipe
-      if (Math.abs(deltaY) > 40 && Math.abs(deltaY) > Math.abs(deltaX) * 1.2 && duration < 600) {
+      if (Math.abs(deltaY) > 35 && Math.abs(deltaY) > Math.abs(deltaX) * 1.2 && duration < 600) {
         const curSlide = slides[currentSlideIndex];
-        const isAtTop = curSlide.scrollTop <= 8;
-        const isAtBottom = (curSlide.scrollHeight - curSlide.scrollTop - curSlide.clientHeight) <= 12;
+        const scroller = getScrollContainer(curSlide);
+        const isAtTop = scroller.scrollTop <= 8;
+        const isAtBottom = (scroller.scrollHeight - scroller.scrollTop - scroller.clientHeight) <= 14;
         const tappedHeader = e.target.closest('.day-header') || e.target.closest('.hotel-card') || e.target.closest('.intro-hero') || e.target.closest('.top-bar');
 
-        if (deltaY < -40) {
+        if (deltaY < -35) {
           // Swipe UP ➔ Next Day
           if (isAtBottom || tappedHeader || currentSlideIndex === 0) {
             goToSlide(currentSlideIndex + 1);
           }
-        } else if (deltaY > 40) {
+        } else if (deltaY > 35) {
           // Swipe DOWN ➔ Prev Day
           if (isAtTop || tappedHeader) {
             goToSlide(currentSlideIndex - 1);
@@ -3194,12 +3196,12 @@
       }
     });
 
-    // Network-First Service Worker registration with instant update check
+    // Network-First Service Worker registration with instant update check (v5)
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=4')
+        navigator.serviceWorker.register('./sw.js?v=5')
           .then(reg => {
-            console.log('SW zarejestrowany:', reg);
+            console.log('SW v5 zarejestrowany:', reg);
             reg.update();
           })
           .catch(err => console.log('Błąd SW:', err));
