@@ -1,6 +1,5 @@
-import json
+import sys, os, json
 
-# Data for all 17 slides (Slide 0: Countdown & Intro, Slides 1-16: Days 1-16)
 slides_data = [
     {
         "id": "intro",
@@ -905,18 +904,19 @@ slides_data = [
     }
 ]
 
-html_template = '''<!DOCTYPE html>
+
+html_head = """<!DOCTYPE html>
 <html lang="pl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Tajlandia 2027 • Harmonogram Podróży</title>
+  <meta name="theme-color" content="#090d16">
+  <link rel="manifest" href="./manifest.json">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Tajlandia 2027">
-  <meta name="theme-color" content="#090d16">
-  <link rel="apple-touch-icon" href="./icon-192.png">
-  <link rel="manifest" href="./manifest.json">
-  <title>Tajlandia 2027 • Harmonogram Podróży</title>
+  <link rel="apple-touch-icon" sizes="192x192" href="./icon-192.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -939,28 +939,35 @@ html_template = '''<!DOCTYPE html>
       -webkit-tap-highlight-color: transparent;
     }
 
-    /* TRUE FULLSCREEN ROOT (100% EDGE-TO-EDGE, ANCHORED TOP:0, BOTTOM:0) */
-    html, body {
-      width: 100%;
-      height: 100%;
+    /* NATURAL FULLSCREEN (EXACT SAME AS CNC-KALKULATOR) */
+    html {
+      overflow-y: auto;
+      scrollbar-gutter: stable;
+      overscroll-behavior-y: none;
+      background-color: #090d16;
+    }
+
+    body {
+      min-height: 100vh;
       margin: 0;
       padding: 0;
-      overflow: hidden;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: var(--bg-dark);
-      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+      overflow-x: hidden;
+      overflow-y: visible;
+      background-color: #090d16;
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       color: var(--text-main);
       -webkit-font-smoothing: antialiased;
       -webkit-text-size-adjust: 100%;
-      user-select: none;
-      -webkit-user-select: none;
     }
 
-    /* Fixed 100% Solid Header - ZERO BLUR, ZERO CARD BLEEDING */
+    #root, .app-root {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* Fixed 100% Solid Header */
     .top-bar {
       position: fixed;
       top: 0;
@@ -974,7 +981,7 @@ html_template = '''<!DOCTYPE html>
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: #090d16; /* 100% SOLID OPAQUE DARK - ZERO BLUR */
+      background: #090d16;
       border-bottom: 1px solid rgba(255, 255, 255, 0.12);
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.85);
       box-sizing: border-box;
@@ -982,12 +989,13 @@ html_template = '''<!DOCTYPE html>
 
     .top-bar-inner {
       width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
-    /* Sharp, High-Contrast Badge */
     .nav-badge {
       display: inline-flex;
       align-items: center;
@@ -1010,7 +1018,6 @@ html_template = '''<!DOCTYPE html>
       flex-shrink: 0;
     }
 
-    /* Crisp SVG Calendar Icon Button */
     .icon-btn {
       background: #1e293b;
       border: 1px solid rgba(245, 158, 11, 0.5);
@@ -1030,7 +1037,6 @@ html_template = '''<!DOCTYPE html>
       background: rgba(245, 158, 11, 0.25);
     }
 
-    /* Top Progress Track */
     .progress-track {
       position: fixed;
       top: 0;
@@ -1048,111 +1054,77 @@ html_template = '''<!DOCTYPE html>
       transition: width 0.3s ease-out;
     }
 
-    /* MASTER VIEWPORT (EDGE-TO-EDGE DECK CONTAINER - ZERO SAFE AREA VOID) */
-    .app-viewport {
+    /* SLIDE CONTAINERS (NATURAL DOCUMENT FLOW) */
+    .slide {
+      display: none;
       width: 100%;
-      height: 100%;
+      min-height: 100vh;
+      position: relative;
+      box-sizing: border-box;
+    }
+
+    .slide.active {
+      display: block;
+      animation: slideFadeIn 0.25s ease-out forwards;
+    }
+
+    @keyframes slideFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Fixed Background Layer (Covers Physical Glass 100%) */
+    .slide-bg {
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      overflow: hidden;
-      background: #090d16;
-    }
-
-    /* INDIVIDUAL DISCRETE SLIDES (TRUE 100% FULLSCREEN) */
-    .slide {
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      overflow: hidden;
-      box-sizing: border-box;
-      opacity: 0;
-      pointer-events: none;
-      transform: translateY(100%);
-      transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.25s ease;
-      z-index: 1;
-    }
-
-    .slide.active {
-      opacity: 1;
-      pointer-events: auto;
-      transform: translateY(0);
-      z-index: 2;
-    }
-
-    .slide.prev {
-      opacity: 0;
-      pointer-events: none;
-      transform: translateY(-100%);
-      z-index: 1;
-    }
-
-    /* Fixed Decoupled Background - NEVER SCROLLS AWAY */
-    .slide-bg {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      width: 100%;
-      height: 100%;
+      width: 100vw;
+      height: 100vh;
       background-size: cover;
       background-position: center;
       z-index: 1;
       pointer-events: none;
-      transform: scale(1.04);
     }
 
     .slide-overlay {
-      position: absolute;
+      position: fixed;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      width: 100%;
-      height: 100%;
+      width: 100vw;
+      height: 100vh;
       z-index: 2;
       pointer-events: none;
       background: linear-gradient(
         180deg,
-        rgba(9, 13, 22, 0.20) 0%,
-        rgba(9, 13, 22, 0.45) 45%,
-        rgba(9, 13, 22, 0.60) 100%
+        rgba(9, 13, 22, 0.30) 0%,
+        rgba(9, 13, 22, 0.60) 45%,
+        rgba(9, 13, 22, 0.85) 100%
       );
     }
 
-    /* Independent Scroll Layer */
-    .slide-scroll-view {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      width: 100%;
-      height: 100%;
-      overflow-y: auto;
-      overflow-x: hidden;
-      -webkit-overflow-scrolling: touch;
-      z-index: 10;
-      box-sizing: border-box;
-    }
-
-    /* Content Layout - 100% TRUE FULLSCREEN EDGE-TO-EDGE */
+    /* Content Layout - Natural Scroll & Safe Area Padding */
     .slide-content {
       position: relative;
+      z-index: 10;
       width: 100%;
-      min-height: 100%;
+      max-width: 600px;
+      min-height: 100vh;
+      margin: 0 auto;
       box-sizing: border-box;
-      padding-top: calc(max(env(safe-area-inset-top, 20px), 20px) + 60px);
-      padding-bottom: 0px; /* ZERO BOTTOM GAP */
-      padding-left: 14px;
-      padding-right: 14px;
+      padding-top: calc(max(env(safe-area-inset-top, 20px), 20px) + 64px);
+      padding-bottom: max(2.5rem, env(safe-area-inset-bottom, 24px));
+      padding-left: 16px;
+      padding-right: 16px;
       display: flex;
       flex-direction: column;
     }
@@ -1166,6 +1138,8 @@ html_template = '''<!DOCTYPE html>
       flex-direction: column;
       align-items: center;
       gap: 14px;
+      padding-top: 20px;
+      padding-bottom: 20px;
     }
 
     .intro-tag {
@@ -1282,12 +1256,11 @@ html_template = '''<!DOCTYPE html>
     .intro-footer {
       margin-top: auto;
       text-align: center;
-      padding-top: 14px;
-      padding-bottom: 12px;
+      padding-top: 16px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
     }
 
     .start-btn {
@@ -1354,13 +1327,10 @@ html_template = '''<!DOCTYPE html>
     .tag-drive { background: rgba(168, 85, 247, 0.25); border-color: rgba(168, 85, 247, 0.5); color: #d8b4fe; }
     .tag-nature { background: rgba(16, 185, 129, 0.25); border-color: rgba(16, 185, 129, 0.5); color: #6ee7b7; }
     .tag-flight { background: rgba(14, 165, 233, 0.25); border-color: rgba(14, 165, 233, 0.5); color: #7dd3fc; }
-    .tag-relax { background: rgba(20, 184, 166, 0.25); border-color: rgba(20, 184, 166, 0.5); color: #5eead4; }
-    .tag-boat { background: rgba(6, 182, 212, 0.25); border-color: rgba(6, 182, 212, 0.5); color: #67e8f9; }
-    .tag-luxury { background: rgba(236, 72, 153, 0.25); border-color: rgba(236, 72, 153, 0.5); color: #f472b6; }
 
     .day-date-text {
       font-size: 13px;
-      color: #cbd5e1;
+      color: var(--text-muted);
       font-weight: 600;
     }
 
@@ -1375,7 +1345,7 @@ html_template = '''<!DOCTYPE html>
     .day-subtitle {
       font-size: 14px;
       color: #cbd5e1;
-      font-weight: 500;
+      line-height: 1.4;
     }
 
     /* Hotel Card */
@@ -1391,26 +1361,15 @@ html_template = '''<!DOCTYPE html>
     }
 
     .hotel-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
-      background: rgba(245, 158, 11, 0.2);
-      border: 1px solid rgba(245, 158, 11, 0.4);
-      color: #fbbf24;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
+      font-size: 22px;
       flex-shrink: 0;
+      margin-top: 2px;
     }
 
     .hotel-info-name {
       font-size: 14px;
       font-weight: 700;
       color: #fff;
-      display: flex;
-      align-items: center;
-      gap: 6px;
     }
 
     .hotel-info-tip {
@@ -1420,16 +1379,12 @@ html_template = '''<!DOCTYPE html>
       line-height: 1.35;
     }
 
-    /* Timeline Items - ZERO DEAD MARGIN */
+    /* Timeline Items */
     .timeline-container {
       display: flex;
       flex-direction: column;
       gap: 12px;
-      margin-bottom: 12px;
-    }
-
-    .timeline-card:last-child {
-      margin-bottom: 8px;
+      margin-bottom: 14px;
     }
 
     .timeline-card {
@@ -1520,11 +1475,43 @@ html_template = '''<!DOCTYPE html>
       background: rgba(245, 158, 11, 0.3);
     }
 
+    /* Bottom Navigation Bar for Days */
+    .day-nav-bar {
+      display: flex;
+      gap: 8px;
+      margin-top: 14px;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .day-nav-btn {
+      flex: 1;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      color: #fff;
+      padding: 13px 10px;
+      border-radius: 14px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+      transition: background 0.15s, transform 0.15s;
+    }
+
+    .day-nav-btn:active {
+      transform: scale(0.96);
+      background: rgba(245, 158, 11, 0.25);
+    }
+
+    .day-nav-btn-main {
+      border-color: rgba(245, 158, 11, 0.5);
+      color: #fbbf24;
+    }
+
     /* Modal / Bottom Drawer for Day Selection */
     .drawer-backdrop {
       position: fixed;
-      top: 0;
-      left: 0;
+      inset: 0;
       width: 100vw;
       height: 100vh;
       background: rgba(0, 0, 0, 0.75);
@@ -1550,7 +1537,7 @@ html_template = '''<!DOCTYPE html>
       background: #0f172a;
       border-top: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 28px 28px 0 0;
-      padding: 20px 20px 24px;
+      padding: 20px 20px calc(max(env(safe-area-inset-bottom, 20px), 20px) + 16px);
       z-index: 201;
       transform: translateY(100%);
       transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
@@ -1641,27 +1628,23 @@ html_template = '''<!DOCTYPE html>
     }
   </style>
 </head>
-<body>
+<body style="margin:0;background-color:#090d16;">
 
-  <!-- Top Progress Bar -->
-  <div class="progress-track" aria-hidden="true">
-    <div class="progress-fill" id="progressFill"></div>
-  </div>
-
-  <!-- 100% Solid Dark Header (NO BLUR, NO CARD TEXT BLEEDING) -->
+  <!-- Fixed Top Header -->
   <header class="top-bar">
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
     <div class="top-bar-inner">
       <div class="nav-badge" id="navBadge" role="status" aria-live="polite">
         <span class="nav-badge-dot"></span>
         <span id="navBadgeText">🇹🇭 Tajlandia '27</span>
       </div>
       <div style="display: flex; gap: 8px; align-items: center;">
-        <button class="icon-btn" onclick="forceAppRefresh()" title="Odśwież aplikację" aria-label="Wymuś odświeżenie najnowszej wersji">
+        <button class="icon-btn" onclick="forceAppRefresh()" title="Wymuś odświeżenie" aria-label="Odśwież aplikację">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
           </svg>
         </button>
-        <button class="icon-btn" id="btnDrawer" title="Spis dni" aria-label="Otwórz harmonogram dni">
+        <button class="icon-btn" id="btnDrawer" title="Harmonogram dni" aria-label="Wybierz dzień z listy">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
             <line x1="16" y1="2" x2="16" y2="6"></line>
@@ -1673,21 +1656,20 @@ html_template = '''<!DOCTYPE html>
     </div>
   </header>
 
-  <!-- MASTER VIEWPORT (EDGE-TO-EDGE DECK CONTAINER) -->
-  <main class="app-viewport" id="viewport">
-'''
+  <!-- NATURAL SCROLL ROOT (LIKE CNC-KALKULATOR) -->
+  <main id="root" class="app-root">
+"""
 
-# Build slides HTML
+html_body_slides = ""
 for idx, s in enumerate(slides_data):
     is_active = " active" if idx == 0 else ""
     if s.get("isIntro"):
-        html_template += f'''
+        html_body_slides += f"""
     <!-- SLIDE 0: INTRO & COUNTDOWN -->
     <section class="slide{is_active}" id="slide-intro" data-index="0" data-label="🇹🇭 Start">
-      <div class="slide-bg" style="background-image: url('{s["bgImage"]}'); {s.get("bgFallback", "")}"></div>
+      <div class="slide-bg" style="background-image: url('{s["bgImage"]}');"></div>
       <div class="slide-overlay"></div>
-      <div class="slide-scroll-view">
-        <div class="slide-content">
+      <div class="slide-content">
         <div class="intro-hero">
           <div class="intro-tag">🌴 TAJLANDIA 2027</div>
           <h1 class="intro-title">{s["title"]}</h1>
@@ -1736,23 +1718,26 @@ for idx, s in enumerate(slides_data):
         <div class="intro-footer">
           <button class="start-btn" onclick="goToSlide(1)">Rozpocznij Podróż ➔</button>
           <div class="swipe-hint">
-            <span>👆 Przesuń w górę, aby zobaczyć Dzień 1</span>
+            <span>👆 Przesuń w górę, aby przejść do Dnia 1</span>
           </div>
-        </div>
         </div>
       </div>
     </section>
-'''
+"""
     else:
         day_num = s["dayNum"]
         slide_idx = day_num
-        html_template += f'''
+        prev_idx = slide_idx - 1
+        next_idx = slide_idx + 1
+        prev_label = f"Dzień {prev_idx}" if prev_idx > 0 else "Odliczanie"
+        next_label = f"Dzień {next_idx}" if next_idx <= 16 else "Początek"
+
+        html_body_slides += f"""
     <!-- SLIDE {slide_idx}: DZIEŃ {day_num} -->
     <section class="slide{is_active}" id="{s["id"]}" data-index="{slide_idx}" data-label="Dzień {day_num} / 16 • {s["badgeDate"]}">
-      <div class="slide-bg" style="background-image: url('{s["bgImage"]}'); {s.get("bgFallback", "")}"></div>
+      <div class="slide-bg" style="background-image: url('{s["bgImage"]}');"></div>
       <div class="slide-overlay"></div>
-      <div class="slide-scroll-view">
-        <div class="slide-content">
+      <div class="slide-content">
         
         <!-- Header -->
         <div class="day-header">
@@ -1776,11 +1761,11 @@ for idx, s in enumerate(slides_data):
 
         <!-- Timeline Items -->
         <div class="timeline-container">
-'''
+"""
         for it in s["items"]:
             encoded_query = it["query"].replace(" ", "+")
             maps_url = f"https://www.google.com/maps/search/?api=1&query={encoded_query}"
-            html_template += f'''
+            html_body_slides += f"""
           <div class="timeline-card">
             <div class="timeline-card-header">
               <span class="time-badge">{it["time"]}</span>
@@ -1799,17 +1784,22 @@ for idx, s in enumerate(slides_data):
               </a>
             </div>
           </div>
-'''
-        html_template += '''
+"""
+        html_body_slides += f"""
         </div>
 
+        <!-- Bottom Day Switcher Navigation -->
+        <div class="day-nav-bar">
+          <button class="day-nav-btn" onclick="goToSlide({prev_idx})">◀ {prev_label}</button>
+          <button class="day-nav-btn day-nav-btn-main" onclick="openDrawer()">📅 Spis dni</button>
+          <button class="day-nav-btn" onclick="goToSlide({next_idx if next_idx <= 16 else 0})">{next_label} ▶</button>
         </div>
+
       </div>
     </section>
-'''
+"""
 
-# Add bottom sheet drawer
-html_template += '''
+html_drawer_and_script = """
   </main>
 
   <!-- Backdrop for drawer -->
@@ -1830,12 +1820,12 @@ html_template += '''
         </div>
         <span class="drawer-item-badge">START</span>
       </a>
-'''
+"""
 
 for idx, s in enumerate(slides_data):
     if not s.get("isIntro"):
         d_num = s["dayNum"]
-        html_template += f'''
+        html_drawer_and_script += f"""
       <a class="drawer-item" onclick="selectDay({d_num})">
         <div>
           <div class="drawer-item-title">Dzień {d_num}: {s["title"]}</div>
@@ -1843,9 +1833,9 @@ for idx, s in enumerate(slides_data):
         </div>
         <span class="drawer-item-badge">{s["badgeDate"]}</span>
       </a>
-'''
+"""
 
-html_template += '''
+html_drawer_and_script += """
     </div>
   </div>
 
@@ -1877,38 +1867,19 @@ html_template += '''
     setInterval(updateCountdown, 1000);
     updateCountdown();
 
-    // DISCRETE DECK ENGINE - ZERO OVERLAP, ZERO JUMPING, 100% CLEAN TRANSITIONS
+    // SLIDE DECK ENGINE (NATURAL FULLSCREEN)
     const slides = document.querySelectorAll('.slide');
     const navBadgeText = document.getElementById('navBadgeText');
     const progressFill = document.getElementById('progressFill');
     const totalSlides = slides.length;
     let currentSlideIndex = 0;
-    let isTransitioning = false;
 
-    function getScrollContainer(slide) {
-      return slide.querySelector('.slide-scroll-view') || slide;
-    }
-
-    function updateSlideClasses(targetIndex, direction) {
+    function updateSlideClasses(targetIndex) {
       slides.forEach((slide, i) => {
-        slide.classList.remove('active', 'prev');
-        if (i < targetIndex) {
-          slide.classList.add('prev');
-          slide.style.transform = 'translateY(-100%)';
-          slide.style.opacity = '0';
-          slide.style.pointerEvents = 'none';
-        } else if (i === targetIndex) {
+        if (i === targetIndex) {
           slide.classList.add('active');
-          slide.style.transform = 'translateY(0)';
-          slide.style.opacity = '1';
-          slide.style.pointerEvents = 'auto';
-          // Ensure new slide starts cleanly from the top
-          const scroller = getScrollContainer(slide);
-          if (scroller) scroller.scrollTop = 0;
         } else {
-          slide.style.transform = 'translateY(100%)';
-          slide.style.opacity = '0';
-          slide.style.pointerEvents = 'none';
+          slide.classList.remove('active');
         }
       });
 
@@ -1925,20 +1896,16 @@ html_template += '''
     }
 
     function goToSlide(targetIndex) {
-      if (targetIndex < 0 || targetIndex >= totalSlides || targetIndex === currentSlideIndex || isTransitioning) return;
-      isTransitioning = true;
-      const direction = targetIndex > currentSlideIndex ? 'down' : 'up';
+      if (targetIndex < 0 || targetIndex >= totalSlides || targetIndex === currentSlideIndex) return;
       currentSlideIndex = targetIndex;
-      updateSlideClasses(targetIndex, direction);
-      setTimeout(() => {
-        isTransitioning = false;
-      }, 380);
+      updateSlideClasses(targetIndex);
+      window.scrollTo({ top: 0, behavior: 'instant' });
     }
 
     // Initialize slide positions
-    updateSlideClasses(0, 'init');
+    updateSlideClasses(0);
 
-    // NATIVE-FEEL TOUCH GESTURES (SWIPE UP / DOWN)
+    // TOUCH SWIPE UP / DOWN GESTURES
     let touchStartY = 0;
     let touchStartX = 0;
     let touchStartTime = 0;
@@ -1950,7 +1917,7 @@ html_template += '''
     }, { passive: true });
 
     window.addEventListener('touchend', (e) => {
-      if (drawerSheet.classList.contains('active') || isTransitioning) return;
+      if (drawerSheet && drawerSheet.classList.contains('active')) return;
 
       const touchEndY = e.changedTouches[0].clientY;
       const touchEndX = e.changedTouches[0].clientX;
@@ -1958,22 +1925,21 @@ html_template += '''
       const deltaX = touchEndX - touchStartX;
       const duration = Date.now() - touchStartTime;
 
-      // Must be a decisive vertical swipe
-      if (Math.abs(deltaY) > 35 && Math.abs(deltaY) > Math.abs(deltaX) * 1.2 && duration < 600) {
-        const curSlide = slides[currentSlideIndex];
-        const scroller = getScrollContainer(curSlide);
-        const isAtTop = scroller.scrollTop <= 8;
-        const isAtBottom = (scroller.scrollHeight - scroller.scrollTop - scroller.clientHeight) <= 14;
-        const tappedHeader = e.target.closest('.day-header') || e.target.closest('.hotel-card') || e.target.closest('.intro-hero') || e.target.closest('.top-bar');
+      if (Math.abs(deltaY) > 50 && Math.abs(deltaY) > Math.abs(deltaX) * 1.3 && duration < 500) {
+        const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
+        const windowHeight = window.innerHeight;
+        const docHeight = document.documentElement.scrollHeight;
+        const isAtBottom = (windowHeight + scrollY) >= (docHeight - 35);
+        const isAtTop = scrollY <= 15;
 
-        if (deltaY < -35) {
-          // Swipe UP ➔ Next Day
-          if (isAtBottom || tappedHeader || currentSlideIndex === 0) {
+        if (deltaY < -50) {
+          // Swiped UP ➔ Next Day (if at bottom of page or on intro)
+          if (isAtBottom || currentSlideIndex === 0) {
             goToSlide(currentSlideIndex + 1);
           }
-        } else if (deltaY > 35) {
-          // Swipe DOWN ➔ Prev Day
-          if (isAtTop || tappedHeader) {
+        } else if (deltaY > 50) {
+          // Swiped DOWN ➔ Prev Day (if at top of page)
+          if (isAtTop) {
             goToSlide(currentSlideIndex - 1);
           }
         }
@@ -2004,70 +1970,68 @@ html_template += '''
       closeDrawer();
       setTimeout(() => {
         goToSlide(index);
-      }, 200);
+      }, 150);
     }
 
     // Keyboard navigation (for desktop testing)
     window.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowDown' || e.key === 'PageDown') {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === 'PageDown') {
         goToSlide(currentSlideIndex + 1);
-      } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'PageUp') {
         goToSlide(currentSlideIndex - 1);
       }
     });
 
-    // Force Refresh Handler (Purges iOS WebClip Cache & Reloads)
-    function forceAppRefresh() {
-      if ('caches' in window) {
-        caches.keys().then(keys => Promise.all(keys.map(k => caches.delete(k)))).then(() => {
-          localStorage.setItem('trip_app_ver', 'v6-fullscreen');
-          window.location.reload(true);
-        });
-      } else {
-        window.location.reload(true);
+    // Force Update Handler (identical to cnc-kalkulator-main AppFooter)
+    async function forceAppRefresh() {
+      try {
+        if ('caches' in window) {
+          const cacheNames = await caches.keys();
+          await Promise.all(cacheNames.map((name) => caches.delete(name)));
+        }
+        if ('serviceWorker' in navigator) {
+          const registrations = await navigator.serviceWorker.getRegistrations();
+          for (const registration of registrations) {
+            await registration.unregister();
+          }
+        }
+        window.location.reload();
+      } catch (e) {
+        window.location.reload();
       }
     }
 
-    // Auto-Flush Cache on Version Upgrade
-    const CURRENT_APP_VERSION = 'v6-fullscreen';
-    if (localStorage.getItem('trip_app_ver') !== CURRENT_APP_VERSION) {
-      localStorage.setItem('trip_app_ver', CURRENT_APP_VERSION);
-      if ('caches' in window) {
-        caches.keys().then(keys => Promise.all(keys.map(k => caches.delete(k)))).then(() => {
-          window.location.reload(true);
-        });
-      }
-    }
-
-    // Network-First Service Worker registration with instant update check (v6)
-    let isRefreshing = false;
+    // Auto-update Service Worker listener (identical to cnc-kalkulator-main main.tsx)
+    let refreshing = false;
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.addEventListener('controllerchange', () => {
-        if (!isRefreshing) {
-          isRefreshing = true;
+        if (!refreshing) {
+          refreshing = true;
           window.location.reload();
         }
       });
 
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=6')
+        navigator.serviceWorker.register('./sw.js?v=13')
           .then(reg => {
-            console.log('SW v6 zarejestrowany:', reg);
+            console.log('SW registered');
             reg.update();
           })
-          .catch(err => console.log('Błąd SW:', err));
+          .catch(err => console.log('SW error:', err));
       });
     }
   </script>
 </body>
 </html>
-'''
+"""
 
-# Write to both repositories
-with open('c:/Users/mosan/Desktop/Thai/Thai2027/index.html', 'w', encoding='utf-8') as f:
-    f.write(html_template)
+full_html = html_head + html_body_slides + html_drawer_and_script
 
-with open('c:/Users/mosan/Desktop/Thai/index.html', 'w', encoding='utf-8') as f:
-    f.write(html_template)
+# Write index.html to Thai2027 and Thai
+with open(r'c:\Users\mosan\Desktop\Thai\Thai2027\index.html', 'w', encoding='utf-8') as f:
+    f.write(full_html)
 
-print('Full-screen edge-to-edge index.html generated successfully!')
+with open(r'c:\Users\mosan\Desktop\Thai\index.html', 'w', encoding='utf-8') as f:
+    f.write(full_html)
+
+print("Generated natural fullscreen index.html successfully! Length:", len(full_html))

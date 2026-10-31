@@ -1,5 +1,7 @@
-const CACHE_NAME = 'thailand-trip-v6';
-const STATIC_ASSETS = [
+const CACHE_PREFIX = 'thailand-trip-';
+const CACHE_NAME = `${CACHE_PREFIX}v13`;
+const PRECACHE_URLS = [
+  './',
   './index.html',
   './manifest.json',
   './icon-192.png',
@@ -9,62 +11,80 @@ const STATIC_ASSETS = [
 self.addEventListener('install', (event) => {
   self.skipWaiting();
   event.waitUntil(
-    caches.open(CACHE_NAME).then(async (cache) => {
-      for (const asset of STATIC_ASSETS) {
-        try {
-          await cache.add(asset);
-        } catch (e) {
-          console.warn('Failed to pre-cache asset:', asset, e);
-        }
-      }
-    })
+    caches.open(CACHE_NAME).then((cache) =>
+      Promise.allSettled(PRECACHE_URLS.map((url) => cache.add(url)))
+    )
   );
 });
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((keys) => {
-      return Promise.all(
-        keys.map((key) => {
-          if (key !== CACHE_NAME) {
-            console.log('Removing old cache:', key);
-            return caches.delete(key);
-          }
-        })
-      );
-    }).then(() => self.clients.claim())
+    Promise.all([
+      caches.keys().then((names) =>
+        Promise.all(
+          names
+            .filter((name) => name.startsWith(CACHE_PREFIX) && name !== CACHE_NAME)
+            .map((name) => caches.delete(name))
+        )
+      ),
+      self.clients.claim()
+    ]).then(() => {
+      return self.clients.matchAll({ type: 'window' }).then((clients) => {
+        clients.forEach((client) => {
+          client.postMessage({ type: 'SW_ACTIVATED' });
+        });
+      });
+    })
   );
 });
 
-// Network-First for HTML navigation so updates are instant; Cache-First for static assets
+self.addEventListener('message', (event) => {
+  if (event.data?.type === 'SKIP_WAITING') self.skipWaiting();
+});
+
 self.addEventListener('fetch', (event) => {
-  if (event.request.method !== 'GET') return;
+  const req = event.request;
+  if (req.method !== 'GET') return;
 
-  const url = new URL(event.request.url);
+  const url = new URL(req.url);
+  const isHTML =
+    req.mode === 'navigate' ||
+    (req.headers.get('accept') || '').includes('text/html') ||
+    url.pathname.endsWith('/') ||
+    url.pathname.endsWith('index.html');
 
-  // If navigating to the page or requesting index.html: NETWORK FIRST
-  if (event.request.mode === 'navigate' || url.pathname.endsWith('index.html') || url.pathname.endsWith('/')) {
+  // HTML — sieć najpierw z wymuszeniem braku cache HTTP, fallback do cache
+  if (isHTML) {
+    const indexUrl = self.registration.scope + 'index.html';
     event.respondWith(
-      fetch(event.request)
-        .then((networkResponse) => {
-          if (networkResponse && networkResponse.status === 200) {
-            const clone = networkResponse.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+      fetch(req, { cache: 'no-cache' })
+        .then((response) => {
+          if (response && response.status === 200) {
+            const clone1 = response.clone();
+            const clone2 = response.clone();
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(req, clone1);
+              cache.put(indexUrl, clone2);
+            });
+            return response;
           }
-          return networkResponse;
+          return caches.match(req, { ignoreSearch: true }).then((hit) => hit || caches.match(indexUrl));
         })
-        .catch(() => caches.match(event.request))
+        .catch(() => {
+          return caches.match(req, { ignoreSearch: true }).then((hit) => hit || caches.match(indexUrl));
+        })
     );
     return;
   }
 
-  // Static assets: Cache First, fallback to Network
+  // Pozostałe statyczne zasoby
   event.respondWith(
-    caches.match(event.request).then((cached) => {
-      return cached || fetch(event.request).then((response) => {
+    caches.match(req).then((cached) => {
+      if (cached) return cached;
+      return fetch(req).then((response) => {
         if (response && response.status === 200 && url.protocol.startsWith('http')) {
           const clone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+          caches.open(CACHE_NAME).then((cache) => cache.put(req, clone));
         }
         return response;
       });
