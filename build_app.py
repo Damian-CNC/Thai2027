@@ -939,11 +939,10 @@ html_template = '''<!DOCTYPE html>
       -webkit-tap-highlight-color: transparent;
     }
 
-    /* TRUE FULLSCREEN ROOT (ANCHORED TOP:0, BOTTOM:0 - ZERO DEAD SPACE) */
+    /* TRUE FULLSCREEN ROOT (100% EDGE-TO-EDGE, ANCHORED TOP:0, BOTTOM:0) */
     html, body {
       width: 100%;
       height: 100%;
-      height: 100dvh;
       margin: 0;
       padding: 0;
       overflow: hidden;
@@ -956,6 +955,7 @@ html_template = '''<!DOCTYPE html>
       font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
       color: var(--text-main);
       -webkit-font-smoothing: antialiased;
+      -webkit-text-size-adjust: 100%;
       user-select: none;
       -webkit-user-select: none;
     }
@@ -1048,11 +1048,10 @@ html_template = '''<!DOCTYPE html>
       transition: width 0.3s ease-out;
     }
 
-    /* MASTER VIEWPORT (EDGE-TO-EDGE DECK CONTAINER) */
+    /* MASTER VIEWPORT (EDGE-TO-EDGE DECK CONTAINER - ZERO SAFE AREA VOID) */
     .app-viewport {
       width: 100%;
       height: 100%;
-      height: 100dvh;
       position: fixed;
       top: 0;
       left: 0;
@@ -1122,9 +1121,9 @@ html_template = '''<!DOCTYPE html>
       pointer-events: none;
       background: linear-gradient(
         180deg,
-        rgba(9, 13, 22, 0.35) 0%,
-        rgba(9, 13, 22, 0.65) 45%,
-        rgba(9, 13, 22, 0.82) 100%
+        rgba(9, 13, 22, 0.20) 0%,
+        rgba(9, 13, 22, 0.45) 45%,
+        rgba(9, 13, 22, 0.60) 100%
       );
     }
 
@@ -1144,16 +1143,16 @@ html_template = '''<!DOCTYPE html>
       box-sizing: border-box;
     }
 
-    /* Content Layout - ZERO BOTTOM VOID */
+    /* Content Layout - 100% TRUE FULLSCREEN EDGE-TO-EDGE */
     .slide-content {
       position: relative;
       width: 100%;
       min-height: 100%;
       box-sizing: border-box;
-      padding-top: calc(max(env(safe-area-inset-top, 20px), 20px) + 64px);
-      padding-bottom: max(env(safe-area-inset-bottom, 0px), 12px);
-      padding-left: 16px;
-      padding-right: 16px;
+      padding-top: calc(max(env(safe-area-inset-top, 20px), 20px) + 60px);
+      padding-bottom: 0px; /* ZERO BOTTOM GAP */
+      padding-left: 14px;
+      padding-right: 14px;
       display: flex;
       flex-direction: column;
     }
@@ -1283,12 +1282,12 @@ html_template = '''<!DOCTYPE html>
     .intro-footer {
       margin-top: auto;
       text-align: center;
-      padding-top: 16px;
-      padding-bottom: max(env(safe-area-inset-bottom, 0px), 12px);
+      padding-top: 14px;
+      padding-bottom: 12px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
     .start-btn {
@@ -1426,7 +1425,11 @@ html_template = '''<!DOCTYPE html>
       display: flex;
       flex-direction: column;
       gap: 12px;
-      margin-bottom: 0;
+      margin-bottom: 12px;
+    }
+
+    .timeline-card:last-child {
+      margin-bottom: 8px;
     }
 
     .timeline-card {
@@ -1547,15 +1550,16 @@ html_template = '''<!DOCTYPE html>
       background: #0f172a;
       border-top: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 28px 28px 0 0;
-      padding: 20px 20px calc(max(env(safe-area-inset-bottom, 20px), 20px) + 16px);
+      padding: 20px 20px 24px;
       z-index: 201;
       transform: translateY(100%);
       transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-      display: flex;
+      display: none;
       flex-direction: column;
     }
 
     .drawer-sheet.active {
+      display: flex;
       transform: translateY(0);
     }
 
@@ -1651,14 +1655,21 @@ html_template = '''<!DOCTYPE html>
         <span class="nav-badge-dot"></span>
         <span id="navBadgeText">🇹🇭 Tajlandia '27</span>
       </div>
-      <button class="icon-btn" id="btnDrawer" title="Spis dni" aria-label="Otwórz harmonogram dni">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-          <line x1="16" y1="2" x2="16" y2="6"></line>
-          <line x1="8" y1="2" x2="8" y2="6"></line>
-          <line x1="3" y1="10" x2="21" y2="10"></line>
-        </svg>
-      </button>
+      <div style="display: flex; gap: 8px; align-items: center;">
+        <button class="icon-btn" onclick="forceAppRefresh()" title="Odśwież aplikację" aria-label="Wymuś odświeżenie najnowszej wersji">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
+          </svg>
+        </button>
+        <button class="icon-btn" id="btnDrawer" title="Spis dni" aria-label="Otwórz harmonogram dni">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+        </button>
+      </div>
     </div>
   </header>
 
@@ -2005,12 +2016,43 @@ html_template += '''
       }
     });
 
-    // Network-First Service Worker registration with instant update check (v5)
+    // Force Refresh Handler (Purges iOS WebClip Cache & Reloads)
+    function forceAppRefresh() {
+      if ('caches' in window) {
+        caches.keys().then(keys => Promise.all(keys.map(k => caches.delete(k)))).then(() => {
+          localStorage.setItem('trip_app_ver', 'v6-fullscreen');
+          window.location.reload(true);
+        });
+      } else {
+        window.location.reload(true);
+      }
+    }
+
+    // Auto-Flush Cache on Version Upgrade
+    const CURRENT_APP_VERSION = 'v6-fullscreen';
+    if (localStorage.getItem('trip_app_ver') !== CURRENT_APP_VERSION) {
+      localStorage.setItem('trip_app_ver', CURRENT_APP_VERSION);
+      if ('caches' in window) {
+        caches.keys().then(keys => Promise.all(keys.map(k => caches.delete(k)))).then(() => {
+          window.location.reload(true);
+        });
+      }
+    }
+
+    // Network-First Service Worker registration with instant update check (v6)
+    let isRefreshing = false;
     if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (!isRefreshing) {
+          isRefreshing = true;
+          window.location.reload();
+        }
+      });
+
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=5')
+        navigator.serviceWorker.register('./sw.js?v=6')
           .then(reg => {
-            console.log('SW v5 zarejestrowany:', reg);
+            console.log('SW v6 zarejestrowany:', reg);
             reg.update();
           })
           .catch(err => console.log('Błąd SW:', err));
