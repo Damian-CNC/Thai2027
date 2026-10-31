@@ -1051,7 +1051,7 @@ html_head = """<!DOCTYPE html>
       height: 100%;
       width: 0%;
       background: var(--gold-gradient);
-      transition: width 0.3s ease-out;
+      transition: width 0.75s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     /* SLIDE CONTAINERS (NATURAL DOCUMENT FLOW) */
@@ -1065,13 +1065,13 @@ html_head = """<!DOCTYPE html>
 
     .slide.active {
       display: block;
-      animation: slideFadeIn 0.25s ease-out forwards;
+      animation: slideFadeIn 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
     @keyframes slideFadeIn {
       from {
         opacity: 0;
-        transform: translateY(8px);
+        transform: translateY(22px);
       }
       to {
         opacity: 1;
@@ -2012,7 +2012,7 @@ html_drawer_and_script += """
       });
 
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=13')
+        navigator.serviceWorker.register('./sw.js?v=14')
           .then(reg => {
             console.log('SW registered');
             reg.update();
